@@ -1,0 +1,8 @@
+{% if site.gravatar_email %}
+<section>
+  <h1>About Me</h1>
+  <img src="{% gravatar_image %}" alt="Gravatar of {{ site.author}} " title="Gravatar of {{ site.author }}" />
+  <div>Takafumi Yoshida</div>
+  <div><a href="http://twitter.com/zephiransas">@zephiransas</a></div>
+</section>
+{% endif %}

@@ -1,8 +1,12 @@
 {% if site.gravatar_email %}
 <section>
   <h1>About Me</h1>
-  <img src="{% gravatar_image %}" alt="Gravatar of {{ site.author}} " title="Gravatar of {{ site.author }}" />
-  <div>Takafumi Yoshida</div>
-  <div><a href="http://twitter.com/zephiransas">@zephiransas</a></div>
+  <img style="display:block;float:left;" src="{% gravatar_image %}" alt="Gravatar of {{ site.author}} " title="Gravatar of {{ site.author }}" />
+  <p>
+    Takafumi Yoshida<br/>
+    Java/Ruby/Scala<br/>
+    Programmer at Okayama<br/>
+    <a href="http://twitter.com/zephiransas">@zephiransas</a>
+  </p>
 </section>
 {% endif %}

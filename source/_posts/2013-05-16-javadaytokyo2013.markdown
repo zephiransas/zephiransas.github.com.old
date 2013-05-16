@@ -1,0 +1,104 @@
+---
+layout: post
+title: "Java Day Tokyo 2013に参加してきた（基調講演）"
+date: 2013-05-16 18:01
+comments: true
+categories: [Java, 勉強会]
+---
+
+<img src="http://farm8.staticflickr.com/7284/8740166245_72f3003e48_n.jpg"/>
+
+前日、5月14日に秋葉原UDXにて開催されたJava Day Tokyo2013に参加してきました。
+JavaOne Tokyo2012が開催されてからほぼ1年。去年イベントが終わった時には「もう、こういったイベントは当分ないだろうなぁ」とか思っていたので、JavaOneではないにしてもちゃんとイベントを開催してくれた日本オラクル＆寺田さんには感謝ですね。
+
+## Keynoteの報告
+
+<img src="http://farm8.staticflickr.com/7294/8740179955_a8a975c375_n.jpg"/>
+
+基本的には去年のサンフランシスコでのJavaOneとかで発表された内容とかぶる感じ。ただ、普段はこういった最新情報をチェックしていない人たちでも、イベントであれば直に最新情報を聞けるので、そういった人たちにリーチできるだけでも、意味はあるかと。
+残念だったのは最初、写真撮影がNGにされていたこと。
+
+<blockquote class="twitter-tweet" lang="ja"><p>写真撮影禁止とか、俺の仕事＼(^o^)／ｵﾜﾀ　<a href="https://twitter.com/search/%23jdt2013">#jdt2013</a></p>&mdash; Takafumi Yoshida✅さん (@zephiransas) <a href="https://twitter.com/zephiransas/status/334111626368270336">2013年5月14日</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+正直コレには参りました。参加者には自分のように地方のコミュニティに属していて、後日報告会をやろうと企画してる人も多いはず。またOracleとしても「Javaを前進させるためにはコミュニティの力が必要です！」と言ってるにもかかわらず、これではなぁ・・・
+
+一応、Keynoteの半分を過ぎたあたりで、寺田さんが取り計らってくれたのか
+
+<blockquote class="twitter-tweet" lang="ja"><p>ただ今から写真全面OKにしました。 <a href="https://twitter.com/search/%23jdt2013">#jdt2013</a></p>&mdash; Terada Yoshioさん (@yoshioterada) <a href="https://twitter.com/yoshioterada/status/334137042609004544">2013年5月14日</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+とはなりました。なので前半の写真がありません(´・ω・`)
+
+まずは日本オラクルの伊藤敬氏が壇上に。
+前回のJavaOne Tokyoは六本木のアカデミーヒルズで開催されましたが「クール・ジャパンの代表格であるアキハバラでJavaのイベントをやったら、どうなるのか？その化学反応も楽しんで欲しい」とのこと。
+
+最初に登壇したのはJava Technology AmbassadorのSimon Ritter氏。JavaSEの最新情報について公演しました。
+2012年7月にリリースされたJava7は、Oracleの元でリリースされた最初にメジャーアップデート。世界中で利用されていることを紹介していました。
+また、Windows,Mac OSX,Linuxをはじめ、ARMアーキテクチャ上でも動作することを紹介し、Javaがいまや様々なデバイスで動作していることも強調。
+そして、（遅れはしたものの）2014年2月には正式リリース予定のJava8についても言及し、その中核はLambdaであるとのこと。Lambdaを使用することのメリットの一つとして、並列処理を容易に書けることを紹介していました。
+現在、Java8はプレビュー版が提供されているので、これを通じて多くのフィードバックをして欲しい、とも言っていました。
+今後Javaは2年サイクルでメジャーアップデートを行う予定で、そうなるとJava9は2016年リリースになるだろうとも。
+
+次に壇上に上がったのはOracleのNandini Ramani氏。JavaFXや組み込みJavaなどについて公演しました。
+Java8からはJavaFXはJavaFX8として、標準でJDKにバンドルされるようになります。そういった意味でもJavaFXはこれから注目の技術になりそうな予感です。
+
+途中、Nandini氏は壇上にJim Weaver氏を招き、Jimが手元でJavaFXのデモを行なっていました。なぜかデモしてた機材がSurface Proでしたw
+球体や円柱を3Dで表示し、それにことなる光源を当てて表示するといったデモや、それにテクスチャを貼り付けてみたり。また港湾での貨物運送にでもつかうんでしょうか、コンテナの位置などをJavaFXでレンダリングするようなものを紹介していました。どれも比較的短いコードで実装可能であるとのこと。
+また、Jim氏は「When should you download JDK8?」と書かれたスライドを前に、「イツヤルカ？イマデショ！」と日本語でネタを披露していました。これには会場も爆笑w Keynoteで一番盛り上がったかもしれません。Jim氏もご満悦な様子でした。
+（しかし、このネタをJim氏に教えたのは、いったい誰なのか気になります！）
+
+次に壇上に上がったのはOracleのCameron Purdy氏。JavaEEの最新動向について公演を行いました。
+JavaEEは次のメジャーバージョンであるJavaEE7のリリースを6月13日に控えています。そのJavaEE7についての話が主でした。
+
+主な新機能としては
+- JBatch 
+- JSON対応
+- WebSocket対応
+などを紹介。JavaEE準拠のAPサーバも18のメーカーから出荷されているとのこと。
+その後OracleのArun Gupta氏を壇上に招き、WebSocketのデモを行なっていました。デモはよくあるWebSocketのチャットに始まり、その後はWhite Boardのアプリケーションをデモ。
+やり取りをしている途中で回線が切断された場合でも、回線がもとにもどれば、最新の状態に簡単に復旧できるようなアプリケーションなんですが、これもWebSocketで簡単に実装できるとのこと。
+
+そして最後に壇上に上がったのはOracleのSharat Chander氏。
+アメリカ本国でのJavaOneを取り仕切っている人ですね。
+
+<img src="http://farm8.staticflickr.com/7294/8741286896_615b239145_n.jpg"/>
+
+Sharat氏はJavaとそれを取り巻くコミュニティについて公演を行いました。Javaにとって大事な構成要素は「Oracle、技術、コミュニティ」の3つであるとして、コミュニティの重要性を強調。
+また「ここにいる皆さんにも是非Javaのコミュニティに参加してコントリビュートして欲しい」と訴えていました。
+
+Sharatに続いて壇上に上がったのは日本のJUG(Java User Group)であるJJUG会長の鈴木雄介氏。
+
+<img src="http://farm8.staticflickr.com/7293/8741285712_3c14cd9c59_n.jpg"/>
+
+鈴木氏はコミュニティに参加する意義を「エンジニアが成長するための」と説明。またJJUGとしても今後、様々な活動を通じて日本のJavaコミュニティのエンジニアをサポートして行きたい、との話がありました。
+地方への講師の派遣なども行なっていただけるらしいので、今後岡山Javaユーザ会でも、そういった方をお招きして勉強会を開催していきたいなぁと思います。
+
+そして最後にはなぜか恒例（？）とも言えるTシャツ投げが行われました。
+
+<img src="http://farm8.staticflickr.com/7293/8740169741_f0562a4e9e_n.jpg"/>
+
+このTシャツ投げは、もはや伝統芸ですが、時間の関係か1つだけだったのが寂しかったり(´・ω・`)
+
+
+基調講演の報告はここまで。参加したセッションの内容は後日まとめます。
+
+
+## リンク集
+
+最後にJava Day Tokyoについて、各メディアのレポートや、個人ブログのリンクをまとめておきます。こちらも参考にしてください。
+
+### メディア系
+- クラウドWatch - [【Java Day Tokyo】Java SE/EEやJavaFXなどの最新トピックを解説](http://cloud.watch.impress.co.jp/docs/event/20130515_599350.html)
+- ITPro - [「Java EE 7はHTML5に焦点」-Java Day Tokyo 2013 基調講演](http://itpro.nikkeibp.co.jp/article/NEWS/20130514/476905/)
+- マイナビニュース - [http://news.mynavi.jp/articles/2013/05/16/java/index.html](http://news.mynavi.jp/articles/2013/05/16/java/index.html)
+- Publickey - [次期Java 8は来年2月、Java EE 7は今年6月にリリース予定。Java Day Tokyo 2013](http://www.publickey1.jp/blog/13/java_82java_ee_76java_day_tokyo_2013.html)
+
+### 個人ブログなど
+- Challenge Java EE ! - [Java Day Tokyo 2013に参加しました](http://kikutaro777.hatenablog.com/entry/2013/05/14/235704)
+- エンジニア的なネタを毎週書くブログ - [Java Day Tokyo 2013　キーノート感想 #jdt2013](http://taichiw.hatenablog.com/entry/2013/05/14/125432)
+- torutkの日記 - [Java Day Tokyo 2013に参加して](http://d.hatena.ne.jp/torutk/20130514/p1)
+
+### その他
+- 当日のツイートまとめ - [Java Day Tokyo ( #jdt2013 ) 関連Tweetまとめ](http://togetter.com/li/502898)
+- 写真 - [http://www.flickr.com/photos/zephiransas/sets/72157633500864874/](http://www.flickr.com/photos/zephiransas/sets/72157633500864874/)

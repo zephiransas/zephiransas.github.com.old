@@ -70,7 +70,7 @@ JavaEE7で導入されるJBatchのセッション。担当はArun氏です。
 
 ## JavaSE7 日本語ドキュメント提供開始
 
-そしてJava the Night終了後、寺田さんから重大な発表がありました。それはJavaSE7の日本度ドキュメントの提供を開始した、とのアナウンスでした。JavaSE7リリース後、しばらくしても日本語ドキュメントが提供されていませんでした。様々な方からも要望は上がっていましたが、残念ながら日本語ドキュメントは提供されないという決定がなされました。
+そしてJava the Night終了後、寺田さんから重大な発表がありました。それはJavaSE7の日本語ドキュメントの提供を開始した、とのアナウンスでした。実はJavaSE7リリース後、しばらくしても日本語ドキュメントは提供されていませんでした。様々な方面から要望は上がっていましたが、残念ながら日本語ドキュメントは当分は提供されないという決定が、以前なされました。
 
 <blockquote class="twitter-tweet" lang="ja"><p>影響度が大きい事を十分承知で申し上げます。誠に残念ながら直近で、提供の予定はございません。“@<a href="https://twitter.com/skrb">skrb</a>: @<a href="https://twitter.com/yoshioterada">yoshioterada</a> それよりもJava SE 7の日本語のJavadocはリリースされないのでしょうか？”</p>&mdash; Terada Yoshioさん (@yoshioterada) <a href="https://twitter.com/yoshioterada/status/183876594010558464">2012年3月25日</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
@@ -79,7 +79,7 @@ JavaEE7で導入されるJBatchのセッション。担当はArun氏です。
 
 そして、Java Day Tokyoにてサプライズとでもいいましょうか、[JavaSE7の日本語ドキュメント提供開始](http://yoshio3.com/2013/05/14/%EF%BD%8A%EF%BD%81%EF%BD%96%EF%BD%81-%EF%BD%93%EF%BD%85%EF%BC%97%EF%BD%81%EF%BD%90%EF%BD%89%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%89%88%E6%8F%90%E4%BE%9B%E9%96%8B%E5%A7%8B/)のアナウンスがされました。
 
-JavaSE7がリリースされて随分経ちますが、これでようやくスタートライン。ようやくJava7を普通に使ってもらう環境が、日本でも整ったといった感じです。いろいろ想いはありますが、日本オラクル＆寺田さんの努力に敬意を表したいと思います。
+JavaSE7がリリースされて随分経ちますが、これでようやくスタートライン。Java7を普通に使ってもらう環境が、日本でも整ったといった感じです。いろいろ想いはありますが、日本オラクル＆寺田さんの努力に敬意を表したいと思います。
 
 ## Conclusion
 

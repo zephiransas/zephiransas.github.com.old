@@ -1,6 +1,8 @@
 require "rubygems"
 require "bundler/setup"
 require "stringex"
+require "yaml"
+require "xmlrpc/client"
 
 ## -- Rsync Deploy config -- ##
 # Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
@@ -380,4 +382,22 @@ desc "list tasks"
 task :list do
   puts "Tasks: #{(Rake::Task.tasks - [Rake::Task[:list]]).join(', ')}"
   puts "(type rake -T for more detail)\n\n"
+end
+
+#-- sending ping --#
+desc "Sedning ping to Web Search Engines"
+task :ping do
+  site_config = YAML.load(IO.read('_config.yml'))
+  blog_title = site_config['title']
+  blog_url = site_config['url']
+  ping_url = YAML.load(IO.read('ping.yml'))
+  ping_url.each do |url|
+    ping = XMLRPC::Client.new2(url)
+    begin
+      result = ping.call('weblogUpdates.ping', blog_title, blog_url)
+      puts "#{url} : #{result}"
+    rescue => e
+      puts "#{url} : #{e}"
+    end
+  end
 end

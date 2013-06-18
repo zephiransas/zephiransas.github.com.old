@@ -12,6 +12,8 @@ categories: [Java, 勉強会]
 
 <script async class="speakerdeck-embed" data-id="ebf8f340b7a20130a14b7e8eb314bbb5" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
 
+当日のTwitterのまとめは、[こちら](http://togetter.com/li/518745)
+
 その他、岡山Javaユーザ会の運営メンバーと、[@soudai1025氏](https://twitter.com/soudai1025)にはJJUG CCCの感想についてもセッションをしていただきました。また角田さんの会社の同僚お二人にもJava Day Tokyoに参加しての感想を話していただきました。
 
 また東京からは櫻庭さんにも来て頂き、JJUG CCCでセッションされた「Project Lambda Essential」を再演していただきました。Java8で最も注目されている機能、Project Lambdaの大事なところを丁寧にお話をしていただきましたので、参加者の皆さんのLambdaに対する理解が深まったものと思います。

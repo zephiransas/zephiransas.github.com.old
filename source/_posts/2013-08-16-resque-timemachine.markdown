@@ -79,13 +79,13 @@ $ vi com.apple.TimeMachine.MachineID.plist
 とし、その内部の
 
 ``` xml
-<integer>0</integer>
+<integer>2</integer>
 ```
 
 を
 
 ``` xml
-<integer>2</integer>
+<integer>0</integer>
 ```
 
 に修正します。

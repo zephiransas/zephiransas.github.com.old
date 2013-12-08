@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "JavaOne2013報告会@岡山を開催しました"
-date: 2013-12-06 23:21
+date: 2013-12-07 23:21
 comments: true
 categories: 
 ---

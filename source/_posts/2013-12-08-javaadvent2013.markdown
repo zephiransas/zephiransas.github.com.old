@@ -1,0 +1,33 @@
+---
+layout: post
+title: "JavaOne2013報告会@岡山を開催しました"
+date: 2013-12-06 23:21
+comments: true
+categories: 
+---
+
+これは[Java Advent Calendar2013](http://www.adventar.org/calendars/145)の12月7日分のエントリです。
+
+前日は[@muraken702](htp://twitter.com/muraken702)さんの[「RxJavaを使ってCallback Hellから脱出する（ Vert.x がいいね！第5回 ）」](http://acro-engineer.hatenablog.com/entry/2013/12/06/082444)でした。
+
+次の日は[@nabedge](http://twitter.com/nabedge)さんの[「Mixer2のSpringMVC連携機能がver 1.2.17でさらに進化！」](http://nabedge.blogspot.jp/2013/12/mixer2springmvcver-1217.html)です。
+
+先日12/5に、岡山国際交流会館にて、[JavaOne2013報告会@岡山](http://local.aguuu.com/events/26540)を開催しました。そのレポートです。
+
+![DSC_2060](/images/20131208/DSC_2060.jpg)
+
+今回は初めて、平日の夜に勉強会を開催しました。というのも、講師の寺田さんが昼間は岡山市内の某SIerにて社内向けにJavaOne報告会を行い、そのまま夜はコミュニティ向けの報告会をやる、といった事情があったためでした。
+
+前日までの参加登録では、9人の予定だったのですが、当日はちょっと増えて、最終的には11人の方にご参加いただきました。ありがとうございます。
+
+２時間という限られた時間のなかで、前半でJavaOne2013の報告と、後半ではWebSocketを活用したより実用的なアプリケーションの開発モデルを紹介していただきました。
+
+![DSC_2066](/images/20131208/DSC_2066.jpg)
+
+JavaOne2013の報告の中ではRaspberry piなどにも注目が集まっているように、「Internet of Things」をキーワードに、Javaが組み込みにも大きく注力していることが印象的でした。現在は組み込みにはJavaMEというJavaSEのサブセット版が提供されていましたが、これを将来的にはSEとMEの垣根をなくし、統合していく方針であるとのこと。これは次のメジャーバージョンで統一というわけにはいかず、少々時間がかかりそうではありますが、スマートフォンを始め、様々なデバイスがインターネットに繋がる時代においては、組み込み分野でも動かせるJavaの重要性は増していくように思いました。
+
+![DSC_2079](/images/20131208/DSC_2079.jpg)
+
+最後には、寺田さんのJavaOne土産をプレゼントするじゃんけん大会などもありました。
+
+懇親会で、参加者の皆さんと話をしたときに感じたのは、JavaEEをもっと知りたいという話でした。今後、岡山Javaユーザ会でも、ハンズオンや勉強会などを通じて、JavaEEの啓蒙もしていきたいと感じました。

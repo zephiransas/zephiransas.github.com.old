@@ -1,0 +1,42 @@
+---
+layout: post
+title: "色んなバリエーションのirofさんを紹介しよう"
+date: 2013-12-13 0:00
+comments: true
+categories: irof
+---
+
+これは[irofアドベントカレンダー2013](http://atnd.org/events/44814)の12月13日分のエントリのようです。
+
+昨日は[@akuraru](https://twitter.com/akuraru)さんの[「いろふさんの描かれていない領域には何があるのか」](http://d.hatena.ne.jp/akuraru/20131212/p1)でした。
+
+このアドベントカレンダーは先日、急にJJUGの某幹事からQBKで振られたものです。
+
+<blockquote class="twitter-tweet" lang="ja"><p><a href="https://twitter.com/zephiransas">@zephiransas</a> ありがとうございます！名前書いておきました！</p>&mdash; (´・ω・｀) (@megascus) <a href="https://twitter.com/megascus/statuses/410019752245870592">2013, 12月 9</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+正直ネタを思いつかないだろうなーとおもいつつ、昨日の@akuraruさんのネタを見て、衝動的に思いついたので、書いてみます。
+
+皆さんご存知の用にirofさんには様々なインスタンスが存在しますが、それと同時に様々なバリエーションも存在します。BANDAIを始めとするおもちゃメーカーからもこぞってirofさんグッズが発売されていますが、今回はそのバリエーションの一部を皆さんにご紹介したいと思います。
+
+## シャア専用irof
+
+![char_irof](/images/20131213/char_irof.jpg)
+
+シャア専用です。赤いです。3倍早いです。通常の3倍の速度でテストを書いてくれます。便利ですね。ぜひうちの会社に欲しいものです。
+
+## 量産型irof
+
+![eva_irof](/images/20131213/eva_irof.jpg)
+
+量産型です。空から降ってきて、人の黒歴史に干渉します。ちょっとイヤですね。
+
+## 金剛型戦艦99番艦 irof
+
+![kongou_irof](/images/20131213/kongou_irof.png)
+
+金剛型戦艦99番艦のirofﾃﾞｰｽ!!
+
+## まとめ
+
+GIMP難しい

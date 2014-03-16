@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://zephiransas.github.com/sitemap.xml 

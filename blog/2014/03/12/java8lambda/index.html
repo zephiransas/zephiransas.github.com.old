@@ -1,0 +1,543 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Java8で始めるLambda（基礎編） - zephiransasのチラシの裏</title>
+  <meta name="author" content="Takafumi Yoshida (@zephiransas)">
+
+  
+  <meta name="description" content="まもなくリリース予定のJava8。その中でも最も大きなインパクトを持つというProject Lambdaについて、ここ数日調べてみました。
+今からLambdaをはじめようとする人向けに、何回かに分けてまとめてみたいと思います。 インターフェースの宣言 まずは手始めに、引数で指定された文字列の前後に &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zephiransas.github.com/blog/2014/03/12/java8lambda">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="zephiransasのチラシの裏" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-41139724-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">zephiransasのチラシの裏</a></h1>
+  
+    <h2>とあるJava/Rubyプログラマのメモ代わりブログ</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zephiransas.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Java8で始めるLambda（基礎編）</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-12T16:33:00+09:00" pubdate data-updated="true">Mar 12<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>まもなくリリース予定のJava8。その中でも最も大きなインパクトを持つというProject Lambdaについて、ここ数日調べてみました。
+今からLambdaをはじめようとする人向けに、何回かに分けてまとめてみたいと思います。</p>
+
+<h2>インターフェースの宣言</h2>
+
+<p>まずは手始めに、引数で指定された文字列の前後に&#8221;[&#8220;と&#8221;]&#8221;をつける処理を考えてみましょう。</p>
+
+<p>Lambdaを使用するには、まずインターフェースを宣言する必要があります。上記の仕様から考えると</p>
+
+<ul>
+<li>引数はString型の引数が1つ</li>
+<li>戻り値もString型</li>
+</ul>
+
+
+<p>となるので、この場合は以下の様なインターフェースを宣言します。</p>
+
+<figure class='code'><figcaption><span>LambdaInterface.class</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">LambdaInterface</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">String</span> <span class="nf">method</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここで注意するべきことが1つ。Java8のLambdaとして使えるインターフェースには決まりがあるのですが、もっとも重要なのが<strong>インターフェースのメソッドが1つだけ</strong>ということです。インターフェースのメソッドが2つ以上ある場合には、それをLambdaとして使用することはできません。</p>
+
+<p>これはLambdaの実装部分を書く際に、どのメソッドの内容を実装しているのかを書かないため、Lambdaを書いた場合は<strong>そのインターフェースがもつ唯一のメソッド</strong>に対して実装をおこなったとみなすからです。</p>
+
+<p>一見、これは不便なように思ってしまうかもしれないですが、普段使うパターンのインターフェースのほとんどがjava.util.functionパッケージ内で用意されているので、実際にはそれ程不便ではありません。むしろ自分でインターフェースを用意するほうが稀かもしれません。</p>
+
+<h2>Lambdaを使った記述</h2>
+
+<p>早速、先に宣言したインターフェースを使ってLambdaを書いてみましょう。Lambdaを記述する際の基本となる文法は、以下のようになっています。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">[</span><span class="err">インターフェース名</span><span class="o">]</span> <span class="o">[</span><span class="n">lambda</span><span class="err">式の名前</span><span class="o">]</span> <span class="o">=</span> <span class="o">(</span><span class="err">引数の型</span> <span class="err">引数</span><span class="o">,...)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>  <span class="err">（実装）</span>
+</span><span class='line'><span class="o">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>よってLambdaInterfaceを使って書くと、以下のようになります。</p>
+
+<figure class='code'><figcaption><span>Sample.class</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">LambdaInterface</span> <span class="n">lambda</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="s">&quot;[&quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">};</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">lambda</span><span class="o">.</span><span class="na">method</span><span class="o">(</span><span class="s">&quot;HOGE&quot;</span><span class="o">));</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実行すると&#8221;[HOGE]&#8221;と出力されていることがわかると思います。</p>
+
+<p>このように、匿名クラスを使った場合などと比べて、少ない記述量で実装できると思います。</p>
+
+<h2>Lambdaの省略記法</h2>
+
+<p>また、このLambdaの記述では、以下のルールで、省略した記述を使用することもできます。</p>
+
+<ul>
+<li>引数の型は（型推論できるので）省略できる</li>
+<li>引数が1つの場合は、引数の()を省略できる</li>
+<li>但し、引数なしの場合は省略できない</li>
+<li>実装部分が1行の場合は、{}を省略可能。さらにreturn文も不要</li>
+</ul>
+
+
+<p>上記ルールに沿ったLambdaであれば省略可能です。ですので先ほどのコードも以下の様に省略できます。</p>
+
+<figure class='code'><figcaption><span>Sample.class</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">LambdaInterface</span> <span class="n">lambda</span> <span class="o">=</span> <span class="n">value</span> <span class="o">-&gt;</span> <span class="s">&quot;[&quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">lambda</span><span class="o">.</span><span class="na">method</span><span class="o">(</span><span class="s">&quot;HOGE&quot;</span><span class="o">));</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>かなりスッキリしましたね！</p>
+
+<h2>java.util.functionで提供されるインターフェースを使う</h2>
+
+<p>先ほど少し触れましたが、上記のLambdaInterfaceのような普段Lambdaとして使うインターフェースはjava.util.function内にいろいろ用意されています。
+例えば、LambdaInterfaceの様に「String型の引数を1つ取り、String型の戻り値を持つ」インターフェースはjava.utl.functionパッケージ内にあるFunctionインターフェースを使います。</p>
+
+<figure class='code'><figcaption><span>Sample.class</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Function</span><span class="o">&lt;</span><span class="n">T</span><span class="o">,</span> <span class="n">R</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">R</span> <span class="nf">apply</span><span class="o">(</span><span class="n">T</span> <span class="n">t</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初の型引数Tには1つ目の引数の型、2つ目の型引数Rには戻り値の型を指定します。またapplyメソッドが実装対象となるメソッドです。</p>
+
+<p>先のコードをFunctionインターフェースを使って書き直すと。</p>
+
+<figure class='code'><figcaption><span>Sample.class</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Function</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">lambda</span> <span class="o">=</span> <span class="n">value</span> <span class="o">-&gt;</span> <span class="s">&quot;[&quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">lambda</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="s">&quot;HOGE&quot;</span><span class="o">));</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となります。Functionの他にも</p>
+
+<ul>
+<li>引数を1つ持ち、戻り値がないConsumer</li>
+<li>引数がなく、戻り値があるSupplier</li>
+<li>引数を1つ持ち、戻り値がboolean型のPredicate</li>
+<li>引数を1つ持ち、かつこれが戻り値と同じ場合のUnaryOperator</li>
+</ul>
+
+
+<p>などのインターフェースが提供されています。</p>
+
+<p>どういった場合に、どのインターフェースを使えばよいかについては、Qiitaにまとめておきましたので、参考にしてみてください。</p>
+
+<ul>
+<li><a href="http://qiita.com/zephiransas/items/3b03af4f9044df3182d0">Java8関数型インターフェース チートシート</a></li>
+</ul>
+
+
+<p>通常は、ここで提供されているインターフェースを使い、それ以外のパターンが発生した場合のみ、自分でインターフェースを宣言するほうがよいでしょう。</p>
+
+<h2>メソッド参照を使う</h2>
+
+<p>メソッド参照もJava8で新しく追加された機能です。</p>
+
+<p>メソッド参照を使うと、他のクラスのクラスメソッドやインスタンスメソッドを、Lambdaの実装として利用することができるようになります。メソッド参照はドット(.)でメソッドを呼ぶ代わりに、コロン2つで呼び出します。</p>
+
+<figure class='code'><figcaption><span>Sample.class</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">[</span><span class="err">クラス名</span><span class="o">]::[</span><span class="err">メソッド名</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>例えば先の文字列の前後にカッコをつけるメソッドが以下のようにSampleクラスのstaticメソッドとして定義されていた場合</p>
+
+<figure class='code'><figcaption><span>Sample.class</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">private</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">add</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&quot;[&quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Sample.addをメソッド参照するには</p>
+
+<figure class='code'><figcaption><span>Sample.class</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Function</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">lambda</span> <span class="o">=</span> <span class="nl">Sample:</span><span class="o">:</span><span class="n">add</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">lambda</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="s">&quot;HOGE&quot;</span><span class="o">));</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">private</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">add</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&quot;[&quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここではstaticなクラスメソッドを使いましたが、インスタンスメソッドの場合も同様に、インスタンスを生成し、そこからメソッド参照をすることができます。</p>
+
+<figure class='code'><figcaption><span>Sample.class</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Sample</span> <span class="n">sample</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Sample</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">Function</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">lambda</span> <span class="o">=</span> <span class="nl">sample:</span><span class="o">:</span><span class="n">add</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">lambda</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="s">&quot;HOGE&quot;</span><span class="o">));</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">add</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&quot;[&quot;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s">&quot;]&quot;</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Takafumi Yoshida (@zephiransas)</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-12T16:33:00+09:00" pubdate data-updated="true">Mar 12<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java/'>Java</a>, <a class='category' href='/blog/categories/java8/'>Java8</a>, <a class='category' href='/blog/categories/lambda/'>Lambda</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://zephiransas.github.com/blog/2014/03/12/java8lambda/" data-via="" data-counturl="http://zephiransas.github.com/blog/2014/03/12/java8lambda/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/02/06/renew-photoleaf/" title="Previous Post: Photo Leafをちょっとリニューアルしました">&laquo; Photo Leafをちょっとリニューアルしました</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/03/15/what-you-shoud-eat-in-daitokai/" title="Next Post: 岡山の勉強会に参加する際の心構え">岡山の勉強会に参加する際の心構え &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+<section>
+  <h1>About Me</h1>
+  <img style="display:block;float:left;" src="http://www.gravatar.com/avatar/ab963de01b53e635d6e699d6d7d162b1" alt="Gravatar of Takafumi Yoshida (@zephiransas) " title="Gravatar of Takafumi Yoshida (@zephiransas)" />
+  <p>
+    Takafumi Yoshida<br/>
+    Java/Ruby/Scala<br/>
+    Programmer at Okayama<br/>
+    <a href="http://twitter.com/zephiransas">@zephiransas</a>
+  </p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/16/test/">test</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/15/what-you-shoud-eat-in-daitokai/">岡山の勉強会に参加する際の心構え</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/12/java8lambda/">Java8で始めるLambda（基礎編）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/06/renew-photoleaf/">Photo Leafをちょっとリニューアルしました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/23/webkit-on-wercker/">werckerでrspecとcucumberのCI環境を作る</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/zephiransas">@zephiransas</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'zephiransas',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Takafumi Yoshida (@zephiransas) -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

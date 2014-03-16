@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: JavaEE | zephiransasのチラシの裏]]></title>
+  <link href="http://zephiransas.github.com/blog/categories/javaee/atom.xml" rel="self"/>
+  <link href="http://zephiransas.github.com/"/>
+  <updated>2014-03-16T14:09:17+09:00</updated>
+  <id>http://zephiransas.github.com/</id>
+  <author>
+    <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[GlassFishのアップグレード方法]]></title>
+    <link href="http://zephiransas.github.com/blog/2013/05/24/how-to-upgrade-gf/"/>
+    <updated>2013-05-24T15:46:00+09:00</updated>
+    <id>http://zephiransas.github.com/blog/2013/05/24/how-to-upgrade-gf</id>
+    <content type="html"><![CDATA[<p>会社で使ってるJenkinsさんはGlassFish上で動いているんですが、これのアップグレードを行ったので、そのメモ。</p>
+
+<p>具体的にはGlassFish 3.1.1からGlassFish 3.1.2へアップグレードしました。</p>
+
+<h2>updatetoolのインストール</h2>
+
+<p>まずはアップグレードに使用するupdatetoolをインストールします。</p>
+
+<p>方法はasadminと同じディレクトリにある、updatetoolを実行するだけ。</p>
+
+<p>初めてupdatetoolコマンドを実行した際に、updatetoolをインストールするか聞いてきますので、yを押してインストールするだけです。</p>
+
+<p>ちょっと時間がかかるので、アニメでも見ながらゆっくり待ちましょう。</p>
+
+<h2>updatetoolからGlassFishのアップグレード</h2>
+
+<p>上記の手順でupdatetoolのインストールが終了したら、もう一度updatetoolコマンドを実行します。するとGUIが立ち上がって来ますので、以下のようにするだけ。</p>
+
+<p><img src="/images/20130524/updatetool.png" alt="updatetool" /></p>
+
+<p>あとは</p>
+
+<p><code>bash
+$ ./asadmin version
+</code></p>
+
+<p>などで、アップグレードできていることを確認しましょう。</p>
+]]></content>
+  </entry>
+  
+</feed>

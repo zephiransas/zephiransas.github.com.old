@@ -1,0 +1,1345 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>zephiransasのチラシの裏</title>
+  <meta name="author" content="Takafumi Yoshida (@zephiransas)">
+
+  
+  <meta name="description" content="モバイル対応のWeb開発をしている時、iPhoneやiPadのブラウザでのデバッグに苦労したことはないですか？ PCの場合であれば、Chormeのデベロッパーツールとかでかなり簡単にデバッグを行うことができますが、iOSとかのSafariではデバッグツールをつかうことができません。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zephiransas.github.com/blog/page/2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="zephiransasのチラシの裏" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-41139724-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">zephiransasのチラシの裏</a></h1>
+  
+    <h2>とあるJava/Rubyプログラマのメモ代わりブログ</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zephiransas.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/20/debug-with-weinre/">weinreでiOSのブラウザのデバッグを行う手順</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-20T13:27:00+09:00" pubdate data-updated="true">Aug 20<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>モバイル対応のWeb開発をしている時、iPhoneやiPadのブラウザでのデバッグに苦労したことはないですか？</p>
+
+<p>PCの場合であれば、Chormeのデベロッパーツールとかでかなり簡単にデバッグを行うことができますが、iOSとかのSafariではデバッグツールをつかうことができません。</p>
+
+<p>そんな時に便利なのが<a href="http://people.apache.org/~pmuellr/weinre/docs/latest/">weinre</a>です。weinreを使うことで、iOS側で表示されたWebページのデバッグツールの情報を、PCから見ることができる大変便利なツールです。</p>
+
+<p>今回はweinreの使い方を紹介します。</p>
+
+<h2>weinreのインストール</h2>
+
+<p>まずはweinreをインストールします。weinreはnpmで提供されているので、以下のコマンドでインストールします。
+npmをインストールしてない場合は、先に<a href="http://nodejs.org/">node.jsをインストール</a>してください。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo npm -g install weinre
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>自分の環境ではsudoを要求されたのですが、sudoなしでインストールできれば、それでもいいかと思います。</p>
+
+<h2>weinreサーバの起動</h2>
+
+<p>次にweinreサーバを、以下のコマンドで起動します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>weinre --boundHost 192.168.0.x
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上記のboundHostにはlocalhostのIPアドレスを設定します。
+weinreサーバはデフォルトの状態だとlocalhostからしか接続できません。この後iPad側から接続する必要がありますので、上記のようにboundHostを設定して、他のデバイスからも接続可能にしておく必要があります。</p>
+
+<p>無事、起動できれば</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>weinre: starting server at http://192.168.0.x:8080
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と表示され、8080ポートでサーバが起動します。早速これをブラウザから見てみましょう。</p>
+
+<p><img src="/images/20130820/weinre_server.png" alt="weinre_server" /></p>
+
+<p>上記の画面が表示されれば、サーバが起動しています。</p>
+
+<h2>iOSデバイスでブックマークレットの登録</h2>
+
+<p>次に、iOSデバイスでweinreサーバへ接続するためのブックマークレットを登録します。直接ブックマークレットを作れればいいのですが、iOSではそれができないようなので、ここでは新規にブックマークを作成して、これを編集することでブックマークレットを作成しています。</p>
+
+<p>まずiOSデバイスのブラウザでweinreサーバ(ex: http://192.168.0.3:8080)を開きます。
+そして、以下のjavascriptをクリップボードにコピーしておきます。</p>
+
+<p><img src="/images/20130820/bookmarklet.png" alt="bookmarklet" /></p>
+
+<p>次にiOSデバイスのブラウザで適当なWebページを開き、それをブックマークしておきます。</p>
+
+<p>そしてそのブックマークを編集して、先ほどコピーしたjavascriptをペーストします。</p>
+
+<p><img src="/images/20130820/ios_bookmarklet.png" alt="ios_bookmarklet" /></p>
+
+<h2>デバッグの手順</h2>
+
+<p>以上で全ての準備が整ったので、実際にデバッグを行ってみます。</p>
+
+<p>まずはPC側のブラウザでweinreサーバを開き、接続中のクライアント一覧を表示します。</p>
+
+<p><img src="/images/20130820/client.png" alt="client" /></p>
+
+<p>上記のリンクをクリックすると</p>
+
+<p><img src="/images/20130820/client_list.png" alt="client_list" /></p>
+
+<p>このような画面が表示されます。iOSデバイスから接続されると、上記のTargets一覧に表示されます。</p>
+
+<p>iOSデバイス側からは、まずデバッグしたいWebページを表示し、その後、先に登録したブックマークレットを実行します。するとTargetが以下のようになります。</p>
+
+<p><img src="/images/20130820/connect.png" alt="connect" /></p>
+
+<p>あとはこの画面から、普通にデバッグツールを使用することができます。</p>
+
+<p><img src="/images/20130820/debug.png" alt="debug" /></p>
+
+<p>当然、デバッグツール側でHTML要素を変更してやれば、それがそのままiOSデバイス側のブラウザに反映されますので</p>
+
+<p><img src="/images/20130820/debug1.png" alt="debug1" /></p>
+
+<p>と変更してやれば、iOS側も</p>
+
+<p><img src="/images/20130820/debug2.png" alt="debug2" /></p>
+
+<p>といった感じで、即反映されます。</p>
+
+<h2>補足</h2>
+
+<p>今回はiOSデバイスしか手元になかったため未検証ですが、当然Androidでも同様にデバッグすることができます。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/16/resque-timemachine/">TimeMachineで検証エラーが発生した場合の復旧方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-16T14:57:00+09:00" pubdate data-updated="true">Aug 16<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我が家の環境では、<a href="http://buffalo.jp/product/hdd/network/ls-xl/">BuffaloのLS-XLシリーズ</a>というNASを使って、MBAのTime Machine環境を作っているのですが、最近よくこんなメッセージが出るようになりました。</p>
+
+<p><img src="/images/20130816/tm_error.png" alt="error" /></p>
+
+<p>これはApple純正のTime Capsule以外をTime Machine環境に使用すると出てくるらしいです。
+しかもこうなってしまうと、「後でバックアップを作成」にしても再度同じメッセージが表示されるし、「新規バックアップを作成」を選ぶと、それまでのバックアップの履歴は全て消えてしまいます。</p>
+
+<p>なので、この場合の復旧手順をメモっておきます。</p>
+
+<p>まずは、Time Machineを一旦「切」にしておきます。</p>
+
+<p><img src="/images/20130816/tm_off.png" alt="off" /></p>
+
+<p>次にNASをマウントして、そのマウントポイントまでのパスを確認しておきます。自分の場合は「/Volumes/share/unicorn.sparsebundle」でしたので、以降はこれで説明します。</p>
+
+<p>次にターミナルを立ちあげ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo chflags -R nouchg /Volumes/share/unicorn.sparsebundle
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>して、ロックを解除しておきます。次に</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>hdiutil attach -nomount -noverify -noautofsck /Volumes/share/unicorn.sparsebundle
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と入力します。実行すると以下のようなメッセージが表示されます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>/dev/disk2 Apple_partition_scheme
+</span><span class='line'>/dev/disk2s1 Apple_partition_map
+</span><span class='line'>/dev/disk2s2 Apple_HFSX
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この時の/dev/disk? の?部分は実行時の環境によって異なる数値が入っていますので注意。また、この次点でTime Machineイメージに対して修復処理がバックグラウンドで実行されています。そのログが/var/log/fsck_hfs.logに出力されています。復旧が終了したかどうかはそのログで確認するのでtailで眺めてやります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>tail -f /var/log/fsck_hfs.log
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>おそらくこんな感じ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>** Checking Journaled HFS Plus volume.
+</span><span class='line'>** Detected a <span class="k">case</span>-sensitive volume.
+</span><span class='line'>   The volume name is Time Machine バックアップ
+</span><span class='line'>** Checking extents overflow file.
+</span><span class='line'>** Checking catalog file.
+</span><span class='line'>** Checking multi-linked files.
+</span><span class='line'>** Checking catalog hierarchy.
+</span><span class='line'>** Checking extended attributes file.
+</span><span class='line'>** Checking multi-linked directories.
+</span><span class='line'>** Checking volume bitmap.
+</span><span class='line'>** Checking volume information.
+</span><span class='line'>** The volume Time Machine バックアップ appears to be OK.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最後の「The volume Time Machine バックアップ appears to be OK.」が表示されればイメージの復旧は完了です。</p>
+
+<p>終了したら、デタッチしておきます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>hdiutil detach /dev/disk2s2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ただこの状態だと、イメージ内部ではまだ壊れたままという情報が残っているため、これを修正します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd</span> /Volumes/share/unicorn.sparsebundle/
+</span><span class='line'><span class="nv">$ </span>vi com.apple.TimeMachine.MachineID.plist
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とし、その内部の</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;integer&gt;</span>2<span class="nt">&lt;/integer&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;integer&gt;</span>0<span class="nt">&lt;/integer&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>に修正します。</p>
+
+<p>これで全て完了です。Time Machineを「入」にして、バックアップを実行して、エラーが表示されなければ完了です。</p>
+
+<p>え？根本的な解決になってない！ですって？　そりゃTime Machineを買うしかありませんがな！！ww</p>
+
+<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00DCM3W26" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/27/photoleaf-release/">Photo Leafをリリースしました</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-27T22:16:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本日、フォトブック作成サービス「<a href="http://www.photo-leaf.com">Photo Leaf</a>」をリリースしました。</p>
+
+<p><img src="/images/20130627/photo-leaf.png" alt="photo-leaf" /></p>
+
+<p>Photo Leafは1冊¥500でフォトブックを作成できるサービス「<a href="http://tolot.com/">TOLOT</a>」と連携して、<a href="http://www.flickr.com/">flickr</a>にアップした自分の写真からフォトブックを簡単に作成できます。</p>
+
+<p>Photo Leafの利用は無料ですので、ぜひ使ってみてください！</p>
+
+<h2>仕組みについて</h2>
+
+<p>具体的なPhoto Leafの仕組みですが、実際にはPhoto Leafだけでフォトブックを作れるわけではありません。</p>
+
+<p>Photo LeafはTOLOTの連携ファイルを作り、これをTOLOTアプリに読み込ませることによって、flickrの写真からフォトブックを作成することができるサービスです。</p>
+
+<p>TOLOTの連携ファイルにはフォトブックのタイトルなどの情報と一緒に、各ページに印刷する写真についての情報をセットしています。これには画像へのURLもセット可能ですので、これにflickrの画像ファイルへのURLをセットするようになっています。</p>
+
+<p>この連携ファイルをTOLOTアプリで読み込むと、画像データをflickrからダウンロードし、フォトブックを作成する仕組みになっています。</p>
+
+<p>ちなみに、Photo Leafは<a href="https://developers.tolot.com/">TOLOTのマネタイズAPI</a>を使用していますので、皆さんがPhoto Leafからフォトブックを注文すると、その一部が私の収益になります。</p>
+
+<h2>実行環境について</h2>
+
+<p>サービスの開発には主に</p>
+
+<ul>
+<li>Ruby 2.0</li>
+<li>Ruby on Rails 4.0</li>
+<li>FlickRaw</li>
+</ul>
+
+
+<p>などを使用しています。Ruby2.0もRails4.0も最近リリースされたばかりですので、かなり新しいものを使用しています。特にRuby2.0は1.9系に比べるとかなりパフォーマンスが改善されていますので、Rails4.0と合わせることで、かなり高速に動作します。もちろん、自分の勉強がてらというのもあるのですが。</p>
+
+<p>また実行時のプラットフォームとしては<a href="https://www.heroku.com/">Heroku</a>を使用しています。</p>
+
+<p>最初は<a href="http://sqale.jp/">Sqale</a>も検討したのですが、まだ収益があがるようなものではないだろうなぁと思っていますので、できる限りコストをかけずに運用するには、現在のところはHerokuが最適と判断しました。</p>
+
+<h2>まとめ</h2>
+
+<p>最初にこのサービスを思いついたのは、<a href="http://uzulla.hateblo.jp/entry/2013/05/08/124552">InstgramからTOLOTの連携ファイルを作成するサービス</a>を作られた方がいて、そこからTOLOTのマネタイズAPIを知ったことがきっかけです。</p>
+
+<p>自分自身も写真をかなり撮るので、フォトブックにもかなり興味があったものあります。実際に、カメラのキタムラが運営している「<a href="http://photobook.jp/photobon/top/">フォト本</a>」などで、フォトブックを作ったこともあります。フォト本は大きめのフォトブックを作るにはかなり良いサービスだと思うのですが、普段のスナップなどを手軽にフォトブックにしたい、といったニーズにはちょっと高い。TOLOTなら文庫本62ページのフォトブックを¥500で作成できるので、かなりコストパフォーマンスはいいと思います。</p>
+
+<p>ぜひ、Photo Leafで自分の写真をフォトブックにしてみてください！</p>
+
+<p>新しい写真の楽しみ方が、見つかると思います。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/18/jdt2013-okayama-report/">Java Day Tokyo 2013報告会@岡山を開催してきた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-18T16:24:00+09:00" pubdate data-updated="true">Jun 18<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>2013年6月15日（土）に、奉還町リブラホールにて「<a href="http://local.aguuu.com/events/15432">Java Day Tokyo 2013報告会@岡山</a>」を開催してきました。</p>
+
+<p>自分は「Java Day Tokyo2013基調公演より」と題して、報告をさせていただきました。</p>
+
+<script async class="speakerdeck-embed" data-id="ebf8f340b7a20130a14b7e8eb314bbb5" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+
+
+<p>当日のTwitterのまとめは、<a href="http://togetter.com/li/518745">こちら</a></p>
+
+<p>その他、岡山Javaユーザ会の運営メンバーと、<a href="https://twitter.com/soudai1025">@soudai1025氏</a>にはJJUG CCCの感想についてもセッションをしていただきました。また角田さんの会社の同僚お二人にもJava Day Tokyoに参加しての感想を話していただきました。</p>
+
+<p>また東京からは櫻庭さんにも来て頂き、JJUG CCCでセッションされた「Project Lambda Essential」を再演していただきました。Java8で最も注目されている機能、Project Lambdaの大事なところを丁寧にお話をしていただきましたので、参加者の皆さんのLambdaに対する理解が深まったものと思います。</p>
+
+<p>この後の懇親会でも次のネタについて、いくつか話あったんですが、個人的には次はハンズオンをやりたいかなーと思っています。</p>
+
+<p>いまのセッション形式もいいのですが、それだとどうしても参加者同士で交流が深まらないように思っていて、これを改善するためにはハンズオン形式のほうがいいのではないだろうか、と考えています。
+で、実際にやるとすればJavaEEとかJavaFXあたりを題材にして、ハンズオンをやろうと考えています。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/04/attended-rubykaigi2013/">RubyKaigi2013に参加してきた</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-04T13:27:00+09:00" pubdate data-updated="true">Jun 4<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>5/30〜6/1まで、東京国際交流館で開催されたRubyKaigi2013に参加してきました。</p>
+
+<p><img src="http://farm3.staticflickr.com/2886/8924755070_a89349e1a3_n.jpg"/></p>
+
+<p>RubyKaigiはRuby界では最大級のイベントですが、一度2011年をもって終了しています。それが今回はいろいろコンセプトを変えて復活した、ということで自分も参加してきました。</p>
+
+<h2>RubyKaigiについて</h2>
+
+<p>自分は今回が初参加なので、以前のRubyKaigiとの比較はできないのですが、他とは違うなと感じたのは以下のところ。</p>
+
+<ul>
+<li>参加費が（それなりに）高い</li>
+</ul>
+
+
+<p><img src="http://farm6.staticflickr.com/5346/8924581912_d947d91aa0_n.jpg"/></p>
+
+<p>自分はSuper Early Birdでの参加申し込みだったので¥20,000でしたが、普通に登録すると¥35,000です。国内で行われるカンファレンスとしては少々高めです。といっても海外に比べたら、まだまだ安いのですが・・・</p>
+
+<p>この値段設定についてもいろいろ意見はあるようですが、RubyKaigiクラスになると、ものすごい人数が参加したいと思うわけです。しかし、そのイベントを運営しているのはあくまでボランティアの人たちですので、そういった状況もあって「この値段を払ってでも参加したい」と思わせるコアなRubyistを呼びたかったのではないかな？と想像しています。</p>
+
+<ul>
+<li>メイン言語は英語</li>
+</ul>
+
+
+<p><img src="http://farm6.staticflickr.com/5457/8924657854_2a9796348e_n.jpg"/></p>
+
+<p><a href="https://twitter.com/kazuhisa1976">@kazuhisa1976</a>氏曰く「世界を対象としたRubyのカンファレンスが、たまたま東京で開催された」</p>
+
+<p>今回のRubyKaigiはインターナショナルカンファレンスとして開催されたので、英語がメイン言語です。<a href="http://rubykaigi.org/2013/">公式サイト</a>も英語ですし、セッションのほとんどが英語です。また、参加者も600人ほどいたそうですが、そのうち100人ほどが海外からの参加です。日本人スピーカーの場合に、日本語でセッションを行うこともありましたが、海外の人向けに日本語から英語への同時通訳（！）が準備されていて、このあたりもインターナショナルカンファレンスなんだなーとおもったことろです。</p>
+
+<h2>セッションについて</h2>
+
+<p>個人的に記憶に残ったセッションは</p>
+
+<ul>
+<li>The Future of JRuby?</li>
+<li>High Performance Rails</li>
+</ul>
+
+
+<p>の2つ。</p>
+
+<p>JRubyのセッションではJRubyのコアメンバーである、<a href="https://twitter.com/tom_enebo">Thomas E. Enebo</a>氏と、<a href="https://twitter.com/headius">Charles O. Nutter</a>氏が登壇。JRubyの高速化などについて話をしていました。で、気になったのがスライド中あったDalvik Generationという文字！将来JRubyでDalvikVMをサポートするような日が来るんでしょうかねぇ・・・</p>
+
+<p>High Performance Railsではクックパッドのエンジニア、成田一成氏によるRailsの高速化の話。超巨大なクックパッドを如何にして、パフォーマンスアップさせているかという内容。</p>
+
+<p><a href="https://speakerdeck.com/mirakui/high-performance-rails-long-edition">こちら</a>の資料にはセッションで話した内容に、キャッシュの話がプラスアルファされていますので、参考までに。</p>
+
+<h2>Conclusion</h2>
+
+<p>自分にとってはこれが初めてのRubyの大きなカンファレンスへの参加でした。最初はJavaとはまた違う雰囲気なんだろうなぁと思っていましたが、それほど大きな違いというのは正直感じませんでした。当然、自分はRubyのコミュニティには知り合いがいるわけではないので、ボッチ率高かったのですがw</p>
+
+<p>ちなみにRubyKaigiは2014年も開催されるらしいです。今から楽しみですね。</p>
+
+<p><img src="http://farm4.staticflickr.com/3830/8924877780_d5b2395e65_n.jpg"/></p>
+
+<p>RubyKaigiで撮った写真はこちらにまとめてます。
+<a href="http://www.flickr.com/photos/zephiransas/sets/72157633895505417/">http://www.flickr.com/photos/zephiransas/sets/72157633895505417/</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/24/how-to-upgrade-gf/">GlassFishのアップグレード方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-24T15:46:00+09:00" pubdate data-updated="true">May 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>会社で使ってるJenkinsさんはGlassFish上で動いているんですが、これのアップグレードを行ったので、そのメモ。</p>
+
+<p>具体的にはGlassFish 3.1.1からGlassFish 3.1.2へアップグレードしました。</p>
+
+<h2>updatetoolのインストール</h2>
+
+<p>まずはアップグレードに使用するupdatetoolをインストールします。</p>
+
+<p>方法はasadminと同じディレクトリにある、updatetoolを実行するだけ。</p>
+
+<p>初めてupdatetoolコマンドを実行した際に、updatetoolをインストールするか聞いてきますので、yを押してインストールするだけです。</p>
+
+<p>ちょっと時間がかかるので、アニメでも見ながらゆっくり待ちましょう。</p>
+
+<h2>updatetoolからGlassFishのアップグレード</h2>
+
+<p>上記の手順でupdatetoolのインストールが終了したら、もう一度updatetoolコマンドを実行します。するとGUIが立ち上がって来ますので、以下のようにするだけ。</p>
+
+<p><img src="/images/20130524/updatetool.png" alt="updatetool" /></p>
+
+<p>あとは</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>./asadmin version
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>などで、アップグレードできていることを確認しましょう。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/20/yutori-advent-calendar/">写真で振り返るゆとり</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-20T00:06:00+09:00" pubdate data-updated="true">May 20<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>これは「<a href="http://atnd.org/events/39189">ゆとりアドベントカレンダー</a>」の5/20分のエントリです</p>
+
+<p>前日は <a href="http://twitter.com/btnrouge">@btnrouge</a> さんの「<a href="http://www.coppermine.jp/docs/programming/2013/05/weblogic-di.html">WebLogicのDIは果たして出来損ないなのか？</a>」でした。</p>
+
+<p>そもそも、このゆとりアドベントカレンダーが何なのかよく分からず、しかも誰に言われるまでもなく、（空気を呼んで）勝手にエントリした身ですので、何もネタがありません（ぉぃ</p>
+
+<p>なので、自分とゆとりさんとの出会いを、写真で振り返ってみたいと思います( ･`ω･´)</p>
+
+<h2>First Contact</h2>
+
+<p>多分直接お会いしたのはTDDBC岡山 1.0の時ではないでしょうか。TDDBC前日にデミカツ丼で有名な「やまと」という店で会ったような気がします。当然、それはまではTL上でしか絡みがなかったので、お会いしてそのガタイのデカさに驚いた記憶があります。また、その時にJava7の日本語ドキュメントがさー的な話をしたような気がします。</p>
+
+<p>TDDBCでは、JavaのTAの一人として活躍して頂きました。</p>
+
+<p><img src="http://farm9.staticflickr.com/8299/7865342634_04ee1d6462_n.jpg"/></p>
+
+<h2>その後</h2>
+
+<p>TDDBCの後は、多分去年のJavaOne Tokyoでお会いしたのかな・・・？</p>
+
+<p>つい最近は、先日のJava Day Tokyoで。長身にぐるぐるTシャツで、離れたところからでもすぐ確認できました。さすが、環境にやさしいゆとりさんですね！</p>
+
+<p>なんか最近はJJUGの幹事にもなられたらしいので、これからも日本のJava界の為、頑張ってくれると思われます。ゆとりさん、頑張ってー</p>
+
+<p><img src="http://farm8.staticflickr.com/7281/8740171565_cc77c9a9e9_n.jpg"/></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/19/javadaytokyo2/">Java Day Tokyo 2013に参加してきた（セッション）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-19T00:17:00+09:00" pubdate data-updated="true">May 19<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>前回の基調講演につづいて、今回は自分が参加したセッションのレポートです。</p>
+
+<h2>Ask the Experts</h2>
+
+<p>基調講演にも登壇したJavaSE,JavaFX,JavaEEの各キーパーソンに、直接質問できるセッションです。ちょうど昼の時間だったので、本来は昼食をとりつつ受けるセッションなんですが、うっかり自分は昼食を仕入れるのを忘れてました・・・</p>
+
+<p>JavaSEの担当は、Simon Ritter氏</p>
+
+<p><img src="http://farm8.staticflickr.com/7288/8740173841_d492ab6090_n.jpg"/></p>
+
+<p>JavaFXの担当は、Jim Weaver氏</p>
+
+<p><img src="http://farm8.staticflickr.com/7285/8741292898_42456c92d5_n.jpg"/></p>
+
+<p>JavaFXの担当は、Arun Gupta氏</p>
+
+<p><img src="http://farm8.staticflickr.com/7281/8741293406_f87d358552_n.jpg"/></p>
+
+<p>通訳の方が居たので、もちろん日本語で質問できたのですが、意外と質問が少ないような感じでした。</p>
+
+<p>印象に残ったのは、最後のJavaEEの質問で</p>
+
+<ul>
+<li>Q「JavaEEはいろんな仕様で構成されているが、最低限どれを使ってればJavaEEを使ってることになるのか？」</li>
+</ul>
+
+
+<p>という質問がありました。（ちょっと意地悪な質問な気もしますがw）それに対してArunは</p>
+
+<ul>
+<li>A「難しい質問だけど、強いて言えばServletかな？あ、でも、Strutsはダメだね！」</li>
+</ul>
+
+
+<p>と返して、会場は大爆笑でしたw</p>
+
+<h2>Javaプラットフォームにおける Batch アプリケーション (JSR 352)</h2>
+
+<p>JavaEE7で導入されるJBatchのセッション。担当はArun氏です。</p>
+
+<p><img src="http://farm8.staticflickr.com/7286/8741295358_cce2037082_n.jpg"/></p>
+
+<p>このJBatchは、エンタープライズアプリケーションでよくある、バッチ処理を効率よく書くためのフレームワークです。セッションを受けつつTLを眺めてて知ったのですが、どうもSpring Batchと非常によく似た仕組みのようです。設定をXMLで記述していくのが少々面倒な気もしますが、この辺りが改善されていけば、バッチ処理のスタンダードになるかなーという感じ。JavaEE準拠のサーバはもちろん、スタンドアロンの環境でも実行可能との事。</p>
+
+<h2>エンタープライズ環境における並列処理の実装方法について</h2>
+
+<p>我らの王子こと、寺田さんによるConcurrency Utilityのセッション。</p>
+
+<p>以前からJavaではThreadを使って、並列処理を書くことが可能でしたが、実際にはなかなか難しいものでした。これを簡単に行えるのがConcurrency Utilityです。実際に以下のデモを会場で見せていました。</p>
+
+<iframe width="560" height="315" src="http://www.youtube.com/embed/s9OB3lDPwtg?rel=0" frameborder="0" allowfullscreen></iframe>
+
+
+<p>詳細は<a href="http://yoshio3.com/2013/05/15/concurrency-utilities-for-ee-7/">寺田氏のブログ</a>に詳しいですが、Concurrncy Utilityを使うことで、CPUリソースを無駄なく使うコードを、簡単に実装することができるようになります。</p>
+
+<h2>Java the Night</h2>
+
+<p><img src="http://farm8.staticflickr.com/7285/8740181743_e4b88c0b29_n.jpg"/></p>
+
+<p>最後はお楽しみ（？）のJava the Night。日本のJava界を代表するエンジニアがLT&amp;デモを行うという趣向です。
+一人8分の持ち時間でした。どのLTもさすがはJava界のスーパーエンジニア！と唸らせる、最高に面白い内容でした。
+前回のJavaOne Tokyoの時もそうでしたが、この最後のLT枠に参加せずして、Javaのイベントに参加したとは言えないくらい、充実した内容です。
+なかでも印象に残ったのは、北海道の大学生2人。</p>
+
+<p><img src="http://farm8.staticflickr.com/7283/8741304934_655e6abe63_n.jpg"/></p>
+
+<p>プレゼンソフトなんですが、JavaFXで様々なエフェクトをつけることができるというものでした。彼らの初々しい（！）発表を聞きながら、その将来に期待をするとともに、まだまだ自分も頑張らなければ、と想いを新たにしました。</p>
+
+<h2>JavaSE7 日本語ドキュメント提供開始</h2>
+
+<p>そしてJava the Night終了後、寺田さんから重大な発表がありました。それはJavaSE7の日本語ドキュメントの提供を開始した、とのアナウンスでした。実はJavaSE7リリース後、しばらくしても日本語ドキュメントは提供されていませんでした。様々な方面から要望は上がっていましたが、残念ながら日本語ドキュメントは当分は提供されないという決定が、以前なされました。</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p>影響度が大きい事を十分承知で申し上げます。誠に残念ながら直近で、提供の予定はございません。“@<a href="https://twitter.com/skrb">skrb</a>: @<a href="https://twitter.com/yoshioterada">yoshioterada</a> それよりもJava SE 7の日本語のJavadocはリリースされないのでしょうか？”</p>&mdash; Terada Yoshioさん (@yoshioterada) <a href="https://twitter.com/yoshioterada/status/183876594010558464">2012年3月25日</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>その後、有志を中心にボランティアで日本語化しようかといった動きもありましたが、本格化するには至りませんでした。</p>
+
+<p>そして、Java Day Tokyoにてサプライズとでもいいましょうか、<a href="http://yoshio3.com/2013/05/14/%EF%BD%8A%EF%BD%81%EF%BD%96%EF%BD%81-%EF%BD%93%EF%BD%85%EF%BC%97%EF%BD%81%EF%BD%90%EF%BD%89%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%89%88%E6%8F%90%E4%BE%9B%E9%96%8B%E5%A7%8B/">JavaSE7の日本語ドキュメント提供開始</a>のアナウンスがされました。</p>
+
+<p>JavaSE7がリリースされて随分経ちますが、これでようやくスタートライン。Java7を普通に使ってもらう環境が、日本でも整ったといった感じです。いろいろ想いはありますが、日本オラクル＆寺田さんの努力に敬意を表したいと思います。</p>
+
+<h2>Conclusion</h2>
+
+<p><img src="http://farm8.staticflickr.com/7286/8740206373_002b31196d_n.jpg"/></p>
+
+<p>以上、2回に分けてJava Day Tokyo 2013の模様をまとめました。</p>
+
+<p>1年ぶりにJavaのカンファレンスに参加して「自分はやっぱり、このJavaのコミュニティが好きなんだなぁ」という思いを強くしました。もちろん他のコミュニティでも似たような経験はできるとは思いますが、古参から新参まで多くのカラーが集まり、多種多様な人がいるコミュニティも珍しいように思います。そのような環境でエンジニアをやれるのは、とても嬉しいことです。</p>
+
+<p>さて、岡山Javaユーザ会でも、Java Day Tokyo 2013報告会@岡山と題して、報告会をやります。</p>
+
+<p>お申込みは<a href="http://local.aguuu.com/events/15432">こちら</a>からです。</p>
+
+<p>お近くの方は、是非ご参加ください。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/16/javadaytokyo2013/">Java Day Tokyo 2013に参加してきた（基調講演）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-16T18:01:00+09:00" pubdate data-updated="true">May 16<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://farm8.staticflickr.com/7284/8740166245_72f3003e48_n.jpg"/></p>
+
+<p>前日、5月14日に秋葉原UDXにて開催されたJava Day Tokyo2013に参加してきました。
+JavaOne Tokyo2012が開催されてからほぼ1年。去年イベントが終わった時には「もう、こういったイベントは当分ないだろうなぁ」とか思っていたので、JavaOneではないにしてもちゃんとイベントを開催してくれた日本オラクル＆寺田さんには感謝ですね。</p>
+
+<h2>Keynoteの報告</h2>
+
+<p><img src="http://farm8.staticflickr.com/7294/8740179955_a8a975c375_n.jpg"/></p>
+
+<p>基本的には去年のサンフランシスコでのJavaOneとかで発表された内容とかぶる感じ。ただ、普段はこういった最新情報をチェックしていない人たちでも、イベントであれば直に最新情報を聞けるので、そういった人たちにリーチできるだけでも、意味はあるかと。
+残念だったのは最初、写真撮影がNGにされていたこと。</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p>写真撮影禁止とか、俺の仕事＼(^o^)／ｵﾜﾀ　<a href="https://twitter.com/search/%23jdt2013">#jdt2013</a></p>&mdash; Takafumi Yoshida✅さん (@zephiransas) <a href="https://twitter.com/zephiransas/status/334111626368270336">2013年5月14日</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>正直コレには参りました。参加者には自分のように地方のコミュニティに属していて、後日報告会をやろうと企画してる人も多いはず。またOracleとしても「Javaを前進させるためにはコミュニティの力が必要です！」と言ってるにもかかわらず、これではなぁ・・・</p>
+
+<p>一応、Keynoteの半分を過ぎたあたりで、寺田さんが取り計らってくれたのか</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p>ただ今から写真全面OKにしました。 <a href="https://twitter.com/search/%23jdt2013">#jdt2013</a></p>&mdash; Terada Yoshioさん (@yoshioterada) <a href="https://twitter.com/yoshioterada/status/334137042609004544">2013年5月14日</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>とはなりました。なので前半の写真がありません(´・ω・`)</p>
+
+<p>まずは日本オラクルの伊藤敬氏が壇上に。
+前回のJavaOne Tokyoは六本木のアカデミーヒルズで開催されましたが「クール・ジャパンの代表格であるアキハバラでJavaのイベントをやったら、どうなるのか？その化学反応も楽しんで欲しい」とのこと。</p>
+
+<p>最初に登壇したのはJava Technology AmbassadorのSimon Ritter氏。JavaSEの最新情報について公演しました。
+2012年7月にリリースされたJava7は、Oracleの元でリリースされた最初のメジャーアップデート。世界中で利用されていることを紹介していました。
+また、Windows,Mac OSX,Linuxをはじめ、ARMアーキテクチャ上でも動作することを紹介し、Javaがいまや様々なデバイスで動作していることも強調。
+そして、（遅れはしたものの）2014年2月には正式リリース予定のJava8についても言及し、その中核はLambdaであるとのこと。Lambdaを使用することのメリットの一つとして、並列処理を容易に書けることを紹介していました。
+現在、Java8はプレビュー版が提供されているので、これを通じて多くのフィードバックをして欲しい、とも言っていました。
+今後Javaは2年サイクルでメジャーアップデートを行う予定で、そうなるとJava9は2016年リリースになるだろうとも。</p>
+
+<p>次に壇上に上がったのはOracleのNandini Ramani氏。JavaFXや組み込みJavaなどについて公演しました。
+Java8からはJavaFXはJavaFX8として、標準でJDKにバンドルされるようになります。そういった意味でもJavaFXはこれから注目の技術になりそうな予感です。</p>
+
+<p>途中、Nandini氏は壇上にJim Weaver氏を招き、Jimが手元でJavaFXのデモを行なっていました。なぜかデモしてた機材がSurface Proでしたw
+球体や円柱を3Dで表示し、それにことなる光源を当てて表示するといったデモや、それにテクスチャを貼り付けてみたり。また港湾での貨物運送にでもつかうんでしょうか、コンテナの位置などをJavaFXでレンダリングするようなものを紹介していました。どれも比較的短いコードで実装可能であるとのこと。
+また、Jim氏は「When should you download JDK8?」と書かれたスライドを前に、「イツヤルカ？イマデショ！」と日本語でネタを披露していました。これには会場も爆笑w Keynoteで一番盛り上がったかもしれません。Jim氏もご満悦な様子でした。
+（しかし、このネタをJim氏に教えたのは、いったい誰なのか気になります！）</p>
+
+<p>（追記）
+@skrb さんに教えて頂きましたが、どうもこのネタはタクシーの運ちゃんから仕入れたようです。外人にネタを授けるとは、タクシーの運ちゃん、侮りがたし！！</p>
+
+<p>次に壇上に上がったのはOracleのCameron Purdy氏。JavaEEの最新動向について公演を行いました。
+JavaEEは次のメジャーバージョンであるJavaEE7のリリースを6月13日に控えています。そのJavaEE7についての話が主でした。</p>
+
+<p>JavaEE7の主な新機能としては</p>
+
+<ul>
+<li>JBatch</li>
+<li>JSON対応</li>
+<li>WebSocket対応</li>
+</ul>
+
+
+<p>などを紹介。JavaEE準拠のAPサーバも18のメーカーから出荷されているとのこと。
+その後OracleのArun Gupta氏を壇上に招き、WebSocketのデモを行なっていました。デモはよくあるWebSocketのチャットに始まり、その後はWhite Boardのアプリケーションをデモ。
+やり取りをしている途中で回線が切断された場合でも、回線がもとにもどれば、最新の状態に簡単に復旧できるようなアプリケーションなんですが、これもWebSocketで簡単に実装できるとのこと。</p>
+
+<p>そして最後に壇上に上がったのはOracleのSharat Chander氏。
+アメリカ本国でのJavaOneを取り仕切っている人ですね。</p>
+
+<p><img src="http://farm8.staticflickr.com/7294/8741286896_615b239145_n.jpg"/></p>
+
+<p>Sharat氏はJavaとそれを取り巻くコミュニティについて公演を行いました。Javaにとって大事な構成要素は「Oracle、技術、コミュニティ」の3つであるとして、コミュニティの重要性を強調。
+また「ここにいる皆さんにも是非Javaのコミュニティに参加してコントリビュートして欲しい」と訴えていました。</p>
+
+<p>そしてSharatに促され壇上に上がったのは日本のJUG(Java User Group)であるJJUG会長の鈴木雄介氏。</p>
+
+<p><img src="http://farm8.staticflickr.com/7293/8741285712_3c14cd9c59_n.jpg"/></p>
+
+<p>鈴木氏はコミュニティに参加する意義を「エンジニアが成長するための場所である」と説明。またJJUGとしても今後、様々な活動を通じて日本のJavaコミュニティのエンジニアをサポートして行きたい、との話がありました。
+地方への講師の派遣なども行なっていただけるらしいので、今後岡山Javaユーザ会でも、そういった方をお招きして勉強会を開催していきたいなぁと思います。</p>
+
+<p>そして最後にはなぜか恒例（？）とも言えるTシャツ投げが行われました。</p>
+
+<p><img src="http://farm8.staticflickr.com/7293/8740169741_f0562a4e9e_n.jpg"/></p>
+
+<p>このTシャツ投げは、もはや伝統芸ですが、時間の関係か1つだけだったのが寂しかったり(´・ω・`)</p>
+
+<p>基調講演の報告はここまで。参加したセッションの内容は後日まとめます。</p>
+
+<h2>リンク集</h2>
+
+<p>最後にJava Day Tokyoについて、各メディアのレポートや、個人ブログのリンクをまとめておきます。こちらも参考にしてください。</p>
+
+<h3>メディア系</h3>
+
+<ul>
+<li>クラウドWatch - <a href="http://cloud.watch.impress.co.jp/docs/event/20130515_599350.html">【Java Day Tokyo】Java SE/EEやJavaFXなどの最新トピックを解説</a></li>
+<li>ITPro - <a href="http://itpro.nikkeibp.co.jp/article/NEWS/20130514/476905/">「Java EE 7はHTML5に焦点」-Java Day Tokyo 2013 基調講演</a></li>
+<li>マイナビニュース - <a href="http://news.mynavi.jp/articles/2013/05/16/java/index.html">http://news.mynavi.jp/articles/2013/05/16/java/index.html</a></li>
+<li>Publickey - <a href="http://www.publickey1.jp/blog/13/java_82java_ee_76java_day_tokyo_2013.html">次期Java 8は来年2月、Java EE 7は今年6月にリリース予定。Java Day Tokyo 2013</a></li>
+</ul>
+
+
+<h3>個人ブログなど</h3>
+
+<ul>
+<li>Challenge Java EE ! - <a href="http://kikutaro777.hatenablog.com/entry/2013/05/14/235704">Java Day Tokyo 2013に参加しました</a></li>
+<li>エンジニア的なネタを毎週書くブログ - <a href="http://taichiw.hatenablog.com/entry/2013/05/14/125432">Java Day Tokyo 2013　キーノート感想 #jdt2013</a></li>
+<li>torutkの日記 - <a href="http://d.hatena.ne.jp/torutk/20130514/p1">Java Day Tokyo 2013に参加して</a></li>
+</ul>
+
+
+<h3>その他</h3>
+
+<ul>
+<li>当日のツイートまとめ - <a href="http://togetter.com/li/502898">Java Day Tokyo ( #jdt2013 ) 関連Tweetまとめ</a></li>
+<li>写真 - <a href="http://www.flickr.com/photos/zephiransas/sets/72157633500864874/">http://www.flickr.com/photos/zephiransas/sets/72157633500864874/</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/24/slickwoshi-u/">Slickを使う（基礎編）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-24T12:42:00+09:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近playframework2.1をちゃんと使いたいなぁと思ったので、Scala含めて色々調べてます。
+で、ドキュメントを眺めてて気になったのがO/Rマッパ。play1.2系のころはEBean等のO/Rマッパを利用できたんですが、play2.1系ではなくなってる！一応Anormという仕組みでSQLを発行出来ますが、SQL直書きするのは小学生までよねー？！的な感じ。</p>
+
+<p>で、更に調べてみると、typesafeで<a href="http://slick.typesafe.com/">Slick</a>というO/Rマッパがあるので、これが良さそうじゃね？ってことで、試してみました。
+本来はplayから利用するのがベストですが、実験なのでスタンドアロンで。</p>
+
+<h2>build.sbtとplugin.sbtの準備</h2>
+
+<p>まずはsbtで環境を作るところから。以下のようにbuild.sbtを作成</p>
+
+<figure class='code'><figcaption><span>build.sbt</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">name</span> <span class="o">:=</span> <span class="s">&quot;slicksample&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">version</span> <span class="o">:=</span> <span class="s">&quot;1.0&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">scalaVersion</span> <span class="o">:=</span> <span class="s">&quot;2.10.0&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">List</span><span class="o">(</span>
+</span><span class='line'>  <span class="s">&quot;com.typesafe.slick&quot;</span> <span class="o">%%</span> <span class="s">&quot;slick&quot;</span> <span class="o">%</span> <span class="s">&quot;1.0.0&quot;</span><span class="o">,</span>
+</span><span class='line'>  <span class="s">&quot;org.slf4j&quot;</span> <span class="o">%</span> <span class="s">&quot;slf4j-nop&quot;</span> <span class="o">%</span> <span class="s">&quot;1.6.4&quot;</span><span class="o">,</span>
+</span><span class='line'>  <span class="s">&quot;com.h2database&quot;</span> <span class="o">%</span> <span class="s">&quot;h2&quot;</span> <span class="o">%</span> <span class="s">&quot;1.3.166&quot;</span><span class="o">,</span>
+</span><span class='line'>  <span class="s">&quot;com.github.tototoshi&quot;</span> <span class="o">%%</span> <span class="s">&quot;slick-joda-mapper&quot;</span> <span class="o">%</span> <span class="s">&quot;0.1.0&quot;</span>
+</span><span class='line'><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>11行目では<a href="http://d.hatena.ne.jp/tototoshi/20130323/1364013170">slick-joda-mapper</a>を指定しています。</p>
+
+<p>Slickでは日付はjava.sql.Dateで扱うらしいのですが、今更java.sql.Dateなんて触りたくないなーと思っていたところ、JodaTimeへマッピングしてくれるプラグインがあったのでこれを使います。</p>
+
+<p>また、今回はIDEにIntelliJを使うので、<a href="https://github.com/mpeltonen/sbt-idea">sbt-ideaプラグイン</a>を使うように、plugin.sbtを設定します。</p>
+
+<figure class='code'><figcaption><span>project/plugin.sbt</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">addSbtPlugin</span><span class="o">(</span><span class="s">&quot;com.github.mpeltonen&quot;</span> <span class="o">%</span> <span class="s">&quot;sbt-idea&quot;</span> <span class="o">%</span> <span class="s">&quot;1.4.0&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あとはsbtからgen-ideaするだけ</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sbt gen-idea
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ついでにscalaのソースファイル置き場であるsrc/main/scalaディレクトリも作っておきましょう。そして、これをIntelliJに読み込ませます。読み込ませるとこんな感じ。</p>
+
+<p><img src="/images/20130424/image1.png" alt="image1" /></p>
+
+<h2>モデルの作成</h2>
+
+<p>次にモデルを作成します。今回はUSERSテーブルにアクセスするUser objectを作成してみます。カラムは</p>
+
+<ul>
+<li>id - Integer（主キー）</li>
+<li>name - String</li>
+<li>birthday - Option[LocalDate]
+ぐらいで。</li>
+</ul>
+
+
+<p>src/main/scalaにUser.scalaを作成し、以下のように記述します。</p>
+
+<figure class='code'><figcaption><span>User.scala</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">org.joda.time.LocalDate</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">com.github.tototoshi.slick.JodaSupport._</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">object</span> <span class="nc">User</span> <span class="k">extends</span> <span class="nc">Table</span><span class="o">[(</span><span class="kt">Int</span>, <span class="kt">String</span>, <span class="kt">Option</span><span class="o">[</span><span class="kt">LocalDate</span><span class="o">])](</span><span class="s">&quot;USERS&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">id</span> <span class="k">=</span> <span class="n">column</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="s">&quot;id&quot;</span><span class="o">,</span> <span class="n">O</span><span class="o">.</span><span class="nc">PrimaryKey</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">name</span> <span class="k">=</span> <span class="n">column</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="s">&quot;name&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">birthday</span> <span class="k">=</span> <span class="n">column</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">LocalDate</span><span class="o">]](</span><span class="s">&quot;birthday&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">def</span> <span class="o">*</span> <span class="k">=</span> <span class="n">id</span> <span class="o">~</span> <span class="n">name</span> <span class="o">~</span> <span class="n">birthday</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>まず2行目でSlickのクラスをインポートしておきます。注意すべきは使用するDBに合わせて、インポートするクラスを変えるってところ。今回はDBにH2を使うので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>としてます。例えばPostgreSQLを使う場合は</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.PostgresDriver.simple._</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とします。</p>
+
+<p>3行目は先述したslick-joda-mapperを使うのに必要です。IntteliJだと、Unusedで警告がでるのがアレですが・・・</p>
+
+<h2>データのINSERTとSELECT</h2>
+
+<p>次に、このUserモデルを使ってテーブルを作成しデータをINSERT、その後SELECTして内容を表示するコードを書いてきましょう。
+src/main/scalaにMain.scalaを作成し、以下のように記述します。</p>
+
+<figure class='code'><figcaption><span>src/main/Main.scala</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">org.joda.time.LocalDate</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">import</span> <span class="nn">Database.threadLocalSession</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">object</span> <span class="nc">Main</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span><span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span><span class="k">:</span><span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nc">Database</span><span class="o">.</span><span class="n">forURL</span><span class="o">(</span><span class="s">&quot;jdbc:h2:mem:test1&quot;</span><span class="o">,</span> <span class="n">driver</span> <span class="k">=</span> <span class="s">&quot;org.h2.Driver&quot;</span><span class="o">)</span> <span class="n">withSession</span> <span class="o">{</span>
+</span><span class='line'>      <span class="nc">User</span><span class="o">.</span><span class="n">ddl</span><span class="o">.</span><span class="n">create</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="nc">User</span><span class="o">.</span><span class="n">insert</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;hoge&quot;</span><span class="o">,</span> <span class="nc">Some</span><span class="o">(</span><span class="k">new</span> <span class="nc">LocalDate</span><span class="o">(</span><span class="mi">2013</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">10</span><span class="o">)))</span>
+</span><span class='line'>      <span class="nc">User</span><span class="o">.</span><span class="n">insert</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="s">&quot;fuga&quot;</span><span class="o">,</span> <span class="nc">Some</span><span class="o">(</span><span class="k">new</span> <span class="nc">LocalDate</span><span class="o">(</span><span class="mi">2013</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">11</span><span class="o">)))</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="c1">//select all</span>
+</span><span class='line'>      <span class="nc">Query</span><span class="o">(</span><span class="nc">User</span><span class="o">)</span> <span class="n">foreach</span> <span class="o">{</span> <span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">birthday</span><span class="o">)</span> <span class="k">=&gt;</span>
+</span><span class='line'>        <span class="n">println</span><span class="o">(</span><span class="n">id</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span> <span class="o">+</span> <span class="n">birthday</span><span class="o">)</span>
+</span><span class='line'>      <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="c1">//name = &quot;hoge&quot;のみ抽出</span>
+</span><span class='line'>      <span class="k">val</span> <span class="n">q1</span> <span class="k">=</span> <span class="k">for</span><span class="o">{</span> <span class="n">u</span> <span class="k">&lt;-</span> <span class="nc">User</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">name</span> <span class="o">===</span> <span class="s">&quot;hoge&quot;</span> <span class="o">}</span> <span class="k">yield</span> <span class="n">u</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'>      <span class="n">q1</span> <span class="n">foreach</span> <span class="n">println</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>まず8行目でDBへの接続を行なっています。</p>
+
+<p>次の9行目ではUSERSテーブルのCREATE文を実行して、テーブルの作成を行なっています。</p>
+
+<p>11,12行目でデータのINSERT。15行目以降で、SELECTを行ない、標準出力で出力しています。</p>
+
+<h2>まとめ</h2>
+
+<p>こうして見ると、まだ自分がScalaのListの扱いに慣れてないせいもあって、SELECT周りの書き方にはちょっと違和感を感じますが、O/Rマッパとしての基本的な機能は十分に押さえていそうな感じです。</p>
+
+<h2>参考サイト</h2>
+
+<ul>
+<li><a href="http://slick.typesafe.com/doc/1.0.0/">Slick1.0.0公式ドキュメント</a></li>
+<li><a href="http://d.hatena.ne.jp/tototoshi/20121204/1354615421">tototoshiの日記 - slickガイド</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+<section>
+  <h1>About Me</h1>
+  <img style="display:block;float:left;" src="http://www.gravatar.com/avatar/ab963de01b53e635d6e699d6d7d162b1" alt="Gravatar of Takafumi Yoshida (@zephiransas) " title="Gravatar of Takafumi Yoshida (@zephiransas)" />
+  <p>
+    Takafumi Yoshida<br/>
+    Java/Ruby/Scala<br/>
+    Programmer at Okayama<br/>
+    <a href="http://twitter.com/zephiransas">@zephiransas</a>
+  </p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/16/test/">test</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/15/what-you-shoud-eat-in-daitokai/">岡山の勉強会に参加する際の心構え</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/12/java8lambda/">Java8で始めるLambda（基礎編）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/06/renew-photoleaf/">Photo Leafをちょっとリニューアルしました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/23/webkit-on-wercker/">werckerでrspecとcucumberのCI環境を作る</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/zephiransas">@zephiransas</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'zephiransas',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Takafumi Yoshida (@zephiransas) -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

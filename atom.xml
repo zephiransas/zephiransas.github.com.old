@@ -4,7 +4,7 @@
   <title><![CDATA[zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2014-03-16T14:09:17+09:00</updated>
+  <updated>2014-03-16T14:10:43+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,15 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[test]]></title>
-    <link href="http://zephiransas.github.com/blog/2014/03/16/test/"/>
-    <updated>2014-03-16T11:33:00+09:00</updated>
-    <id>http://zephiransas.github.com/blog/2014/03/16/test</id>
-    <content type="html"><![CDATA[
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[岡山の勉強会に参加する際の心構え]]></title>
@@ -1743,6 +1734,22 @@ src/main/scalaにMain.scalaを作成し、以下のように記述します。</
 <li><a href="http://d.hatena.ne.jp/tototoshi/20121204/1354615421">tototoshiの日記 - slickガイド</a></li>
 </ul>
 
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ブログを引越しました]]></title>
+    <link href="http://zephiransas.github.com/blog/2013/04/06/blog-moved/"/>
+    <updated>2013-04-06T14:00:00+09:00</updated>
+    <id>http://zephiransas.github.com/blog/2013/04/06/blog-moved</id>
+    <content type="html"><![CDATA[<p>以前使っていた、<a href="http://d.hatena.ne.jp/zephiransas">はてなダイアリー</a>からGithub Pagesへ移行しようとおもって、はや４ヶ月・・・
+ようやく引越しました。</p>
+
+<p>本当は今年始めの転職と同時に移行したかったんですが、あれよあれよという間に時間だけが経過して・・・</p>
+
+<p>今後はこちらをメインのブログとして使用していきたいと思います。はてダもそのまま残しておきます。</p>
+
+<p>というわけで、ｺﾝｺﾞﾄﾓﾖﾛｼｸ&#8230;.</p>
 ]]></content>
   </entry>
   

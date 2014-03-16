@@ -9,8 +9,7 @@
   <meta name="author" content="Takafumi Yoshida (@zephiransas)">
 
   
-  <meta name="description" content="
-">
+  <meta name="description" content="IT勉強会はなにも東京ばかりで開催されているわけではない。 地方の勉強会に参加するのであれば、ついでに観光地を巡ったり、その土地の美味しいモノを食べたいというのが人情である。 本エントリでは岡山の勉強会に来た際に食べるべきものを紹介する。 もも、ぶどう 言わずと知れた岡山の特産品。桃は白桃、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,42 +77,6 @@
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/16/test/">Test</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-16T11:33:00+09:00" pubdate data-updated="true">Mar 16<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -1211,6 +1174,136 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/20/debug-with-weinre/">weinreでiOSのブラウザのデバッグを行う手順</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-20T13:27:00+09:00" pubdate data-updated="true">Aug 20<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>モバイル対応のWeb開発をしている時、iPhoneやiPadのブラウザでのデバッグに苦労したことはないですか？</p>
+
+<p>PCの場合であれば、Chormeのデベロッパーツールとかでかなり簡単にデバッグを行うことができますが、iOSとかのSafariではデバッグツールをつかうことができません。</p>
+
+<p>そんな時に便利なのが<a href="http://people.apache.org/~pmuellr/weinre/docs/latest/">weinre</a>です。weinreを使うことで、iOS側で表示されたWebページのデバッグツールの情報を、PCから見ることができる大変便利なツールです。</p>
+
+<p>今回はweinreの使い方を紹介します。</p>
+
+<h2>weinreのインストール</h2>
+
+<p>まずはweinreをインストールします。weinreはnpmで提供されているので、以下のコマンドでインストールします。
+npmをインストールしてない場合は、先に<a href="http://nodejs.org/">node.jsをインストール</a>してください。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo npm -g install weinre
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>自分の環境ではsudoを要求されたのですが、sudoなしでインストールできれば、それでもいいかと思います。</p>
+
+<h2>weinreサーバの起動</h2>
+
+<p>次にweinreサーバを、以下のコマンドで起動します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>weinre --boundHost 192.168.0.x
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上記のboundHostにはlocalhostのIPアドレスを設定します。
+weinreサーバはデフォルトの状態だとlocalhostからしか接続できません。この後iPad側から接続する必要がありますので、上記のようにboundHostを設定して、他のデバイスからも接続可能にしておく必要があります。</p>
+
+<p>無事、起動できれば</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>weinre: starting server at http://192.168.0.x:8080
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と表示され、8080ポートでサーバが起動します。早速これをブラウザから見てみましょう。</p>
+
+<p><img src="/images/20130820/weinre_server.png" alt="weinre_server" /></p>
+
+<p>上記の画面が表示されれば、サーバが起動しています。</p>
+
+<h2>iOSデバイスでブックマークレットの登録</h2>
+
+<p>次に、iOSデバイスでweinreサーバへ接続するためのブックマークレットを登録します。直接ブックマークレットを作れればいいのですが、iOSではそれができないようなので、ここでは新規にブックマークを作成して、これを編集することでブックマークレットを作成しています。</p>
+
+<p>まずiOSデバイスのブラウザでweinreサーバ(ex: http://192.168.0.3:8080)を開きます。
+そして、以下のjavascriptをクリップボードにコピーしておきます。</p>
+
+<p><img src="/images/20130820/bookmarklet.png" alt="bookmarklet" /></p>
+
+<p>次にiOSデバイスのブラウザで適当なWebページを開き、それをブックマークしておきます。</p>
+
+<p>そしてそのブックマークを編集して、先ほどコピーしたjavascriptをペーストします。</p>
+
+<p><img src="/images/20130820/ios_bookmarklet.png" alt="ios_bookmarklet" /></p>
+
+<h2>デバッグの手順</h2>
+
+<p>以上で全ての準備が整ったので、実際にデバッグを行ってみます。</p>
+
+<p>まずはPC側のブラウザでweinreサーバを開き、接続中のクライアント一覧を表示します。</p>
+
+<p><img src="/images/20130820/client.png" alt="client" /></p>
+
+<p>上記のリンクをクリックすると</p>
+
+<p><img src="/images/20130820/client_list.png" alt="client_list" /></p>
+
+<p>このような画面が表示されます。iOSデバイスから接続されると、上記のTargets一覧に表示されます。</p>
+
+<p>iOSデバイス側からは、まずデバッグしたいWebページを表示し、その後、先に登録したブックマークレットを実行します。するとTargetが以下のようになります。</p>
+
+<p><img src="/images/20130820/connect.png" alt="connect" /></p>
+
+<p>あとはこの画面から、普通にデバッグツールを使用することができます。</p>
+
+<p><img src="/images/20130820/debug.png" alt="debug" /></p>
+
+<p>当然、デバッグツール側でHTML要素を変更してやれば、それがそのままiOSデバイス側のブラウザに反映されますので</p>
+
+<p><img src="/images/20130820/debug1.png" alt="debug1" /></p>
+
+<p>と変更してやれば、iOS側も</p>
+
+<p><img src="/images/20130820/debug2.png" alt="debug2" /></p>
+
+<p>といった感じで、即反映されます。</p>
+
+<h2>補足</h2>
+
+<p>今回はiOSデバイスしか手元になかったため未検証ですが、当然Androidでも同様にデバッグすることができます。</p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1237,10 +1330,6 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/03/16/test/">test</a>
-      </li>
-    
-      <li class="post">
         <a href="/blog/2014/03/15/what-you-shoud-eat-in-daitokai/">岡山の勉強会に参加する際の心構え</a>
       </li>
     
@@ -1254,6 +1343,10 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
     
       <li class="post">
         <a href="/blog/2014/01/23/webkit-on-wercker/">werckerでrspecとcucumberのCI環境を作る</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/31/end-of-2013/">2013年を振り返って</a>
       </li>
     
   </ul>

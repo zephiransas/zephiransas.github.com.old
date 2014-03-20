@@ -1,0 +1,451 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Pusherを使ったChrome拡張を作る - zephiransasのチラシの裏</title>
+  <meta name="author" content="Takafumi Yoshida (@zephiransas)">
+
+  
+  <meta name="description" content="メッセージ等の新着通知やアップデート情報の配信など、アプリケーションへの通知の方法として、スマートフォンなどで使われるpush通知など、最近では様々なものがあります。 しかし自前で通知用のサーバを運用するのは手間がかかるので、これを簡単に使えるようにするサービスも増えてきました。例えばPusher &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zephiransas.github.com/blog/2014/03/20/pusher-with-chrome-extension">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="zephiransasのチラシの裏" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-41139724-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">zephiransasのチラシの裏</a></h1>
+  
+    <h2>とあるJava/Rubyプログラマのメモ代わりブログ</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zephiransas.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Pusherを使ったChrome拡張を作る</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-20T17:24:00+09:00" pubdate data-updated="true">Mar 20<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>メッセージ等の新着通知やアップデート情報の配信など、アプリケーションへの通知の方法として、スマートフォンなどで使われるpush通知など、最近では様々なものがあります。</p>
+
+<p>しかし自前で通知用のサーバを運用するのは手間がかかるので、これを簡単に使えるようにするサービスも増えてきました。例えば<a href="http://pusher.com">Pusher.com</a>などがあります。これを使うことで、ブラウザへのリアルタイムな通知機能を、WebSocketを使って簡単に作成することができます。</p>
+
+<p><img src="/images/20140321/pusher-ss.png" alt="pusher-ss" /></p>
+
+<p>今回はPusherからの通知をChrome拡張で受信し、これをデスクトップ通知するサンプルを作成しましたので、解説してみます。</p>
+
+<h2>Pusher側の設定</h2>
+
+<p>まずはPusher側に設定を行います。Pusherでアカウントを作成後、以下のようにアプリケーションを登録します。</p>
+
+<p><img src="/images/20140321/pusher1.png" alt="pusher1" /></p>
+
+<p>ここでEncryptionにチェックを入れておきましょう。チェックしなくても特に問題はないのですが、Chrome拡張の場合セキュリティの問題からSSLを使用したほうが、いろいろ都合がいいので、チェックするほうが無難です。</p>
+
+<h2>Chrome拡張の作成</h2>
+
+<h3>manifest.jsonの設定</h3>
+
+<figure class='code'><figcaption><span>manifest.json</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;manifest_version&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Pusher test extension&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Pusher用 Chrome extension&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;permissions&quot;</span> <span class="p">:</span> <span class="p">[</span>
+</span><span class='line'>        <span class="s2">&quot;notifications&quot;</span>
+</span><span class='line'>    <span class="p">],</span>
+</span><span class='line'>    <span class="nt">&quot;content_security_policy&quot;</span><span class="p">:</span> <span class="s2">&quot;script-src &#39;self&#39; https://stats.pusher.com; object-src &#39;self&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;background&quot;</span> <span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span class='line'>            <span class="s2">&quot;src/javascript/pusher.min.js&quot;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s2">&quot;src/javascript/background.js&quot;</span>
+</span><span class='line'>        <span class="p">]</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>今回はPusherからのメッセージをデスクトップ通知するようにしたいのでpermissionに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="s2">&quot;permissions&quot;</span> <span class="err">:</span> <span class="p">[</span>
+</span><span class='line'>    <span class="s2">&quot;notifications&quot;</span>
+</span><span class='line'><span class="p">]</span><span class="err">,</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を指定しています。</p>
+
+<p>また、content_security_policyのscript-srcに <strong>https://stats.pusher.com</strong> を追加しています。httpではなく<strong>https</strong>を指定していることに注意してください。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="s2">&quot;content_security_policy&quot;</span><span class="err">:</span> <span class="s2">&quot;script-src &#39;self&#39; https://stats.pusher.com; object-src &#39;self&#39;&quot;</span><span class="err">,</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このサイトは、Pusherのクライアントライブラリであるpusher.min.jsからアクセスしているのですが、これを許可していないとChrome拡張からPusherのサーバへ、正しく接続をすることができません。</p>
+
+<p>次にpusher.min.jsですが、これは本来であればPusherのサイトに公開されているものを読み込んで使いたいところなのですが、Chrome拡張では外部のjavascriptを読み込むことができないようです。なので、ダウンロードしてソースに加えています。
+ちなみにpusher.min.jsのホスト先は、<a href="http://pusher.com/docs/client_libraries">こちらで</a>公開されています。</p>
+
+<h3>background.js</h3>
+
+<p>あとはChrome拡張のバックグラウンドで実行されるbackground.jsで、Pusherとの接続を行います。</p>
+
+<figure class='code'><figcaption><span>background.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">pusher</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Pusher</span><span class="p">(</span><span class="s2">&quot;======== KEY ========&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">encrypted</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">channel</span> <span class="o">=</span> <span class="nx">pusher</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">&#39;test_channel&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">channel</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;my_event&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">opt</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;basic&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">title</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">message</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">iconUrl</span><span class="o">:</span> <span class="s2">&quot;&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">chrome</span><span class="p">.</span><span class="nx">notifications</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nx">opt</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">){</span> <span class="cm">/** Do Nothing */</span> <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pusherのコンストラクタに渡すkeyには、Pusherで作成したアプリケーションのKeyを指定します。</p>
+
+<p><img src="/images/20140321/pusher2.png" alt="pusher2" /></p>
+
+<p>また、大事なポイントとしてPusherのオプションに</p>
+
+<figure class='code'><figcaption><span>background.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">{</span> <span class="nx">encrypted</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を指定する必要があります。これは先のmanifest.jsonの設定でも触れましたが、この指定がない場合Pusherの接続先が <strong>http://stats.pusher.com</strong> となってしまいます。Chrome拡張ではhttpsでない外部サーバに接続することはセキュリティ上できませんので、上記のオプションを指定しています。</p>
+
+<h2>Chrome拡張の読み込み</h2>
+
+<p>では、このようにして作ったChrome拡張を、Chromeに読み込ませて動作確認してみましょう。</p>
+
+<p>ChromeのURL欄に chrome://extensions/ と入力します。まだデベロッパーモードを有効にしていない場合は「デベロッパーモード」をチェックします。次に「パッケージ化されていない拡張機能を読み込む」をクリックします。</p>
+
+<p><img src="/images/20140321/pusher3.png" alt="pusher3" /></p>
+
+<p>そして先ほど作ったChrome拡張を含むディレクトリを指定します。すると、拡張機能の一覧に表示されます。</p>
+
+<p><img src="/images/20140321/pusher4.png" alt="pusher4" /></p>
+
+<p>これでChrome拡張を導入することができました。</p>
+
+<h2>Pusherからテストを行う</h2>
+
+<p>それでは実際にPusherから通知を行い、Chrome拡張に通知が表示されるかどうか確認してみましょう。</p>
+
+<p>Railsなどを使って自分でサーバアプリを作ってもいいのですが、今回はPusherのEvent Creatorの機能を使ってみましょう。</p>
+
+<p>Pusherの管理画面から「Event creator」を選択し、以下のように入力します。</p>
+
+<p><img src="/images/20140321/pusher5.png" alt="pusher5" /></p>
+
+<p>これで、Send eventボタンをおして、うまくいけば画面に以下の様な通知が表示されます。</p>
+
+<p><img src="/images/20140321/pusher6.png" alt="pusher6" /></p>
+
+<p>今回はアイコン画像のURLを指定しなかったので、なにも表示されていませんが、以下の用に画像へのURLを指定することでアイコンを表示することもできます。</p>
+
+<figure class='code'><figcaption><span>background.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">opt</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;basic&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">title</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">message</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">iconUrl</span><span class="o">:</span> <span class="s2">&quot;http://example.com/path/to/icon&quot;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>ソースなど</h2>
+
+<p>今回作成したChrome拡張は、こちらのGithubにまとめてあります。参考にしてみてください。</p>
+
+<ul>
+<li><a href="https://github.com/zephiransas/pusher-extension">pusher-extension</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Takafumi Yoshida (@zephiransas)</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-20T17:24:00+09:00" pubdate data-updated="true">Mar 20<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/chrome/'>Chrome</a>, <a class='category' href='/blog/categories/pusher/'>Pusher</a>, <a class='category' href='/blog/categories/webscoket/'>WebScoket</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://zephiransas.github.com/blog/2014/03/20/pusher-with-chrome-extension/" data-via="" data-counturl="http://zephiransas.github.com/blog/2014/03/20/pusher-with-chrome-extension/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/03/15/what-you-shoud-eat-in-daitokai/" title="Previous Post: 岡山の勉強会に参加する際の心構え">&laquo; 岡山の勉強会に参加する際の心構え</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+<section>
+  <h1>About Me</h1>
+  <img style="display:block;float:left;" src="http://www.gravatar.com/avatar/ab963de01b53e635d6e699d6d7d162b1" alt="Gravatar of Takafumi Yoshida (@zephiransas) " title="Gravatar of Takafumi Yoshida (@zephiransas)" />
+  <p>
+    Takafumi Yoshida<br/>
+    Java/Ruby/Scala<br/>
+    Programmer at Okayama<br/>
+    <a href="http://twitter.com/zephiransas">@zephiransas</a>
+  </p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/20/pusher-with-chrome-extension/">Pusherを使ったChrome拡張を作る</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/15/what-you-shoud-eat-in-daitokai/">岡山の勉強会に参加する際の心構え</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/12/java8lambda/">Java8で始めるLambda（基礎編）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/02/06/renew-photoleaf/">Photo Leafをちょっとリニューアルしました</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/01/23/webkit-on-wercker/">werckerでrspecとcucumberのCI環境を作る</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/zephiransas">@zephiransas</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'zephiransas',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Takafumi Yoshida (@zephiransas) -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

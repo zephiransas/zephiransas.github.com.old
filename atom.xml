@@ -4,7 +4,7 @@
   <title><![CDATA[zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2014-03-16T14:10:43+09:00</updated>
+  <updated>2014-03-20T21:40:52+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,189 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Pusherを使ったChrome拡張を作る]]></title>
+    <link href="http://zephiransas.github.com/blog/2014/03/20/pusher-with-chrome-extension/"/>
+    <updated>2014-03-20T17:24:00+09:00</updated>
+    <id>http://zephiransas.github.com/blog/2014/03/20/pusher-with-chrome-extension</id>
+    <content type="html"><![CDATA[<p>メッセージ等の新着通知やアップデート情報の配信など、アプリケーションへの通知の方法として、スマートフォンなどで使われるpush通知など、最近では様々なものがあります。</p>
+
+<p>しかし自前で通知用のサーバを運用するのは手間がかかるので、これを簡単に使えるようにするサービスも増えてきました。例えば<a href="http://pusher.com">Pusher.com</a>などがあります。これを使うことで、ブラウザへのリアルタイムな通知機能を、WebSocketを使って簡単に作成することができます。</p>
+
+<p><img src="http://zephiransas.github.com/images/20140321/pusher-ss.png" alt="pusher-ss" /></p>
+
+<p>今回はPusherからの通知をChrome拡張で受信し、これをデスクトップ通知するサンプルを作成しましたので、解説してみます。</p>
+
+<h2>Pusher側の設定</h2>
+
+<p>まずはPusher側に設定を行います。Pusherでアカウントを作成後、以下のようにアプリケーションを登録します。</p>
+
+<p><img src="http://zephiransas.github.com/images/20140321/pusher1.png" alt="pusher1" /></p>
+
+<p>ここでEncryptionにチェックを入れておきましょう。チェックしなくても特に問題はないのですが、Chrome拡張の場合セキュリティの問題からSSLを使用したほうが、いろいろ都合がいいので、チェックするほうが無難です。</p>
+
+<h2>Chrome拡張の作成</h2>
+
+<h3>manifest.jsonの設定</h3>
+
+<figure class='code'><figcaption><span>manifest.json</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;manifest_version&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Pusher test extension&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Pusher用 Chrome extension&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;permissions&quot;</span> <span class="p">:</span> <span class="p">[</span>
+</span><span class='line'>        <span class="s2">&quot;notifications&quot;</span>
+</span><span class='line'>    <span class="p">],</span>
+</span><span class='line'>    <span class="nt">&quot;content_security_policy&quot;</span><span class="p">:</span> <span class="s2">&quot;script-src &#39;self&#39; https://stats.pusher.com; object-src &#39;self&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;background&quot;</span> <span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span class='line'>            <span class="s2">&quot;src/javascript/pusher.min.js&quot;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s2">&quot;src/javascript/background.js&quot;</span>
+</span><span class='line'>        <span class="p">]</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>今回はPusherからのメッセージをデスクトップ通知するようにしたいのでpermissionに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="s2">&quot;permissions&quot;</span> <span class="err">:</span> <span class="p">[</span>
+</span><span class='line'>    <span class="s2">&quot;notifications&quot;</span>
+</span><span class='line'><span class="p">]</span><span class="err">,</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を指定しています。</p>
+
+<p>また、content_security_policyのscript-srcに <strong>https://stats.pusher.com</strong> を追加しています。httpではなく<strong>https</strong>を指定していることに注意してください。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="s2">&quot;content_security_policy&quot;</span><span class="err">:</span> <span class="s2">&quot;script-src &#39;self&#39; https://stats.pusher.com; object-src &#39;self&#39;&quot;</span><span class="err">,</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このサイトは、Pusherのクライアントライブラリであるpusher.min.jsからアクセスしているのですが、これを許可していないとChrome拡張からPusherのサーバへ、正しく接続をすることができません。</p>
+
+<p>次にpusher.min.jsですが、これは本来であればPusherのサイトに公開されているものを読み込んで使いたいところなのですが、Chrome拡張では外部のjavascriptを読み込むことができないようです。なので、ダウンロードしてソースに加えています。
+ちなみにpusher.min.jsのホスト先は、<a href="http://pusher.com/docs/client_libraries">こちらで</a>公開されています。</p>
+
+<h3>background.js</h3>
+
+<p>あとはChrome拡張のバックグラウンドで実行されるbackground.jsで、Pusherとの接続を行います。</p>
+
+<figure class='code'><figcaption><span>background.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">pusher</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Pusher</span><span class="p">(</span><span class="s2">&quot;======== KEY ========&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">encrypted</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">channel</span> <span class="o">=</span> <span class="nx">pusher</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">&#39;test_channel&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">channel</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;my_event&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">opt</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;basic&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">title</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">message</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">iconUrl</span><span class="o">:</span> <span class="s2">&quot;&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">chrome</span><span class="p">.</span><span class="nx">notifications</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nx">opt</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">){</span> <span class="cm">/** Do Nothing */</span> <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pusherのコンストラクタに渡すkeyには、Pusherで作成したアプリケーションのKeyを指定します。</p>
+
+<p><img src="http://zephiransas.github.com/images/20140321/pusher2.png" alt="pusher2" /></p>
+
+<p>また、大事なポイントとしてPusherのオプションに</p>
+
+<figure class='code'><figcaption><span>background.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">{</span> <span class="nx">encrypted</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を指定する必要があります。これは先のmanifest.jsonの設定でも触れましたが、この指定がない場合Pusherの接続先が <strong>http://stats.pusher.com</strong> となってしまいます。Chrome拡張ではhttpsでない外部サーバに接続することはセキュリティ上できませんので、上記のオプションを指定しています。</p>
+
+<h2>Chrome拡張の読み込み</h2>
+
+<p>では、このようにして作ったChrome拡張を、Chromeに読み込ませて動作確認してみましょう。</p>
+
+<p>ChromeのURL欄に chrome://extensions/ と入力します。まだデベロッパーモードを有効にしていない場合は「デベロッパーモード」をチェックします。次に「パッケージ化されていない拡張機能を読み込む」をクリックします。</p>
+
+<p><img src="http://zephiransas.github.com/images/20140321/pusher3.png" alt="pusher3" /></p>
+
+<p>そして先ほど作ったChrome拡張を含むディレクトリを指定します。すると、拡張機能の一覧に表示されます。</p>
+
+<p><img src="http://zephiransas.github.com/images/20140321/pusher4.png" alt="pusher4" /></p>
+
+<p>これでChrome拡張を導入することができました。</p>
+
+<h2>Pusherからテストを行う</h2>
+
+<p>それでは実際にPusherから通知を行い、Chrome拡張に通知が表示されるかどうか確認してみましょう。</p>
+
+<p>Railsなどを使って自分でサーバアプリを作ってもいいのですが、今回はPusherのEvent Creatorの機能を使ってみましょう。</p>
+
+<p>Pusherの管理画面から「Event creator」を選択し、以下のように入力します。</p>
+
+<p><img src="http://zephiransas.github.com/images/20140321/pusher5.png" alt="pusher5" /></p>
+
+<p>これで、Send eventボタンをおして、うまくいけば画面に以下の様な通知が表示されます。</p>
+
+<p><img src="http://zephiransas.github.com/images/20140321/pusher6.png" alt="pusher6" /></p>
+
+<p>今回はアイコン画像のURLを指定しなかったので、なにも表示されていませんが、以下の用に画像へのURLを指定することでアイコンを表示することもできます。</p>
+
+<figure class='code'><figcaption><span>background.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">opt</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;basic&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">title</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">message</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">iconUrl</span><span class="o">:</span> <span class="s2">&quot;http://example.com/path/to/icon&quot;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>ソースなど</h2>
+
+<p>今回作成したChrome拡張は、こちらのGithubにまとめてあります。参考にしてみてください。</p>
+
+<ul>
+<li><a href="https://github.com/zephiransas/pusher-extension">pusher-extension</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[岡山の勉強会に参加する際の心構え]]></title>
@@ -1734,22 +1917,6 @@ src/main/scalaにMain.scalaを作成し、以下のように記述します。</
 <li><a href="http://d.hatena.ne.jp/tototoshi/20121204/1354615421">tototoshiの日記 - slickガイド</a></li>
 </ul>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ブログを引越しました]]></title>
-    <link href="http://zephiransas.github.com/blog/2013/04/06/blog-moved/"/>
-    <updated>2013-04-06T14:00:00+09:00</updated>
-    <id>http://zephiransas.github.com/blog/2013/04/06/blog-moved</id>
-    <content type="html"><![CDATA[<p>以前使っていた、<a href="http://d.hatena.ne.jp/zephiransas">はてなダイアリー</a>からGithub Pagesへ移行しようとおもって、はや４ヶ月・・・
-ようやく引越しました。</p>
-
-<p>本当は今年始めの転職と同時に移行したかったんですが、あれよあれよという間に時間だけが経過して・・・</p>
-
-<p>今後はこちらをメインのブログとして使用していきたいと思います。はてダもそのまま残しておきます。</p>
-
-<p>というわけで、ｺﾝｺﾞﾄﾓﾖﾛｼｸ&#8230;.</p>
 ]]></content>
   </entry>
   

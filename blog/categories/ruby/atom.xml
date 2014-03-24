@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2014-03-20T21:40:52+09:00</updated>
+  <updated>2014-03-24T16:18:18+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -65,7 +65,7 @@ box: wercker/rvm</p>
 
 <h1>See the Rails section on the wercker devcenter:</h1>
 
-<h1>http://devcenter.wercker.com/articles/languages/ruby/settingup-rails4.html</h1>
+<h1><a href="http://devcenter.wercker.com/articles/languages/ruby/settingup-rails4.html">http://devcenter.wercker.com/articles/languages/ruby/settingup-rails4.html</a></h1>
 
 <h1>You will want to define your database as follows:</h1>
 
@@ -76,7 +76,7 @@ box: wercker/rvm</p>
 
 <h1>See more about services on our devcenter:</h1>
 
-<h1>http://devcenter.wercker.com/articles/services/</h1>
+<h1><a href="http://devcenter.wercker.com/articles/services/">http://devcenter.wercker.com/articles/services/</a></h1>
 
 <p>build:</p>
 
@@ -133,10 +133,10 @@ box: wercker/rvm</p>
 <p>```</p>
 
 <ul>
-<li>16~18行目 - テスト用のtmpディレクトリを作成（rspecのテストでtmpを使ってるので、必要なければ不要です）</li>
-<li>6~7,37~38行目 - テスト用のPostgreSQLを実行する</li>
-<li>53~55行目 - rspecを実行</li>
-<li>57~59行目 - cucumberを実行</li>
+<li>16~18行目 &ndash; テスト用のtmpディレクトリを作成（rspecのテストでtmpを使ってるので、必要なければ不要です）</li>
+<li>6~7,37~38行目 &ndash; テスト用のPostgreSQLを実行する</li>
+<li>53~55行目 &ndash; rspecを実行</li>
+<li>57~59行目 &ndash; cucumberを実行</li>
 </ul>
 
 
@@ -145,7 +145,7 @@ box: wercker/rvm</p>
 <p>capybara-webkitを動かすにはX11が使用できる必要があります。なのでXvfbを仮想環境で実行する必要があります。その設定が以下の部分。</p>
 
 <p>``` yml wercker.yml
-- script:</p>
+&ndash; script:</p>
 
 <pre><code>name: Enable virtual display
 code: |-

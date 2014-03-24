@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2014-03-20T21:40:52+09:00</updated>
+  <updated>2014-03-24T16:18:18+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -23,7 +23,7 @@
 
 <h2>インターフェースの宣言</h2>
 
-<p>まずは手始めに、引数で指定された文字列の前後に"["と"]"をつける処理を考えてみましょう。</p>
+<p>まずは手始めに、引数で指定された文字列の前後に"[&ldquo;と&rdquo;]&ldquo;をつける処理を考えてみましょう。</p>
 
 <p>Lambdaを使用するには、まずインターフェースを宣言する必要があります。上記の仕様から考えると</p>
 
@@ -62,7 +62,7 @@ public interface LambdaInterface {
 <p>``` java Sample.class
 public class Sample {</p>
 
-<p>  public static void main(String... args) {</p>
+<p>  public static void main(String&hellip; args) {</p>
 
 <pre><code>LambdaInterface lambda = (String value) -&gt; {
   return "[" + value + "]";
@@ -74,7 +74,7 @@ System.out.println(lambda.method("HOGE"));
 
 <p>}
 ```
-実行すると"[HOGE]"と出力されていることがわかると思います。</p>
+実行すると"[HOGE]&ldquo;と出力されていることがわかると思います。</p>
 
 <p>このように、匿名クラスを使った場合などと比べて、少ない記述量で実装できると思います。</p>
 
@@ -95,7 +95,7 @@ System.out.println(lambda.method("HOGE"));
 <p>``` java Sample.class
 public class Sample {</p>
 
-<p>  public static void main(String... args) {</p>
+<p>  public static void main(String&hellip; args) {</p>
 
 <pre><code>LambdaInterface lambda = value -&gt; "[" + value + "]";
 System.out.println(lambda.method("HOGE"));
@@ -126,7 +126,7 @@ public interface Function&lt;T, R&gt; {
 <p>``` java Sample.class
 public class Sample {</p>
 
-<p>  public static void main(String... args) {</p>
+<p>  public static void main(String&hellip; args) {</p>
 
 <pre><code>Function&lt;String, String&gt; lambda = value -&gt; "[" + value + "]";
 System.out.println(lambda.apply("HOGE"));
@@ -172,7 +172,7 @@ System.out.println(lambda.apply("HOGE"));
 <p>``` java Sample.class
 public class Sample {</p>
 
-<p>  public static void main(String... args) {</p>
+<p>  public static void main(String&hellip; args) {</p>
 
 <pre><code>...
 </code></pre>
@@ -194,7 +194,7 @@ public class Sample {</p>
 <p>``` java Sample.class
 public class Sample {</p>
 
-<p>  public static void main(String... args) {</p>
+<p>  public static void main(String&hellip; args) {</p>
 
 <pre><code>Function&lt;String, String&gt; lambda = Sample::add;
 System.out.println(lambda.apply("HOGE"));
@@ -217,7 +217,7 @@ System.out.println(lambda.apply("HOGE"));
 <p>``` java Sample.class
 public class Sample {</p>
 
-<p>  public static void main(String... args) {</p>
+<p>  public static void main(String&hellip; args) {</p>
 
 <pre><code>Sample sample = new Sample();
 Function&lt;String, String&gt; lambda = sample::add;
@@ -247,7 +247,7 @@ System.out.println(lambda.apply("HOGE"));
 
 <p>自分は「Java Day Tokyo2013基調公演より」と題して、報告をさせていただきました。</p>
 
-<script async class="speakerdeck-embed" data-id="ebf8f340b7a20130a14b7e8eb314bbb5" data-ratio="1.33333333333333" src="http://zephiransas.github.com//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="ebf8f340b7a20130a14b7e8eb314bbb5" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
 
 
 <p>当日のTwitterのまとめは、<a href="http://togetter.com/li/518745">こちら</a></p>
@@ -378,7 +378,7 @@ $ ./asadmin version
 <blockquote class="twitter-tweet" lang="ja"><p>影響度が大きい事を十分承知で申し上げます。誠に残念ながら直近で、提供の予定はございません。“@<a href="https://twitter.com/skrb">skrb</a>: @<a href="https://twitter.com/yoshioterada">yoshioterada</a> それよりもJava SE 7の日本語のJavadocはリリースされないのでしょうか？”</p>&mdash; Terada Yoshioさん (@yoshioterada) <a href="https://twitter.com/yoshioterada/status/183876594010558464">2012年3月25日</a></blockquote>
 
 
-<script async src="http://zephiransas.github.com//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 
 <p>その後、有志を中心にボランティアで日本語化しようかといった動きもありましたが、本格化するには至りませんでした。</p>
@@ -423,7 +423,7 @@ JavaOne Tokyo2012が開催されてからほぼ1年。去年イベントが終�
 <blockquote class="twitter-tweet" lang="ja"><p>写真撮影禁止とか、俺の仕事＼(^o^)／ｵﾜﾀ　<a href="https://twitter.com/search/%23jdt2013">#jdt2013</a></p>&mdash; Takafumi Yoshida✅さん (@zephiransas) <a href="https://twitter.com/zephiransas/status/334111626368270336">2013年5月14日</a></blockquote>
 
 
-<script async src="http://zephiransas.github.com//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 
 <p>正直コレには参りました。参加者には自分のように地方のコミュニティに属していて、後日報告会をやろうと企画してる人も多いはず。またOracleとしても「Javaを前進させるためにはコミュニティの力が必要です！」と言ってるにもかかわらず、これではなぁ・・・</p>
@@ -433,7 +433,7 @@ JavaOne Tokyo2012が開催されてからほぼ1年。去年イベントが終�
 <blockquote class="twitter-tweet" lang="ja"><p>ただ今から写真全面OKにしました。 <a href="https://twitter.com/search/%23jdt2013">#jdt2013</a></p>&mdash; Terada Yoshioさん (@yoshioterada) <a href="https://twitter.com/yoshioterada/status/334137042609004544">2013年5月14日</a></blockquote>
 
 
-<script async src="http://zephiransas.github.com//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 
 <p>とはなりました。なので前半の写真がありません(´・ω・`)</p>
@@ -505,27 +505,27 @@ JavaEEは次のメジャーバージョンであるJavaEE7のリリースを6月
 <h3>メディア系</h3>
 
 <ul>
-<li>クラウドWatch - <a href="http://cloud.watch.impress.co.jp/docs/event/20130515_599350.html">【Java Day Tokyo】Java SE/EEやJavaFXなどの最新トピックを解説</a></li>
-<li>ITPro - <a href="http://itpro.nikkeibp.co.jp/article/NEWS/20130514/476905/">「Java EE 7はHTML5に焦点」-Java Day Tokyo 2013 基調講演</a></li>
-<li>マイナビニュース - <a href="http://news.mynavi.jp/articles/2013/05/16/java/index.html">http://news.mynavi.jp/articles/2013/05/16/java/index.html</a></li>
-<li>Publickey - <a href="http://www.publickey1.jp/blog/13/java_82java_ee_76java_day_tokyo_2013.html">次期Java 8は来年2月、Java EE 7は今年6月にリリース予定。Java Day Tokyo 2013</a></li>
+<li>クラウドWatch &ndash; <a href="http://cloud.watch.impress.co.jp/docs/event/20130515_599350.html">【Java Day Tokyo】Java SE/EEやJavaFXなどの最新トピックを解説</a></li>
+<li>ITPro &ndash; <a href="http://itpro.nikkeibp.co.jp/article/NEWS/20130514/476905/">「Java EE 7はHTML5に焦点」-Java Day Tokyo 2013 基調講演</a></li>
+<li>マイナビニュース &ndash; <a href="http://news.mynavi.jp/articles/2013/05/16/java/index.html">http://news.mynavi.jp/articles/2013/05/16/java/index.html</a></li>
+<li>Publickey &ndash; <a href="http://www.publickey1.jp/blog/13/java_82java_ee_76java_day_tokyo_2013.html">次期Java 8は来年2月、Java EE 7は今年6月にリリース予定。Java Day Tokyo 2013</a></li>
 </ul>
 
 
 <h3>個人ブログなど</h3>
 
 <ul>
-<li>Challenge Java EE ! - <a href="http://kikutaro777.hatenablog.com/entry/2013/05/14/235704">Java Day Tokyo 2013に参加しました</a></li>
-<li>エンジニア的なネタを毎週書くブログ - <a href="http://taichiw.hatenablog.com/entry/2013/05/14/125432">Java Day Tokyo 2013　キーノート感想 #jdt2013</a></li>
-<li>torutkの日記 - <a href="http://d.hatena.ne.jp/torutk/20130514/p1">Java Day Tokyo 2013に参加して</a></li>
+<li>Challenge Java EE ! &ndash; <a href="http://kikutaro777.hatenablog.com/entry/2013/05/14/235704">Java Day Tokyo 2013に参加しました</a></li>
+<li>エンジニア的なネタを毎週書くブログ &ndash; <a href="http://taichiw.hatenablog.com/entry/2013/05/14/125432">Java Day Tokyo 2013　キーノート感想 #jdt2013</a></li>
+<li>torutkの日記 &ndash; <a href="http://d.hatena.ne.jp/torutk/20130514/p1">Java Day Tokyo 2013に参加して</a></li>
 </ul>
 
 
 <h3>その他</h3>
 
 <ul>
-<li>当日のツイートまとめ - <a href="http://togetter.com/li/502898">Java Day Tokyo ( #jdt2013 ) 関連Tweetまとめ</a></li>
-<li>写真 - <a href="http://www.flickr.com/photos/zephiransas/sets/72157633500864874/">http://www.flickr.com/photos/zephiransas/sets/72157633500864874/</a></li>
+<li>当日のツイートまとめ &ndash; <a href="http://togetter.com/li/502898">Java Day Tokyo ( #jdt2013 ) 関連Tweetまとめ</a></li>
+<li>写真 &ndash; <a href="http://www.flickr.com/photos/zephiransas/sets/72157633500864874/">http://www.flickr.com/photos/zephiransas/sets/72157633500864874/</a></li>
 </ul>
 
 ]]></content>

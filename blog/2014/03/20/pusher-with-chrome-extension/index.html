@@ -24,7 +24,7 @@
   <link href="/atom.xml" rel="alternate" title="zephiransasのチラシの裏" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -171,7 +171,7 @@
 
 <p>を指定しています。</p>
 
-<p>また、content_security_policyのscript-srcに <strong>https://stats.pusher.com</strong> を追加しています。httpではなく<strong>https</strong>を指定していることに注意してください。</p>
+<p>また、content_security_policyのscript-srcに <strong><a href="https://stats.pusher.com**">https://stats.pusher.com**</a> を追加しています。httpではなく</strong>https**を指定していることに注意してください。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='json'><span class='line'><span class="s2">&quot;content_security_policy&quot;</span><span class="err">:</span> <span class="s2">&quot;script-src &#39;self&#39; https://stats.pusher.com; object-src &#39;self&#39;&quot;</span><span class="err">,</span>
@@ -223,7 +223,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>を指定する必要があります。これは先のmanifest.jsonの設定でも触れましたが、この指定がない場合Pusherの接続先が <strong>http://stats.pusher.com</strong> となってしまいます。Chrome拡張ではhttpsでない外部サーバに接続することはセキュリティ上できませんので、上記のオプションを指定しています。</p>
+<p>を指定する必要があります。これは先のmanifest.jsonの設定でも触れましたが、この指定がない場合Pusherの接続先が **<a href="http://stats.pusher.com**">http://stats.pusher.com**</a> となってしまいます。Chrome拡張ではhttpsでない外部サーバに接続することはセキュリティ上できませんので、上記のオプションを指定しています。</p>
 
 <h2>Chrome拡張の読み込み</h2>
 
@@ -314,7 +314,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://zephiransas.github.com/blog/2014/03/20/pusher-with-chrome-extension/" data-via="" data-counturl="http://zephiransas.github.com/blog/2014/03/20/pusher-with-chrome-extension/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://zephiransas.github.com/blog/2014/03/20/pusher-with-chrome-extension/" data-via="" data-counturl="http://zephiransas.github.com/blog/2014/03/20/pusher-with-chrome-extension/" >Tweet</a>
   
   
   
@@ -438,7 +438,7 @@
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>

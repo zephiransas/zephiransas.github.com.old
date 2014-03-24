@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java8 | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/blog/categories/java8/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2014-03-20T21:40:52+09:00</updated>
+  <updated>2014-03-24T16:18:18+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -23,7 +23,7 @@
 
 <h2>インターフェースの宣言</h2>
 
-<p>まずは手始めに、引数で指定された文字列の前後に"["と"]"をつける処理を考えてみましょう。</p>
+<p>まずは手始めに、引数で指定された文字列の前後に"[&ldquo;と&rdquo;]&ldquo;をつける処理を考えてみましょう。</p>
 
 <p>Lambdaを使用するには、まずインターフェースを宣言する必要があります。上記の仕様から考えると</p>
 
@@ -62,7 +62,7 @@ public interface LambdaInterface {
 <p>``` java Sample.class
 public class Sample {</p>
 
-<p>  public static void main(String... args) {</p>
+<p>  public static void main(String&hellip; args) {</p>
 
 <pre><code>LambdaInterface lambda = (String value) -&gt; {
   return "[" + value + "]";
@@ -74,7 +74,7 @@ System.out.println(lambda.method("HOGE"));
 
 <p>}
 ```
-実行すると"[HOGE]"と出力されていることがわかると思います。</p>
+実行すると"[HOGE]&ldquo;と出力されていることがわかると思います。</p>
 
 <p>このように、匿名クラスを使った場合などと比べて、少ない記述量で実装できると思います。</p>
 
@@ -95,7 +95,7 @@ System.out.println(lambda.method("HOGE"));
 <p>``` java Sample.class
 public class Sample {</p>
 
-<p>  public static void main(String... args) {</p>
+<p>  public static void main(String&hellip; args) {</p>
 
 <pre><code>LambdaInterface lambda = value -&gt; "[" + value + "]";
 System.out.println(lambda.method("HOGE"));
@@ -126,7 +126,7 @@ public interface Function&lt;T, R&gt; {
 <p>``` java Sample.class
 public class Sample {</p>
 
-<p>  public static void main(String... args) {</p>
+<p>  public static void main(String&hellip; args) {</p>
 
 <pre><code>Function&lt;String, String&gt; lambda = value -&gt; "[" + value + "]";
 System.out.println(lambda.apply("HOGE"));
@@ -172,7 +172,7 @@ System.out.println(lambda.apply("HOGE"));
 <p>``` java Sample.class
 public class Sample {</p>
 
-<p>  public static void main(String... args) {</p>
+<p>  public static void main(String&hellip; args) {</p>
 
 <pre><code>...
 </code></pre>
@@ -194,7 +194,7 @@ public class Sample {</p>
 <p>``` java Sample.class
 public class Sample {</p>
 
-<p>  public static void main(String... args) {</p>
+<p>  public static void main(String&hellip; args) {</p>
 
 <pre><code>Function&lt;String, String&gt; lambda = Sample::add;
 System.out.println(lambda.apply("HOGE"));
@@ -217,7 +217,7 @@ System.out.println(lambda.apply("HOGE"));
 <p>``` java Sample.class
 public class Sample {</p>
 
-<p>  public static void main(String... args) {</p>
+<p>  public static void main(String&hellip; args) {</p>
 
 <pre><code>Sample sample = new Sample();
 Function&lt;String, String&gt; lambda = sample::add;

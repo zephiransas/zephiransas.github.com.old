@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2014-03-24T16:18:18+09:00</updated>
+  <updated>2014-11-17T21:59:11+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,105 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[JJUG CCC 2014 Fallで発表してきた]]></title>
+    <link href="http://zephiransas.github.com/blog/2014/11/17/attend-jjug-ccc-2014-fall/"/>
+    <updated>2014-11-17T20:40:56+09:00</updated>
+    <id>http://zephiransas.github.com/blog/2014/11/17/attend-jjug-ccc-2014-fall</id>
+    <content type="html"><![CDATA[<p>11月15日に、東京は新宿の西新宿ベルサールにて開催された<a href="http://www.java-users.jp/?page_id=1284">JJUG CCC 2014 Fall</a>に参加してきました。</p>
+
+<p>JJUC CCC（クロス・コミュニティ・カンファレンス）日本Javaユーザ会が春/秋と、年に2回開催している、JJUG主催としては最大のイベントです。</p>
+
+<p>今回はこれのセッション公募(CfP)に応募したところ嬉しい事にセッション枠を1つ受け持つことになったので、それも兼ねて東京まで参加してきました。
+久々に東京のJavaコミュニティの勉強会で、普段はTL上でしか面識のない人たちに会えるのも、楽しみの一つ。</p>
+
+<p>いつもの面々（失礼）もそうですが、今回は以前からお会いしたいと思っていた <a href="https://twitter.com/kikutaro_">@kikutaro_</a> さんと、お昼をご一緒させていただくことができました。TL上での発言を見て「真面目な好青年っぽいなー」という印象を持っていましたが、会ってもやはり好青年でした。</p>
+
+<p><strong>普段から何をツイートするか、考えて発言しないといけませんね！！</strong> （ｹﾞﾌﾝｹﾞﾌﾝ</p>
+
+<p>それから余談ですが、実は大都会ITクラスタは過去、JJUG CCCのスピーカを3人輩出しています。</p>
+
+<p>最初は独立国家福山に済む「<a href="https://twitter.com/soudai1025">@soudai1025</a> 氏」</p>
+
+<p>それから岡山Javaユーザ会/倉敷天領Scala勉強会に所属する「<a href="https://twitter.com/razon">@razon</a> 氏」</p>
+
+<p>あとは「<a href="https://twitter.com/mao_instantlife">@mao_instantlife</a> 氏」</p>
+
+<p>他の地方で、これだけスピーカが出てるところはないように思うので、ちょっと自慢していいような気もしますw</p>
+
+<h3>自分のセッションについて</h3>
+
+<p>今回自分はRailsライクなWebフレームワーク「<a href="http://www.ninjaframework.org/">ninjaframework</a>」について、セッションを行いました。以下はその資料。</p>
+
+<script async class="speakerdeck-embed" data-id="425e04e04edd01329d885e31c290001e" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+
+
+<p>一番小さい部屋だったので、おそらく40~50人程度の方がいらしていたと思います。</p>
+
+<p>当日、他のセッションでSpring Bootのセッションとハンズオンがあり「これはネタを選択し間違えた感・・・」と思ったのは内緒。</p>
+
+<p>久々の発表だったり、資料作りが思うように進まなくて、練習もろくにできなかったりで、たどたどしいことこの上ないセッションになってしまったような気がします・・・</p>
+
+<p>しかも50分の予定が40分程度で終わってしまい、困ったなーと思っていたところ、Q&amp;Aで意外にも多くの方から質問を頂きました。その結果、きっちり50分！</p>
+
+<p>あまりうまくいかなかった部分もありましたが、最後まで聞いていただいた皆さん、大変にありがとうございます！</p>
+
+<h3>Java女子部の台頭</h3>
+
+<p>以下はセッションの内容とはあまり関係ない、参加して自分が肌で感じたことです。</p>
+
+<p>今回のCCCで一番思ったことが、女性の参加者が多いこと。</p>
+
+<p>個人的にですが、エンジニアの世界はまだまだ男性中心な世界だなと感じていて、女性でバリバリコード書いたり、勉強会で発表してる人って少ないのが現状です。（それが良いとも悪いともいいません。それは本質ではないので。）</p>
+
+<p>なので、今回のCCCに多くの女性エンジニアがいたことには正直驚きました。最近、女性エンジニアの有志を中心に「<a href="http://javajo.doorkeeper.jp/">Java女子部</a>」なるコミュニティが発足したことは知っていましたが、それが広まってきてる感じです。</p>
+
+<p>エンジニアという職業が成熟していく過程に、女性が活躍できる環境というのは必須だと思います。また、それがエンジニアという仕事を一生の仕事にするためにも、必要なことだと思います。</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p>Java女子部の女の子たちみんな可愛かったのでみんなJavaやるべき</p>&mdash; しょぼちむ@どうもネカマです (@syobochim) <a href="https://twitter.com/syobochim/status/533626307267928065">2014, 11月 15</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<h3>Javaコミュニティの復活の兆し</h3>
+
+<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4774169315" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>つい先日発売された「Javaエンジニア養成読本」（通称「妖精本」）の巻頭記事に、Javaのコミュニティの歴史について触れている部分があります。</p>
+
+<p>自分がJavaのコミュニティに最初に触れたのは、Seasarが流行っていた時代です。</p>
+
+<p>その後Javaのコミュニティは、Sunの不振などもあり少しづつ勢いを失ってきたように思います。</p>
+
+<p>しかし今回のCCCの参加登録数は約650名で過去最大。また懇親会の参加者も受付開始するとあっという間に満席になり、最終的には100名とこちらも過去最高。自分にとっても最高に楽しい時間でした。</p>
+
+<ul>
+<li>JJUG CCC 2014 Fall 懇親会 &ndash; <a href="https://www.flickr.com/photos/zephiransas/sets/72157648917084929/">https://www.flickr.com/photos/zephiransas/sets/72157648917084929/</a></li>
+</ul>
+
+
+<blockquote class="twitter-tweet" lang="ja"><p>この飲み会、Java最盛期っぽい！</p>&mdash; きしだﬗ (@kis) <a href="https://twitter.com/kis/status/533619083271352322">2014, 11月 15</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>これもひとえに2007年4月にJJUGが発足以来、地道に活動してこられた多くの人たちの努力の賜物です。</p>
+
+<p>自分が感じたことは、<strong>Javaコミュニティは再びかつての勢いを取り戻しはじめている</strong>、ということです。</p>
+
+<p>そして言語としてのJavaもJava8で導入されたLambdaを皮切りに、これからも進化を続けていって欲しいと思います。</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p>もはやJavaダサいとかいてるほうがダサい　<a href="https://twitter.com/hashtag/jjug_ccc?src=hash">#jjug_ccc</a> <a href="https://twitter.com/hashtag/ccc_r17?src=hash">#ccc_r17</a></p>&mdash; Takafumi Yoshida (@zephiransas) <a href="https://twitter.com/zephiransas/status/533561483234267136">2014, 11月 15</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Java8で始めるLambda（基礎編）]]></title>
@@ -400,134 +499,6 @@ $ ./asadmin version
 <p>お申込みは<a href="http://local.aguuu.com/events/15432">こちら</a>からです。</p>
 
 <p>お近くの方は、是非ご参加ください。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Java Day Tokyo 2013に参加してきた（基調講演）]]></title>
-    <link href="http://zephiransas.github.com/blog/2013/05/16/javadaytokyo2013/"/>
-    <updated>2013-05-16T18:01:00+09:00</updated>
-    <id>http://zephiransas.github.com/blog/2013/05/16/javadaytokyo2013</id>
-    <content type="html"><![CDATA[<p><img src="http://farm8.staticflickr.com/7284/8740166245_72f3003e48_n.jpg"/></p>
-
-<p>前日、5月14日に秋葉原UDXにて開催されたJava Day Tokyo2013に参加してきました。
-JavaOne Tokyo2012が開催されてからほぼ1年。去年イベントが終わった時には「もう、こういったイベントは当分ないだろうなぁ」とか思っていたので、JavaOneではないにしてもちゃんとイベントを開催してくれた日本オラクル＆寺田さんには感謝ですね。</p>
-
-<h2>Keynoteの報告</h2>
-
-<p><img src="http://farm8.staticflickr.com/7294/8740179955_a8a975c375_n.jpg"/></p>
-
-<p>基本的には去年のサンフランシスコでのJavaOneとかで発表された内容とかぶる感じ。ただ、普段はこういった最新情報をチェックしていない人たちでも、イベントであれば直に最新情報を聞けるので、そういった人たちにリーチできるだけでも、意味はあるかと。
-残念だったのは最初、写真撮影がNGにされていたこと。</p>
-
-<blockquote class="twitter-tweet" lang="ja"><p>写真撮影禁止とか、俺の仕事＼(^o^)／ｵﾜﾀ　<a href="https://twitter.com/search/%23jdt2013">#jdt2013</a></p>&mdash; Takafumi Yoshida✅さん (@zephiransas) <a href="https://twitter.com/zephiransas/status/334111626368270336">2013年5月14日</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>正直コレには参りました。参加者には自分のように地方のコミュニティに属していて、後日報告会をやろうと企画してる人も多いはず。またOracleとしても「Javaを前進させるためにはコミュニティの力が必要です！」と言ってるにもかかわらず、これではなぁ・・・</p>
-
-<p>一応、Keynoteの半分を過ぎたあたりで、寺田さんが取り計らってくれたのか</p>
-
-<blockquote class="twitter-tweet" lang="ja"><p>ただ今から写真全面OKにしました。 <a href="https://twitter.com/search/%23jdt2013">#jdt2013</a></p>&mdash; Terada Yoshioさん (@yoshioterada) <a href="https://twitter.com/yoshioterada/status/334137042609004544">2013年5月14日</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>とはなりました。なので前半の写真がありません(´・ω・`)</p>
-
-<p>まずは日本オラクルの伊藤敬氏が壇上に。
-前回のJavaOne Tokyoは六本木のアカデミーヒルズで開催されましたが「クール・ジャパンの代表格であるアキハバラでJavaのイベントをやったら、どうなるのか？その化学反応も楽しんで欲しい」とのこと。</p>
-
-<p>最初に登壇したのはJava Technology AmbassadorのSimon Ritter氏。JavaSEの最新情報について公演しました。
-2012年7月にリリースされたJava7は、Oracleの元でリリースされた最初のメジャーアップデート。世界中で利用されていることを紹介していました。
-また、Windows,Mac OSX,Linuxをはじめ、ARMアーキテクチャ上でも動作することを紹介し、Javaがいまや様々なデバイスで動作していることも強調。
-そして、（遅れはしたものの）2014年2月には正式リリース予定のJava8についても言及し、その中核はLambdaであるとのこと。Lambdaを使用することのメリットの一つとして、並列処理を容易に書けることを紹介していました。
-現在、Java8はプレビュー版が提供されているので、これを通じて多くのフィードバックをして欲しい、とも言っていました。
-今後Javaは2年サイクルでメジャーアップデートを行う予定で、そうなるとJava9は2016年リリースになるだろうとも。</p>
-
-<p>次に壇上に上がったのはOracleのNandini Ramani氏。JavaFXや組み込みJavaなどについて公演しました。
-Java8からはJavaFXはJavaFX8として、標準でJDKにバンドルされるようになります。そういった意味でもJavaFXはこれから注目の技術になりそうな予感です。</p>
-
-<p>途中、Nandini氏は壇上にJim Weaver氏を招き、Jimが手元でJavaFXのデモを行なっていました。なぜかデモしてた機材がSurface Proでしたw
-球体や円柱を3Dで表示し、それにことなる光源を当てて表示するといったデモや、それにテクスチャを貼り付けてみたり。また港湾での貨物運送にでもつかうんでしょうか、コンテナの位置などをJavaFXでレンダリングするようなものを紹介していました。どれも比較的短いコードで実装可能であるとのこと。
-また、Jim氏は「When should you download JDK8?」と書かれたスライドを前に、「イツヤルカ？イマデショ！」と日本語でネタを披露していました。これには会場も爆笑w Keynoteで一番盛り上がったかもしれません。Jim氏もご満悦な様子でした。
-（しかし、このネタをJim氏に教えたのは、いったい誰なのか気になります！）</p>
-
-<p>（追記）
-@skrb さんに教えて頂きましたが、どうもこのネタはタクシーの運ちゃんから仕入れたようです。外人にネタを授けるとは、タクシーの運ちゃん、侮りがたし！！</p>
-
-<p>次に壇上に上がったのはOracleのCameron Purdy氏。JavaEEの最新動向について公演を行いました。
-JavaEEは次のメジャーバージョンであるJavaEE7のリリースを6月13日に控えています。そのJavaEE7についての話が主でした。</p>
-
-<p>JavaEE7の主な新機能としては</p>
-
-<ul>
-<li>JBatch</li>
-<li>JSON対応</li>
-<li>WebSocket対応</li>
-</ul>
-
-
-<p>などを紹介。JavaEE準拠のAPサーバも18のメーカーから出荷されているとのこと。
-その後OracleのArun Gupta氏を壇上に招き、WebSocketのデモを行なっていました。デモはよくあるWebSocketのチャットに始まり、その後はWhite Boardのアプリケーションをデモ。
-やり取りをしている途中で回線が切断された場合でも、回線がもとにもどれば、最新の状態に簡単に復旧できるようなアプリケーションなんですが、これもWebSocketで簡単に実装できるとのこと。</p>
-
-<p>そして最後に壇上に上がったのはOracleのSharat Chander氏。
-アメリカ本国でのJavaOneを取り仕切っている人ですね。</p>
-
-<p><img src="http://farm8.staticflickr.com/7294/8741286896_615b239145_n.jpg"/></p>
-
-<p>Sharat氏はJavaとそれを取り巻くコミュニティについて公演を行いました。Javaにとって大事な構成要素は「Oracle、技術、コミュニティ」の3つであるとして、コミュニティの重要性を強調。
-また「ここにいる皆さんにも是非Javaのコミュニティに参加してコントリビュートして欲しい」と訴えていました。</p>
-
-<p>そしてSharatに促され壇上に上がったのは日本のJUG(Java User Group)であるJJUG会長の鈴木雄介氏。</p>
-
-<p><img src="http://farm8.staticflickr.com/7293/8741285712_3c14cd9c59_n.jpg"/></p>
-
-<p>鈴木氏はコミュニティに参加する意義を「エンジニアが成長するための場所である」と説明。またJJUGとしても今後、様々な活動を通じて日本のJavaコミュニティのエンジニアをサポートして行きたい、との話がありました。
-地方への講師の派遣なども行なっていただけるらしいので、今後岡山Javaユーザ会でも、そういった方をお招きして勉強会を開催していきたいなぁと思います。</p>
-
-<p>そして最後にはなぜか恒例（？）とも言えるTシャツ投げが行われました。</p>
-
-<p><img src="http://farm8.staticflickr.com/7293/8740169741_f0562a4e9e_n.jpg"/></p>
-
-<p>このTシャツ投げは、もはや伝統芸ですが、時間の関係か1つだけだったのが寂しかったり(´・ω・`)</p>
-
-<p>基調講演の報告はここまで。参加したセッションの内容は後日まとめます。</p>
-
-<h2>リンク集</h2>
-
-<p>最後にJava Day Tokyoについて、各メディアのレポートや、個人ブログのリンクをまとめておきます。こちらも参考にしてください。</p>
-
-<h3>メディア系</h3>
-
-<ul>
-<li>クラウドWatch &ndash; <a href="http://cloud.watch.impress.co.jp/docs/event/20130515_599350.html">【Java Day Tokyo】Java SE/EEやJavaFXなどの最新トピックを解説</a></li>
-<li>ITPro &ndash; <a href="http://itpro.nikkeibp.co.jp/article/NEWS/20130514/476905/">「Java EE 7はHTML5に焦点」-Java Day Tokyo 2013 基調講演</a></li>
-<li>マイナビニュース &ndash; <a href="http://news.mynavi.jp/articles/2013/05/16/java/index.html">http://news.mynavi.jp/articles/2013/05/16/java/index.html</a></li>
-<li>Publickey &ndash; <a href="http://www.publickey1.jp/blog/13/java_82java_ee_76java_day_tokyo_2013.html">次期Java 8は来年2月、Java EE 7は今年6月にリリース予定。Java Day Tokyo 2013</a></li>
-</ul>
-
-
-<h3>個人ブログなど</h3>
-
-<ul>
-<li>Challenge Java EE ! &ndash; <a href="http://kikutaro777.hatenablog.com/entry/2013/05/14/235704">Java Day Tokyo 2013に参加しました</a></li>
-<li>エンジニア的なネタを毎週書くブログ &ndash; <a href="http://taichiw.hatenablog.com/entry/2013/05/14/125432">Java Day Tokyo 2013　キーノート感想 #jdt2013</a></li>
-<li>torutkの日記 &ndash; <a href="http://d.hatena.ne.jp/torutk/20130514/p1">Java Day Tokyo 2013に参加して</a></li>
-</ul>
-
-
-<h3>その他</h3>
-
-<ul>
-<li>当日のツイートまとめ &ndash; <a href="http://togetter.com/li/502898">Java Day Tokyo ( #jdt2013 ) 関連Tweetまとめ</a></li>
-<li>写真 &ndash; <a href="http://www.flickr.com/photos/zephiransas/sets/72157633500864874/">http://www.flickr.com/photos/zephiransas/sets/72157633500864874/</a></li>
-</ul>
-
 ]]></content>
   </entry>
   

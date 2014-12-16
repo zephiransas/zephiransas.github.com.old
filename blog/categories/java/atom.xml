@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2014-11-17T23:17:24+09:00</updated>
+  <updated>2014-12-16T19:27:06+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,188 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[lambda-behaveでテストを書こう]]></title>
+    <link href="http://zephiransas.github.com/blog/2014/12/16/about-lambda-behave/"/>
+    <updated>2014-12-16T18:17:15+09:00</updated>
+    <id>http://zephiransas.github.com/blog/2014/12/16/about-lambda-behave</id>
+    <content type="html"><![CDATA[<p>これは<a href="http://qiita.com/advent-calendar/2014/java">Javaアドベントカレンダー2014</a>の12/16分の記事です。</p>
+
+<p>昨日は<a href="https://github.com/grimrose">grimrose</a>さんの、<a href="http://grimrose.blogspot.jp/2014/12/gradle.html">[書評] Gradle徹底入門</a> でした。</p>
+
+<p>自分はJavaのテストフレームワークである、<a href="https://github.com/RichardWarburton/lambda-behave">lambda-behave</a>について紹介します。</p>
+
+<p>自分は普段はRailsでの開発を行っているのですが、現場では主にRSpecを使ってテストを記述しています。RSpecでのテストは以下のような感じです。</p>
+
+<p>``` ruby
+describe &lsquo;Sample&rsquo; do
+  context &lsquo;hogeメソッドについて&rsquo; do</p>
+
+<pre><code>it 'fugaを返すこと' do
+  Sample.hoge.should == "fuga"
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>RSpecでは上記のようにDSLを使って、なにをテストしているかを構造的に記述することができます。
+lambda-behaveを使うと、このようなDSLっぽい記述のテストを、Java8のLambdaを使って書くことができるようになります。</p>
+
+<h2>最初のテスト</h2>
+
+<p>まずはテスト対象となるメソッドを準備します。</p>
+
+<p>``` java
+public class Sample {</p>
+
+<pre><code>public static int includeTax(Integer price) {
+    return 0;
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>上記のようなstaticなメソッドを準備します。includeTaxメソッドは引数を一つ取り、その税込み金額を返すメソッドとします。<strong>実にギョーミーですね！</strong></p>
+
+<p>今回はTDD的なノリで実装していきますので、ここでは中身の実装はおこないません。</p>
+
+<p>それでは実際のテストを書いて行きましょう。ここでのテストシナリオは</p>
+
+<ul>
+<li>includeTaxメソッドに100を渡した場合に、108が返ってくること</li>
+</ul>
+
+
+<p>をテストするとします。これをlambda-behaveで書くと、以下のようになります。</p>
+
+<p>
+``` java
+import static com.insightfullogic.lambdabehave.Suite.*;</p>
+
+<p>@RunWith(JunitSuiteRunner.class)
+public class SampleSpec {{</p>
+
+<pre><code>describe("includeTax", it -&gt; {
+    it.should("税込み価格が取得できること", expect -&gt;
+        expect.that(Sample.includeTax(100)).is(108)
+    );
+});
+</code></pre>
+
+<p>}}
+```
+</p>
+
+<p>static importを使ってlambda-behaveのメソッドを使えるようにし、こられを使って記述していきます。</p>
+
+<p>JUnitのランナーも用意されていますので、これを@RunWithで指定すれば、IDEからも簡単にテストを実行可能です。早速、テストを実行してみましょう。</p>
+
+<p><img src="/images/20141216/screen1.png" alt="screen1" /></p>
+
+<p>includeTaxは、まだ実装をおこなっていませんので、当然このとおりテストが失敗します。</p>
+
+<p>次に、includeTaxを実装してみます。</p>
+
+<p>``` java
+public class Sample {</p>
+
+<pre><code>public static int includeTax(Integer price) {
+    final float TAX_RATE = 8;
+    int tax = (int)Math.ceil(price * TAX_RATE / 100);
+    return price + tax;
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>再度、テストを実行すれば、テストが成功しています。</p>
+
+<p><img src="/images/20141216/screen2.png" alt="screen2" /></p>
+
+<h2>複数のテストデータでチェック</h2>
+
+<p>先の例では1つの値でしかテストしませんでしたが、lambda-behaveでは同時に複数の値でテストすることもできます。以下のようになります。</p>
+
+<p>``` java
+it.uses(100, 108)
+  .and(200, 216)
+  .toShow(&ldquo;税込み価格が取得できること&rdquo;, (expect, price, includeTax) &ndash;> {</p>
+
+<pre><code> expect.that(Sample.includeTax(price)).is(includeTax);
+</code></pre>
+
+<p>  });
+```</p>
+
+<p>itのあとにuseとandをチェインして値を準備し、これを使ってtoShowメソッド内でテストを行います。toShowメソッド内ではlambdaの引数で準備した値を利用できますので、lambda内でその値をexpectするようにしています。</p>
+
+<h2>生成した値でチェック</h2>
+
+<p>lambda-behaveではランダムな値を生成する機能も準備されています。適当な数値を5つほど生成して、そのテストを行うコードは以下のようになります。</p>
+
+<p>（あまり例がよくないですが・・・）</p>
+
+<p>``` java
+it.requires(5)
+  .example(Generator.integersUpTo(1000))
+  .toShow(&ldquo;税込み価格が取得できること&rdquo;, (expect, price) &ndash;> {</p>
+
+<pre><code>expect.that(Sample.includeTax(price)).is(price + (int)Math.ceil(price * 8 / 100));
+</code></pre>
+
+<p>  });
+```
+requiresでランダムに準備する値の数を指定します。</p>
+
+<p>exampleではどのようなテストデータを生成するかを指定します。ここではlambda-behaveで準備されたGenerator.integersUpToを使用しています。この他にも適当な文字列を生成するasciiStringsメソッドなどもあります</p>
+
+<h2>例外が発生することをチェック</h2>
+
+<p>引数にnullが渡された場合にNullPointerExceptionの発生をチェックすることも、JUnitと同様に可能です。</p>
+
+<p>まず、includeTaxにnullチェックを記述します。</p>
+
+<p>``` java
+public class Sample {</p>
+
+<pre><code>public static int includeTax(Integer price) {
+    if(price == null) {
+        throw new NullPointerException();
+    }
+    final float TAX_RATE = 8;
+    int tax = (int)Math.ceil(price * TAX_RATE / 100);
+    return price + tax;
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>これをテストするlambda-behaveのコードは以下のようになります。</p>
+
+<p>``` java
+it.should(&ldquo;nullの場合ぬるぽ&rdquo;, expect &ndash;> {</p>
+
+<pre><code>expect.exception(NullPointerException.class, () -&gt; {
+    Sample.includeTax(null);
+});
+</code></pre>
+
+<p>});
+```</p>
+
+<p>exceptionメソッドの第1引数に、発生する予定の例外を指定し、第2引数には例外が発生する処理をlambdaで記述します。</p>
+
+<p>lambdaに慣れていないと少々書きづらいかもしれないですが、DSLちっくに書けるのはJavaっぽくなくてステキですよね！</p>
+
+<p>こちらからは以上です。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[JJUG CCC 2014 Fallで発表してきた]]></title>
@@ -394,111 +576,6 @@ $ ./asadmin version
 </code></p>
 
 <p>などで、アップグレードできていることを確認しましょう。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Java Day Tokyo 2013に参加してきた（セッション）]]></title>
-    <link href="http://zephiransas.github.com/blog/2013/05/19/javadaytokyo2/"/>
-    <updated>2013-05-19T00:17:00+09:00</updated>
-    <id>http://zephiransas.github.com/blog/2013/05/19/javadaytokyo2</id>
-    <content type="html"><![CDATA[<p>前回の基調講演につづいて、今回は自分が参加したセッションのレポートです。</p>
-
-<h2>Ask the Experts</h2>
-
-<p>基調講演にも登壇したJavaSE,JavaFX,JavaEEの各キーパーソンに、直接質問できるセッションです。ちょうど昼の時間だったので、本来は昼食をとりつつ受けるセッションなんですが、うっかり自分は昼食を仕入れるのを忘れてました・・・</p>
-
-<p>JavaSEの担当は、Simon Ritter氏</p>
-
-<p><img src="http://farm8.staticflickr.com/7288/8740173841_d492ab6090_n.jpg"/></p>
-
-<p>JavaFXの担当は、Jim Weaver氏</p>
-
-<p><img src="http://farm8.staticflickr.com/7285/8741292898_42456c92d5_n.jpg"/></p>
-
-<p>JavaFXの担当は、Arun Gupta氏</p>
-
-<p><img src="http://farm8.staticflickr.com/7281/8741293406_f87d358552_n.jpg"/></p>
-
-<p>通訳の方が居たので、もちろん日本語で質問できたのですが、意外と質問が少ないような感じでした。</p>
-
-<p>印象に残ったのは、最後のJavaEEの質問で</p>
-
-<ul>
-<li>Q「JavaEEはいろんな仕様で構成されているが、最低限どれを使ってればJavaEEを使ってることになるのか？」</li>
-</ul>
-
-
-<p>という質問がありました。（ちょっと意地悪な質問な気もしますがw）それに対してArunは</p>
-
-<ul>
-<li>A「難しい質問だけど、強いて言えばServletかな？あ、でも、Strutsはダメだね！」</li>
-</ul>
-
-
-<p>と返して、会場は大爆笑でしたw</p>
-
-<h2>Javaプラットフォームにおける Batch アプリケーション (JSR 352)</h2>
-
-<p>JavaEE7で導入されるJBatchのセッション。担当はArun氏です。</p>
-
-<p><img src="http://farm8.staticflickr.com/7286/8741295358_cce2037082_n.jpg"/></p>
-
-<p>このJBatchは、エンタープライズアプリケーションでよくある、バッチ処理を効率よく書くためのフレームワークです。セッションを受けつつTLを眺めてて知ったのですが、どうもSpring Batchと非常によく似た仕組みのようです。設定をXMLで記述していくのが少々面倒な気もしますが、この辺りが改善されていけば、バッチ処理のスタンダードになるかなーという感じ。JavaEE準拠のサーバはもちろん、スタンドアロンの環境でも実行可能との事。</p>
-
-<h2>エンタープライズ環境における並列処理の実装方法について</h2>
-
-<p>我らの王子こと、寺田さんによるConcurrency Utilityのセッション。</p>
-
-<p>以前からJavaではThreadを使って、並列処理を書くことが可能でしたが、実際にはなかなか難しいものでした。これを簡単に行えるのがConcurrency Utilityです。実際に以下のデモを会場で見せていました。</p>
-
-<iframe width="560" height="315" src="http://www.youtube.com/embed/s9OB3lDPwtg?rel=0" frameborder="0" allowfullscreen></iframe>
-
-
-<p>詳細は<a href="http://yoshio3.com/2013/05/15/concurrency-utilities-for-ee-7/">寺田氏のブログ</a>に詳しいですが、Concurrncy Utilityを使うことで、CPUリソースを無駄なく使うコードを、簡単に実装することができるようになります。</p>
-
-<h2>Java the Night</h2>
-
-<p><img src="http://farm8.staticflickr.com/7285/8740181743_e4b88c0b29_n.jpg"/></p>
-
-<p>最後はお楽しみ（？）のJava the Night。日本のJava界を代表するエンジニアがLT&amp;デモを行うという趣向です。
-一人8分の持ち時間でした。どのLTもさすがはJava界のスーパーエンジニア！と唸らせる、最高に面白い内容でした。
-前回のJavaOne Tokyoの時もそうでしたが、この最後のLT枠に参加せずして、Javaのイベントに参加したとは言えないくらい、充実した内容です。
-なかでも印象に残ったのは、北海道の大学生2人。</p>
-
-<p><img src="http://farm8.staticflickr.com/7283/8741304934_655e6abe63_n.jpg"/></p>
-
-<p>プレゼンソフトなんですが、JavaFXで様々なエフェクトをつけることができるというものでした。彼らの初々しい（！）発表を聞きながら、その将来に期待をするとともに、まだまだ自分も頑張らなければ、と想いを新たにしました。</p>
-
-<h2>JavaSE7 日本語ドキュメント提供開始</h2>
-
-<p>そしてJava the Night終了後、寺田さんから重大な発表がありました。それはJavaSE7の日本語ドキュメントの提供を開始した、とのアナウンスでした。実はJavaSE7リリース後、しばらくしても日本語ドキュメントは提供されていませんでした。様々な方面から要望は上がっていましたが、残念ながら日本語ドキュメントは当分は提供されないという決定が、以前なされました。</p>
-
-<blockquote class="twitter-tweet" lang="ja"><p>影響度が大きい事を十分承知で申し上げます。誠に残念ながら直近で、提供の予定はございません。“@<a href="https://twitter.com/skrb">skrb</a>: @<a href="https://twitter.com/yoshioterada">yoshioterada</a> それよりもJava SE 7の日本語のJavadocはリリースされないのでしょうか？”</p>&mdash; Terada Yoshioさん (@yoshioterada) <a href="https://twitter.com/yoshioterada/status/183876594010558464">2012年3月25日</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>その後、有志を中心にボランティアで日本語化しようかといった動きもありましたが、本格化するには至りませんでした。</p>
-
-<p>そして、Java Day Tokyoにてサプライズとでもいいましょうか、<a href="http://yoshio3.com/2013/05/14/%EF%BD%8A%EF%BD%81%EF%BD%96%EF%BD%81-%EF%BD%93%EF%BD%85%EF%BC%97%EF%BD%81%EF%BD%90%EF%BD%89%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%89%88%E6%8F%90%E4%BE%9B%E9%96%8B%E5%A7%8B/">JavaSE7の日本語ドキュメント提供開始</a>のアナウンスがされました。</p>
-
-<p>JavaSE7がリリースされて随分経ちますが、これでようやくスタートライン。Java7を普通に使ってもらう環境が、日本でも整ったといった感じです。いろいろ想いはありますが、日本オラクル＆寺田さんの努力に敬意を表したいと思います。</p>
-
-<h2>Conclusion</h2>
-
-<p><img src="http://farm8.staticflickr.com/7286/8740206373_002b31196d_n.jpg"/></p>
-
-<p>以上、2回に分けてJava Day Tokyo 2013の模様をまとめました。</p>
-
-<p>1年ぶりにJavaのカンファレンスに参加して「自分はやっぱり、このJavaのコミュニティが好きなんだなぁ」という思いを強くしました。もちろん他のコミュニティでも似たような経験はできるとは思いますが、古参から新参まで多くのカラーが集まり、多種多様な人がいるコミュニティも珍しいように思います。そのような環境でエンジニアをやれるのは、とても嬉しいことです。</p>
-
-<p>さて、岡山Javaユーザ会でも、Java Day Tokyo 2013報告会@岡山と題して、報告会をやります。</p>
-
-<p>お申込みは<a href="http://local.aguuu.com/events/15432">こちら</a>からです。</p>
-
-<p>お近くの方は、是非ご参加ください。</p>
 ]]></content>
   </entry>
   

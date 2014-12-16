@@ -9,7 +9,7 @@
   <meta name="author" content="Takafumi Yoshida (@zephiransas)">
 
   
-  <meta name="description" content="11月15日に、東京は新宿の西新宿ベルサールにて開催されたJJUG CCC 2014 Fallに参加してきました。 JJUC CCC（クロス・コミュニティ・カンファレンス）日本Javaユーザ会が春/秋と、年に2回開催している、JJUG主催としては最大のイベントです。 今回はこれのセッション公募( &hellip;">
+  <meta name="description" content="これはJavaアドベントカレンダー2014の12/16分の記事です。 昨日はgrimroseさんの、[書評] Gradle徹底入門 でした。 自分はJavaのテストフレームワークである、lambda-behaveについて紹介します。 自分は普段はRailsでの開発を行っているのですが、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,244 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/16/about-lambda-behave/">Lambda-behaveでテストを書こう</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-16T18:17:15+09:00" pubdate data-updated="true">Dec 16<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>これは<a href="http://qiita.com/advent-calendar/2014/java">Javaアドベントカレンダー2014</a>の12/16分の記事です。</p>
+
+<p>昨日は<a href="https://github.com/grimrose">grimrose</a>さんの、<a href="http://grimrose.blogspot.jp/2014/12/gradle.html">[書評] Gradle徹底入門</a> でした。</p>
+
+<p>自分はJavaのテストフレームワークである、<a href="https://github.com/RichardWarburton/lambda-behave">lambda-behave</a>について紹介します。</p>
+
+<p>自分は普段はRailsでの開発を行っているのですが、現場では主にRSpecを使ってテストを記述しています。RSpecでのテストは以下のような感じです。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">describe</span> <span class="s1">&#39;Sample&#39;</span> <span class="k">do</span>
+</span><span class='line'>  <span class="n">context</span> <span class="s1">&#39;hogeメソッドについて&#39;</span> <span class="k">do</span>
+</span><span class='line'>    <span class="n">it</span> <span class="s1">&#39;fugaを返すこと&#39;</span> <span class="k">do</span>
+</span><span class='line'>      <span class="no">Sample</span><span class="o">.</span><span class="n">hoge</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="s2">&quot;fuga&quot;</span>
+</span><span class='line'>    <span class="k">end</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>RSpecでは上記のようにDSLを使って、なにをテストしているかを構造的に記述することができます。
+lambda-behaveを使うと、このようなDSLっぽい記述のテストを、Java8のLambdaを使って書くことができるようになります。</p>
+
+<h2>最初のテスト</h2>
+
+<p>まずはテスト対象となるメソッドを準備します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">includeTax</span><span class="o">(</span><span class="n">Integer</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上記のようなstaticなメソッドを準備します。includeTaxメソッドは引数を一つ取り、その税込み金額を返すメソッドとします。<strong>実にギョーミーですね！</strong></p>
+
+<p>今回はTDD的なノリで実装していきますので、ここでは中身の実装はおこないません。</p>
+
+<p>それでは実際のテストを書いて行きましょう。ここでのテストシナリオは</p>
+
+<ul>
+<li>includeTaxメソッドに100を渡した場合に、108が返ってくること</li>
+</ul>
+
+
+<p>をテストするとします。これをlambda-behaveで書くと、以下のようになります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">insightfullogic</span><span class="o">.</span><span class="na">lambdabehave</span><span class="o">.</span><span class="na">Suite</span><span class="o">.*;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nd">@RunWith</span><span class="o">(</span><span class="n">JunitSuiteRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleSpec</span> <span class="o">{{</span>
+</span><span class='line'>    <span class="n">describe</span><span class="o">(</span><span class="s">&quot;includeTax&quot;</span><span class="o">,</span> <span class="n">it</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">it</span><span class="o">.</span><span class="na">should</span><span class="o">(</span><span class="s">&quot;税込み価格が取得できること&quot;</span><span class="o">,</span> <span class="n">expect</span> <span class="o">-&gt;</span>
+</span><span class='line'>            <span class="n">expect</span><span class="o">.</span><span class="na">that</span><span class="o">(</span><span class="n">Sample</span><span class="o">.</span><span class="na">includeTax</span><span class="o">(</span><span class="mi">100</span><span class="o">)).</span><span class="na">is</span><span class="o">(</span><span class="mi">108</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">);</span>
+</span><span class='line'>    <span class="o">});</span>
+</span><span class='line'><span class="o">}}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>static importを使ってlambda-behaveのメソッドを使えるようにし、こられを使って記述していきます。</p>
+
+<p>JUnitのランナーも用意されていますので、これを@RunWithで指定すれば、IDEからも簡単にテストを実行可能です。早速、テストを実行してみましょう。</p>
+
+<p><img src="/images/20141216/screen1.png" alt="screen1" /></p>
+
+<p>includeTaxは、まだ実装をおこなっていませんので、当然このとおりテストが失敗します。</p>
+
+<p>次に、includeTaxを実装してみます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">includeTax</span><span class="o">(</span><span class="n">Integer</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">final</span> <span class="kt">float</span> <span class="n">TAX_RATE</span> <span class="o">=</span> <span class="mi">8</span><span class="o">;</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">tax</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">ceil</span><span class="o">(</span><span class="n">price</span> <span class="o">*</span> <span class="n">TAX_RATE</span> <span class="o">/</span> <span class="mi">100</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">price</span> <span class="o">+</span> <span class="n">tax</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>再度、テストを実行すれば、テストが成功しています。</p>
+
+<p><img src="/images/20141216/screen2.png" alt="screen2" /></p>
+
+<h2>複数のテストデータでチェック</h2>
+
+<p>先の例では1つの値でしかテストしませんでしたが、lambda-behaveでは同時に複数の値でテストすることもできます。以下のようになります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">it</span><span class="o">.</span><span class="na">uses</span><span class="o">(</span><span class="mi">100</span><span class="o">,</span> <span class="mi">108</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">and</span><span class="o">(</span><span class="mi">200</span><span class="o">,</span> <span class="mi">216</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">toShow</span><span class="o">(</span><span class="s">&quot;税込み価格が取得できること&quot;</span><span class="o">,</span> <span class="o">(</span><span class="n">expect</span><span class="o">,</span> <span class="n">price</span><span class="o">,</span> <span class="n">includeTax</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>     <span class="n">expect</span><span class="o">.</span><span class="na">that</span><span class="o">(</span><span class="n">Sample</span><span class="o">.</span><span class="na">includeTax</span><span class="o">(</span><span class="n">price</span><span class="o">)).</span><span class="na">is</span><span class="o">(</span><span class="n">includeTax</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>itのあとにuseとandをチェインして値を準備し、これを使ってtoShowメソッド内でテストを行います。toShowメソッド内ではlambdaの引数で準備した値を利用できますので、lambda内でその値をexpectするようにしています。</p>
+
+<h2>生成した値でチェック</h2>
+
+<p>lambda-behaveではランダムな値を生成する機能も準備されています。適当な数値を5つほど生成して、そのテストを行うコードは以下のようになります。</p>
+
+<p>（あまり例がよくないですが・・・）</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">it</span><span class="o">.</span><span class="na">requires</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">example</span><span class="o">(</span><span class="n">Generator</span><span class="o">.</span><span class="na">integersUpTo</span><span class="o">(</span><span class="mi">1000</span><span class="o">))</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">toShow</span><span class="o">(</span><span class="s">&quot;税込み価格が取得できること&quot;</span><span class="o">,</span> <span class="o">(</span><span class="n">expect</span><span class="o">,</span> <span class="n">price</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">expect</span><span class="o">.</span><span class="na">that</span><span class="o">(</span><span class="n">Sample</span><span class="o">.</span><span class="na">includeTax</span><span class="o">(</span><span class="n">price</span><span class="o">)).</span><span class="na">is</span><span class="o">(</span><span class="n">price</span> <span class="o">+</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">ceil</span><span class="o">(</span><span class="n">price</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">/</span> <span class="mi">100</span><span class="o">));</span>
+</span><span class='line'>  <span class="o">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>requiresでランダムに準備する値の数を指定します。</p>
+
+<p>exampleではどのようなテストデータを生成するかを指定します。ここではlambda-behaveで準備されたGenerator.integersUpToを使用しています。この他にも適当な文字列を生成するasciiStringsメソッドなどもあります</p>
+
+<h2>例外が発生することをチェック</h2>
+
+<p>引数にnullが渡された場合にNullPointerExceptionの発生をチェックすることも、JUnitと同様に可能です。</p>
+
+<p>まず、includeTaxにnullチェックを記述します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">includeTax</span><span class="o">(</span><span class="n">Integer</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span><span class="o">(</span><span class="n">price</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">NullPointerException</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="kd">final</span> <span class="kt">float</span> <span class="n">TAX_RATE</span> <span class="o">=</span> <span class="mi">8</span><span class="o">;</span>
+</span><span class='line'>        <span class="kt">int</span> <span class="n">tax</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">ceil</span><span class="o">(</span><span class="n">price</span> <span class="o">*</span> <span class="n">TAX_RATE</span> <span class="o">/</span> <span class="mi">100</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">price</span> <span class="o">+</span> <span class="n">tax</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これをテストするlambda-behaveのコードは以下のようになります。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">it</span><span class="o">.</span><span class="na">should</span><span class="o">(</span><span class="s">&quot;nullの場合ぬるぽ&quot;</span><span class="o">,</span> <span class="n">expect</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">expect</span><span class="o">.</span><span class="na">exception</span><span class="o">(</span><span class="n">NullPointerException</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="o">()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Sample</span><span class="o">.</span><span class="na">includeTax</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">});</span>
+</span><span class='line'><span class="o">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>exceptionメソッドの第1引数に、発生する予定の例外を指定し、第2引数には例外が発生する処理をlambdaで記述します。</p>
+
+<p>lambdaに慣れていないと少々書きづらいかもしれないですが、DSLちっくに書けるのはJavaっぽくなくてステキですよね！</p>
+
+<p>こちらからは以上です。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1378,78 +1616,6 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/12/13/irof2013/">色んなバリエーションのirofさんを紹介しよう</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-12-13T00:00:00+09:00" pubdate data-updated="true">Dec 13<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>これは<a href="http://atnd.org/events/44814">irofアドベントカレンダー2013</a>の12月13日分のエントリのようです。</p>
-
-<p>昨日は<a href="https://twitter.com/akuraru">@akuraru</a>さんの<a href="http://d.hatena.ne.jp/akuraru/20131212/p1">「いろふさんの描かれていない領域には何があるのか」</a>でした。</p>
-
-<p>このアドベントカレンダーは先日、急にJJUGの某幹事からQBKで振られたものです。</p>
-
-<blockquote class="twitter-tweet" lang="ja"><p><a href="https://twitter.com/zephiransas">@zephiransas</a> ありがとうございます！名前書いておきました！</p>&mdash; (´・ω・｀) (@megascus) <a href="https://twitter.com/megascus/statuses/410019752245870592">2013, 12月 9</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>正直ネタを思いつかないだろうなーとおもいつつ、昨日の@akuraruさんのネタを見て、衝動的に思いついたので、書いてみます。</p>
-
-<p>皆さんご存知の用にirofさんには様々なインスタンスが存在しますが、それと同時に様々なバリエーションも存在します。BANDAIを始めとするおもちゃメーカーからもこぞってirofさんグッズが発売されていますが、今回はそのバリエーションの一部を皆さんにご紹介したいと思います。</p>
-
-<h2>シャア専用irof</h2>
-
-<p><img src="/images/20131213/char_irof.jpg" alt="char_irof" /></p>
-
-<p>シャア専用です。赤いです。3倍早いです。通常の3倍の速度でテストを書いてくれます。便利ですね。ぜひうちの会社に欲しいものです。</p>
-
-<h2>量産型irof</h2>
-
-<p><img src="/images/20131213/eva_irof.jpg" alt="eva_irof" /></p>
-
-<p>量産型です。空から降ってきて、人の黒歴史に干渉します。ちょっとイヤですね。</p>
-
-<h2>金剛型戦艦99番艦 irof</h2>
-
-<p><img src="/images/20131213/kongou_irof.png" alt="kongou_irof" /></p>
-
-<p>金剛型戦艦99番艦のirofﾃﾞｰｽ!!</p>
-
-<h2>まとめ</h2>
-
-<p>GIMP難しい</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1476,6 +1642,10 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/12/16/about-lambda-behave/">Lambda-behaveでテストを書こう</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/17/attend-jjug-ccc-2014-fall/">JJUG CCC 2014 Fallで発表してきた</a>
       </li>
     
@@ -1489,10 +1659,6 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
     
       <li class="post">
         <a href="/blog/2014/03/12/java8lambda/">Java8で始めるLambda（基礎編）</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/06/renew-photoleaf/">Photo Leafをちょっとリニューアルしました</a>
       </li>
     
   </ul>

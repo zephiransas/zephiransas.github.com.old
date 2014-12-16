@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2014-12-16T19:27:06+09:00</updated>
+  <updated>2014-12-16T23:10:19+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -102,9 +102,8 @@ public class SampleSpec {{</p>
 public class Sample {</p>
 
 <pre><code>public static int includeTax(Integer price) {
-    final float TAX_RATE = 8;
-    int tax = (int)Math.ceil(price * TAX_RATE / 100);
-    return price + tax;
+    final float TAX_RATE = 0.08;
+    return (int)Math.floor(price * (1 + TAX_RATE));
 }
 </code></pre>
 

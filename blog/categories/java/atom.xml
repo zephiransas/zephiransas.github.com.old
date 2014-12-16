@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2014-12-16T23:10:19+09:00</updated>
+  <updated>2014-12-16T23:15:06+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -142,7 +142,7 @@ it.requires(5)
   .example(Generator.integersUpTo(1000))
   .toShow(&ldquo;税込み価格が取得できること&rdquo;, (expect, price) &ndash;> {</p>
 
-<pre><code>expect.that(Sample.includeTax(price)).is(price + (int)Math.ceil(price * 8 / 100));
+<pre><code>expect.that(Sample.includeTax(price)).is((int)Math.floor(price * (1 + TAX_RATE)));
 </code></pre>
 
 <p>  });
@@ -164,9 +164,8 @@ public class Sample {</p>
     if(price == null) {
         throw new NullPointerException();
     }
-    final float TAX_RATE = 8;
-    int tax = (int)Math.ceil(price * TAX_RATE / 100);
-    return price + tax;
+    final float TAX_RATE = 0.08f;
+    return (int)Math.floor(price * (1 + TAX_RATE));
 }
 </code></pre>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2014-12-16T23:10:19+09:00</updated>
+  <updated>2014-12-16T23:15:06+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -161,7 +161,7 @@ lambda-behaveを使うと、このようなDSLっぽい記述のテストを、J
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">it</span><span class="o">.</span><span class="na">requires</span><span class="o">(</span><span class="mi">5</span><span class="o">)</span>
 </span><span class='line'>  <span class="o">.</span><span class="na">example</span><span class="o">(</span><span class="n">Generator</span><span class="o">.</span><span class="na">integersUpTo</span><span class="o">(</span><span class="mi">1000</span><span class="o">))</span>
 </span><span class='line'>  <span class="o">.</span><span class="na">toShow</span><span class="o">(</span><span class="s">&quot;税込み価格が取得できること&quot;</span><span class="o">,</span> <span class="o">(</span><span class="n">expect</span><span class="o">,</span> <span class="n">price</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">expect</span><span class="o">.</span><span class="na">that</span><span class="o">(</span><span class="n">Sample</span><span class="o">.</span><span class="na">includeTax</span><span class="o">(</span><span class="n">price</span><span class="o">)).</span><span class="na">is</span><span class="o">(</span><span class="n">price</span> <span class="o">+</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">ceil</span><span class="o">(</span><span class="n">price</span> <span class="o">*</span> <span class="mi">8</span> <span class="o">/</span> <span class="mi">100</span><span class="o">));</span>
+</span><span class='line'>    <span class="n">expect</span><span class="o">.</span><span class="na">that</span><span class="o">(</span><span class="n">Sample</span><span class="o">.</span><span class="na">includeTax</span><span class="o">(</span><span class="n">price</span><span class="o">)).</span><span class="na">is</span><span class="o">((</span><span class="kt">int</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">floor</span><span class="o">(</span><span class="n">price</span> <span class="o">*</span> <span class="o">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">TAX_RATE</span><span class="o">)));</span>
 </span><span class='line'>  <span class="o">});</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -185,15 +185,13 @@ lambda-behaveを使うと、このようなDSLっぽい記述のテストを、J
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-<span class='line-number'>10</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Sample</span> <span class="o">{</span>
 </span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">includeTax</span><span class="o">(</span><span class="n">Integer</span> <span class="n">price</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>        <span class="k">if</span><span class="o">(</span><span class="n">price</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nf">NullPointerException</span><span class="o">();</span>
 </span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="kd">final</span> <span class="kt">float</span> <span class="n">TAX_RATE</span> <span class="o">=</span> <span class="mi">8</span><span class="o">;</span>
-</span><span class='line'>        <span class="kt">int</span> <span class="n">tax</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">ceil</span><span class="o">(</span><span class="n">price</span> <span class="o">*</span> <span class="n">TAX_RATE</span> <span class="o">/</span> <span class="mi">100</span><span class="o">);</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">price</span> <span class="o">+</span> <span class="n">tax</span><span class="o">;</span>
+</span><span class='line'>        <span class="kd">final</span> <span class="kt">float</span> <span class="n">TAX_RATE</span> <span class="o">=</span> <span class="mf">0.08f</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">floor</span><span class="o">(</span><span class="n">price</span> <span class="o">*</span> <span class="o">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">TAX_RATE</span><span class="o">));</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure>

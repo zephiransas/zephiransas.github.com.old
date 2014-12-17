@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2014-12-16T23:16:37+09:00</updated>
+  <updated>2014-12-17T17:06:09+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -21,6 +21,8 @@
     <content type="html"><![CDATA[<p>これは<a href="http://qiita.com/advent-calendar/2014/java">Javaアドベントカレンダー2014</a>の12/16分の記事です。</p>
 
 <p>昨日は<a href="https://github.com/grimrose">grimrose</a>さんの、<a href="http://grimrose.blogspot.jp/2014/12/gradle.html">[書評] Gradle徹底入門</a> でした。</p>
+
+<p>明日は<a href="https://twitter.com/com4dc">@com4dc</a>さんの、<a href="http://dev.classmethod.jp/server-side/what-a-wonderful-stream-world/">はじめて触るStreamの世界</a> です。</p>
 
 <p>自分はJavaのテストフレームワークである、<a href="https://github.com/RichardWarburton/lambda-behave">lambda-behave</a>について紹介します。</p>
 

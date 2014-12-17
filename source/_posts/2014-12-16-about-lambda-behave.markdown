@@ -10,6 +10,8 @@ categories: Java
 
 昨日は[grimrose](https://github.com/grimrose)さんの、[[書評] Gradle徹底入門](http://grimrose.blogspot.jp/2014/12/gradle.html) でした。
 
+明日は[@com4dc](https://twitter.com/com4dc)さんの、[はじめて触るStreamの世界](http://dev.classmethod.jp/server-side/what-a-wonderful-stream-world/) です。
+
 自分はJavaのテストフレームワークである、[lambda-behave](https://github.com/RichardWarburton/lambda-behave)について紹介します。
 
 自分は普段はRailsでの開発を行っているのですが、現場では主にRSpecを使ってテストを記述しています。RSpecでのテストは以下のような感じです。

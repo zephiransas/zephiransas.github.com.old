@@ -4,7 +4,7 @@
   <title><![CDATA[zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2014-12-17T17:06:09+09:00</updated>
+  <updated>2015-04-02T18:00:03+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,69 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[GitHubのPull requestから、CHANGELOGっぽいものを作成するgemを作った]]></title>
+    <link href="http://zephiransas.github.com/blog/2015/04/02/introduce-octocam/"/>
+    <updated>2015-04-02T17:31:42+09:00</updated>
+    <id>http://zephiransas.github.com/blog/2015/04/02/introduce-octocam</id>
+    <content type="html"><![CDATA[<p>gemを作りました。名前はoctocamです。</p>
+
+<ul>
+<li>octocam &ndash; <a href="https://rubygems.org/gems/octocam">https://rubygems.org/gems/octocam</a></li>
+</ul>
+
+
+<p>主な機能としては「GitHubから指定された日付期間にマージされたPull requestを抽出し、CHANGELOGっぽいMarkdownを生成する」というgemです。</p>
+
+<p>定期的にリリースを行っている場合に、以前リリースされたときからどのような機能が増えたかをCHANGELOGとかに書き出しますが、そういった時に便利に使えると思います。</p>
+
+<p>似たような機能を持つものはgemやnpmを探すと、結構あります。<a href="https://github.com/skywinder/Github-Changelog-Generator/wiki/Alternatives">この辺り</a>とか。ただ、いずれも</p>
+
+<ul>
+<li>日付の指定ができない。できたとしてもPull requestの作成日とか。</li>
+<li>issueやcommitを含めてしまう。</li>
+<li>Markdownで出力できない。</li>
+<li>認証に対応してない。</li>
+</ul>
+
+
+<p>などなど、要求を満たすものではなかったので、gemの作り方を勉強がてら作ってみました。</p>
+
+<p>ワークフローとして、 <strong>必ずPull requestでレビューをしてから、マージをおこなうワークフロー</strong> を採用しているところであれば、フィットするように思います。</p>
+
+<h2>インストール</h2>
+
+<p>以下のようにしてインストールします。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem install octocam
+</span><span class='line'>rbenv rehash  # rbenvを使ってる人はrehash</span></code></pre></td></tr></table></div></figure>
+
+
+<p>もしプライベートなリポジトリにアクセスしたい場合は、<a href="https://github.com/settings/applications">こちら</a>からPersonal access tokensを生成します。
+あとは、生成したトークンを.bash_profileあたりから、環境変数「OCTOCAM_GITHUB_TOKEN」に設定しておきます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>export OCTOCAM_GITHUB_TOKEN="your-40-digit-github-token"</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>使い方</h2>
+
+<p>インストールされるとoctocamコマンドが使えるようになるので、以下のようにして実行します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>octocam -o zephiransas -r octocam -f 2015-01-01 -t 2015-01-31</span></code></pre></td></tr></table></div></figure>
+
+
+<p>-f,-tオプションにPull requestがマージされた日付を指定でききます。</p>
+
+<p><strong> カレントディレクトリがgitのローカルリポジトリで、かつ、originがGitHubに設定されている場合であれば-o,-rオプションは省略できます。 </strong></p>
+
+<p>欲しい機能ありましたら、issueを立てて頂くか、Pull requestを投げてください。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Lambda-behaveでテストを書こう]]></title>
@@ -1797,111 +1860,6 @@ weinreサーバはデフォルトの状態だとlocalhostからしか接続で�
 <p>なんか最近はJJUGの幹事にもなられたらしいので、これからも日本のJava界の為、頑張ってくれると思われます。ゆとりさん、頑張ってー</p>
 
 <p><img src="http://farm8.staticflickr.com/7281/8740171565_cc77c9a9e9_n.jpg"/></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Java Day Tokyo 2013に参加してきた（セッション）]]></title>
-    <link href="http://zephiransas.github.com/blog/2013/05/19/javadaytokyo2/"/>
-    <updated>2013-05-19T00:17:00+09:00</updated>
-    <id>http://zephiransas.github.com/blog/2013/05/19/javadaytokyo2</id>
-    <content type="html"><![CDATA[<p>前回の基調講演につづいて、今回は自分が参加したセッションのレポートです。</p>
-
-<h2>Ask the Experts</h2>
-
-<p>基調講演にも登壇したJavaSE,JavaFX,JavaEEの各キーパーソンに、直接質問できるセッションです。ちょうど昼の時間だったので、本来は昼食をとりつつ受けるセッションなんですが、うっかり自分は昼食を仕入れるのを忘れてました・・・</p>
-
-<p>JavaSEの担当は、Simon Ritter氏</p>
-
-<p><img src="http://farm8.staticflickr.com/7288/8740173841_d492ab6090_n.jpg"/></p>
-
-<p>JavaFXの担当は、Jim Weaver氏</p>
-
-<p><img src="http://farm8.staticflickr.com/7285/8741292898_42456c92d5_n.jpg"/></p>
-
-<p>JavaFXの担当は、Arun Gupta氏</p>
-
-<p><img src="http://farm8.staticflickr.com/7281/8741293406_f87d358552_n.jpg"/></p>
-
-<p>通訳の方が居たので、もちろん日本語で質問できたのですが、意外と質問が少ないような感じでした。</p>
-
-<p>印象に残ったのは、最後のJavaEEの質問で</p>
-
-<ul>
-<li>Q「JavaEEはいろんな仕様で構成されているが、最低限どれを使ってればJavaEEを使ってることになるのか？」</li>
-</ul>
-
-
-<p>という質問がありました。（ちょっと意地悪な質問な気もしますがw）それに対してArunは</p>
-
-<ul>
-<li>A「難しい質問だけど、強いて言えばServletかな？あ、でも、Strutsはダメだね！」</li>
-</ul>
-
-
-<p>と返して、会場は大爆笑でしたw</p>
-
-<h2>Javaプラットフォームにおける Batch アプリケーション (JSR 352)</h2>
-
-<p>JavaEE7で導入されるJBatchのセッション。担当はArun氏です。</p>
-
-<p><img src="http://farm8.staticflickr.com/7286/8741295358_cce2037082_n.jpg"/></p>
-
-<p>このJBatchは、エンタープライズアプリケーションでよくある、バッチ処理を効率よく書くためのフレームワークです。セッションを受けつつTLを眺めてて知ったのですが、どうもSpring Batchと非常によく似た仕組みのようです。設定をXMLで記述していくのが少々面倒な気もしますが、この辺りが改善されていけば、バッチ処理のスタンダードになるかなーという感じ。JavaEE準拠のサーバはもちろん、スタンドアロンの環境でも実行可能との事。</p>
-
-<h2>エンタープライズ環境における並列処理の実装方法について</h2>
-
-<p>我らの王子こと、寺田さんによるConcurrency Utilityのセッション。</p>
-
-<p>以前からJavaではThreadを使って、並列処理を書くことが可能でしたが、実際にはなかなか難しいものでした。これを簡単に行えるのがConcurrency Utilityです。実際に以下のデモを会場で見せていました。</p>
-
-<iframe width="560" height="315" src="http://www.youtube.com/embed/s9OB3lDPwtg?rel=0" frameborder="0" allowfullscreen></iframe>
-
-
-<p>詳細は<a href="http://yoshio3.com/2013/05/15/concurrency-utilities-for-ee-7/">寺田氏のブログ</a>に詳しいですが、Concurrncy Utilityを使うことで、CPUリソースを無駄なく使うコードを、簡単に実装することができるようになります。</p>
-
-<h2>Java the Night</h2>
-
-<p><img src="http://farm8.staticflickr.com/7285/8740181743_e4b88c0b29_n.jpg"/></p>
-
-<p>最後はお楽しみ（？）のJava the Night。日本のJava界を代表するエンジニアがLT&amp;デモを行うという趣向です。
-一人8分の持ち時間でした。どのLTもさすがはJava界のスーパーエンジニア！と唸らせる、最高に面白い内容でした。
-前回のJavaOne Tokyoの時もそうでしたが、この最後のLT枠に参加せずして、Javaのイベントに参加したとは言えないくらい、充実した内容です。
-なかでも印象に残ったのは、北海道の大学生2人。</p>
-
-<p><img src="http://farm8.staticflickr.com/7283/8741304934_655e6abe63_n.jpg"/></p>
-
-<p>プレゼンソフトなんですが、JavaFXで様々なエフェクトをつけることができるというものでした。彼らの初々しい（！）発表を聞きながら、その将来に期待をするとともに、まだまだ自分も頑張らなければ、と想いを新たにしました。</p>
-
-<h2>JavaSE7 日本語ドキュメント提供開始</h2>
-
-<p>そしてJava the Night終了後、寺田さんから重大な発表がありました。それはJavaSE7の日本語ドキュメントの提供を開始した、とのアナウンスでした。実はJavaSE7リリース後、しばらくしても日本語ドキュメントは提供されていませんでした。様々な方面から要望は上がっていましたが、残念ながら日本語ドキュメントは当分は提供されないという決定が、以前なされました。</p>
-
-<blockquote class="twitter-tweet" lang="ja"><p>影響度が大きい事を十分承知で申し上げます。誠に残念ながら直近で、提供の予定はございません。“@<a href="https://twitter.com/skrb">skrb</a>: @<a href="https://twitter.com/yoshioterada">yoshioterada</a> それよりもJava SE 7の日本語のJavadocはリリースされないのでしょうか？”</p>&mdash; Terada Yoshioさん (@yoshioterada) <a href="https://twitter.com/yoshioterada/status/183876594010558464">2012年3月25日</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>その後、有志を中心にボランティアで日本語化しようかといった動きもありましたが、本格化するには至りませんでした。</p>
-
-<p>そして、Java Day Tokyoにてサプライズとでもいいましょうか、<a href="http://yoshio3.com/2013/05/14/%EF%BD%8A%EF%BD%81%EF%BD%96%EF%BD%81-%EF%BD%93%EF%BD%85%EF%BC%97%EF%BD%81%EF%BD%90%EF%BD%89%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%89%88%E6%8F%90%E4%BE%9B%E9%96%8B%E5%A7%8B/">JavaSE7の日本語ドキュメント提供開始</a>のアナウンスがされました。</p>
-
-<p>JavaSE7がリリースされて随分経ちますが、これでようやくスタートライン。Java7を普通に使ってもらう環境が、日本でも整ったといった感じです。いろいろ想いはありますが、日本オラクル＆寺田さんの努力に敬意を表したいと思います。</p>
-
-<h2>Conclusion</h2>
-
-<p><img src="http://farm8.staticflickr.com/7286/8740206373_002b31196d_n.jpg"/></p>
-
-<p>以上、2回に分けてJava Day Tokyo 2013の模様をまとめました。</p>
-
-<p>1年ぶりにJavaのカンファレンスに参加して「自分はやっぱり、このJavaのコミュニティが好きなんだなぁ」という思いを強くしました。もちろん他のコミュニティでも似たような経験はできるとは思いますが、古参から新参まで多くのカラーが集まり、多種多様な人がいるコミュニティも珍しいように思います。そのような環境でエンジニアをやれるのは、とても嬉しいことです。</p>
-
-<p>さて、岡山Javaユーザ会でも、Java Day Tokyo 2013報告会@岡山と題して、報告会をやります。</p>
-
-<p>お申込みは<a href="http://local.aguuu.com/events/15432">こちら</a>からです。</p>
-
-<p>お近くの方は、是非ご参加ください。</p>
 ]]></content>
   </entry>
   

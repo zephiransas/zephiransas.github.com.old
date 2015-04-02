@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/blog/categories/ruby/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2014-12-17T17:06:09+09:00</updated>
+  <updated>2015-04-02T18:00:03+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,68 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[GitHubのPull requestから、CHANGELOGっぽいものを作成するgemを作った]]></title>
+    <link href="http://zephiransas.github.com/blog/2015/04/02/introduce-octocam/"/>
+    <updated>2015-04-02T17:31:42+09:00</updated>
+    <id>http://zephiransas.github.com/blog/2015/04/02/introduce-octocam</id>
+    <content type="html"><![CDATA[<p>gemを作りました。名前はoctocamです。</p>
+
+<ul>
+<li>octocam &ndash; <a href="https://rubygems.org/gems/octocam">https://rubygems.org/gems/octocam</a></li>
+</ul>
+
+
+<p>主な機能としては「GitHubから指定された日付期間にマージされたPull requestを抽出し、CHANGELOGっぽいMarkdownを生成する」というgemです。</p>
+
+<p>定期的にリリースを行っている場合に、以前リリースされたときからどのような機能が増えたかをCHANGELOGとかに書き出しますが、そういった時に便利に使えると思います。</p>
+
+<p>似たような機能を持つものはgemやnpmを探すと、結構あります。<a href="https://github.com/skywinder/Github-Changelog-Generator/wiki/Alternatives">この辺り</a>とか。ただ、いずれも</p>
+
+<ul>
+<li>日付の指定ができない。できたとしてもPull requestの作成日とか。</li>
+<li>issueやcommitを含めてしまう。</li>
+<li>Markdownで出力できない。</li>
+<li>認証に対応してない。</li>
+</ul>
+
+
+<p>などなど、要求を満たすものではなかったので、gemの作り方を勉強がてら作ってみました。</p>
+
+<p>ワークフローとして、 <strong>必ずPull requestでレビューをしてから、マージをおこなうワークフロー</strong> を採用しているところであれば、フィットするように思います。</p>
+
+<h2>インストール</h2>
+
+<p>以下のようにしてインストールします。</p>
+
+<p><code>
+gem install octocam
+rbenv rehash  # rbenvを使ってる人はrehash
+</code></p>
+
+<p>もしプライベートなリポジトリにアクセスしたい場合は、<a href="https://github.com/settings/applications">こちら</a>からPersonal access tokensを生成します。
+あとは、生成したトークンを.bash_profileあたりから、環境変数「OCTOCAM_GITHUB_TOKEN」に設定しておきます。</p>
+
+<p><code>
+export OCTOCAM_GITHUB_TOKEN="your-40-digit-github-token"
+</code></p>
+
+<h2>使い方</h2>
+
+<p>インストールされるとoctocamコマンドが使えるようになるので、以下のようにして実行します。</p>
+
+<p><code>
+octocam -o zephiransas -r octocam -f 2015-01-01 -t 2015-01-31
+</code></p>
+
+<p>-f,-tオプションにPull requestがマージされた日付を指定でききます。</p>
+
+<p><strong> カレントディレクトリがgitのローカルリポジトリで、かつ、originがGitHubに設定されている場合であれば-o,-rオプションは省略できます。 </strong></p>
+
+<p>欲しい機能ありましたら、issueを立てて頂くか、Pull requestを投げてください。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[werckerでrspecとcucumberのCI環境を作る]]></title>

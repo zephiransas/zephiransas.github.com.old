@@ -9,7 +9,8 @@
   <meta name="author" content="Takafumi Yoshida (@zephiransas)">
 
   
-  <meta name="description" content="gemを作りました。名前はoctocamです。 octocam &ndash; https://rubygems.org/gems/octocam 主な機能としては「GitHubから指定された日付期間にマージされたPull requestを抽出し、CHANGELOGっぽいMarkdownを生成する &hellip;">
+  <meta name="description" content="以前から気になっていたJavaのREPL、Project Kullaを動かしてみました。 REPLとはRead-eval-print loopの略で、CUIからコードを直接入力していって、その場で動作を確認できるツールです。
+Rubyであればirbやpryなどが有名ですね。 Project &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +78,274 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/04/16/project-kulla/">Project Kullaを試す</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-04-16T12:26:30+09:00" pubdate data-updated="true">Apr 16<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>以前から気になっていたJavaのREPL、Project Kullaを動かしてみました。</p>
+
+<p>REPLとはRead-eval-print loopの略で、CUIからコードを直接入力していって、その場で動作を確認できるツールです。
+Rubyであればirbやpryなどが有名ですね。</p>
+
+<p>Project KullaはOpenJDKにて開発されている、JavaのREPL環境をつくるプロジェクトです。
+ちなみにこの機能はJDK9で、正式導入される予定になっています。</p>
+
+<h2>JLine2のインストール</h2>
+
+<p>早速REPL環境を動かしてみたいところですが、まずは前準備として、Kullaに必要なJLine2というライブラリをビルドします。</p>
+
+<p>ソースコードは<a href="https://github.com/jline/jline2">GitHubのリポジトリ</a>でホストされていますので</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git clone git@github.com:jline/jline2.git
+</span><span class='line'><span class="nb">cd </span>jline2
+</span><span class='line'>mvn install
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ちなみにJLine2はJDK8以前でないとビルドできないので注意です。</p>
+
+<p>ビルドに成功するとjline2/targetディレクトリにjline-2.13-SNAPSHOT.jarが作成されます。Kullaからは、このjarを利用します。</p>
+
+<h2>JDK9 EAのインストール</h2>
+
+<p>KullaのビルドにはJDK9が必要です。<a href="https://jdk9.java.net/download/">こちら</a>からJDK9をダウンロードし、インストールします。
+自分がインストールしたのは、以下のバージョン。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>java version <span class="s2">&quot;1.9.0-ea&quot;</span>
+</span><span class='line'>Java<span class="o">(</span>TM<span class="o">)</span> SE Runtime Environment <span class="o">(</span>build 1.9.0-ea-b59<span class="o">)</span>
+</span><span class='line'>Java HotSpot<span class="o">(</span>TM<span class="o">)</span> 64-Bit Server VM <span class="o">(</span>build 1.9.0-ea-b59, mixed mode<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>その後、使用するJAVA_HOMEをJDK9に設定します。</p>
+
+<p>普段、自分はJAVA_HOMEの設定にjava_homeコマンドを使用しているので、.bash_profileに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">JAVA_HOME</span><span class="o">=</span><span class="sb">`</span>/usr/libexec/java_home -v 1.8<span class="sb">`</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>としてJDK8を使用しています。今回はJDK9を使いたいので、これを</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">export </span><span class="nv">JAVA_HOME</span><span class="o">=</span><span class="sb">`</span>/usr/libexec/java_home -v 1.9<span class="sb">`</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とし</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">source</span> ~/.bash_profile
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>として、JDK9を有効にします。</p>
+
+<h2>Kullaのビルド</h2>
+
+<p>いよいよKullaのソースをダウンロードしてビルドします。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>hg clone http://hg.openjdk.java.net/kulla/dev ~/kulla
+</span><span class='line'><span class="nb">cd</span> ~/kulla
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>次に、その他必要なソース類を取得します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>chmod 755 get_source.sh
+</span><span class='line'>./get_source.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>しばらく待つと、終了します。次にビルドスクリプトを環境に合わせて修正します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>langtools/repl
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>scripts/compileを以下のように修正します。</p>
+
+<figure class='code'><figcaption><span>scripts/compile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'><span class="nv">JLINE2LIB</span><span class="o">=</span>/Users/<span class="o">[</span>ユーザ名<span class="o">]</span>/jline2/target/jline-2.13-SNAPSHOT.jar
+</span><span class='line'><span class="nv">JAVAC_BIN_HOME</span><span class="o">=</span>/Library/Java/JavaVirtualMachines/jdk1.9.0.jdk/Contents/Home/bin
+</span><span class='line'>
+</span><span class='line'>mkdir -p build
+</span><span class='line'><span class="nv">$JAVAC_BIN_HOME</span>/javac -Xlint:unchecked -Xdiags:verbose -cp <span class="k">${</span><span class="nv">JLINE2LIB</span><span class="k">}</span> -d build src/*/*.java
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>1行目 &ndash; OSXの環境に合わせて&#8221;#!/bin/sh&#8221;に修正
+2行目 &ndash; jline2のjarを指定
+3行目 &ndash; JDK9のjavacのあるディレクトリを指定
+6行目 &ndash; 先頭に&#8221;$JAVAC_BIN_HOME&#8221;を追加</p>
+
+<p>修正できたら</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>scripts/compile
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>でビルドしましょう。なにもエラーがでなければ、成功しています。</p>
+
+<h2>REPLを実行する</h2>
+
+<p>実行前にscripts/runを以下のように修正します。</p>
+
+<figure class='code'><figcaption><span>scripts/run</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'><span class="nv">JLINE2LIB</span><span class="o">=</span>/Users/<span class="o">[</span>ユーザ名<span class="o">]</span>/jline2/target/jline-2.13-SNAPSHOT.jar
+</span><span class='line'><span class="nv">JAVA_BIN_HOME</span><span class="o">=</span>/Library/Java/JavaVirtualMachines/jdk1.9.0.jdk/Contents/Home/bin/
+</span><span class='line'><span class="nv">$JAVA_BIN_HOME</span>/java -ea -esa -cp build:<span class="k">${</span><span class="nv">JLINE2LIB</span><span class="k">}</span> tool.Repl <span class="s2">&quot;$@&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>先になおしたスクリプトとほぼ同じです。</p>
+
+<p>修正できたら、早速実行してみましょう。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>scripts/run
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>すると、以下のようにプロンプトが表示されます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>|  Welcome to the Java REPL -- Version 0.411
+</span><span class='line'>|  Type /help <span class="k">for </span><span class="nb">help</span>
+</span><span class='line'>
+</span><span class='line'>-&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あとは普通にJavaのプログラムが書けます！</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>-&gt; System.out.println<span class="o">(</span><span class="s2">&quot;Hello!&quot;</span><span class="o">)</span>;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>また、CUIなどと同じようにタブによる補完もできます。</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p><a href="https://twitter.com/zephiransas">@zephiransas</a> ちなみにSHIFT+TABでメソッドのシグネチャが表示されます．&#10;new String([SHIFT+TAB]みたいな感じで</p>&mdash; bitter_fox (@bitter_fox) <a href="https://twitter.com/bitter_fox/status/588512374845411328">2015, 4月 16</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>Shift + Tab補完もなかなかステキ。</p>
+
+<p>当然ですがクラスを定義することもできます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>-&gt; class Hoge <span class="o">{</span>
+</span><span class='line'>&gt;&gt; public static String fuga<span class="o">(){</span> <span class="k">return</span> <span class="s2">&quot;FUGA!!&quot;</span>; <span class="o">}</span>
+</span><span class='line'>&gt;&gt; <span class="o">}</span>
+</span><span class='line'>|  Added class Hoge
+</span><span class='line'>
+</span><span class='line'>-&gt; Hoge.fuga<span class="o">()</span>;
+</span><span class='line'>|  Expression value is: <span class="s2">&quot;FUGA!!&quot;</span>
+</span><span class='line'>|    assigned to temporary variable <span class="nv">$1</span> of <span class="nb">type </span>String
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>面白いのは、<strong>いきなりメソッド定義</strong>もできます！</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>-&gt; int add<span class="o">(</span>int x, int y<span class="o">){</span> <span class="k">return </span>x + y;<span class="o">}</span>
+</span><span class='line'>|  Added method add
+</span><span class='line'>
+</span><span class='line'>-&gt; add<span class="o">(</span>2,3<span class="o">)</span>;
+</span><span class='line'>|  Expression value is: 5
+</span><span class='line'>|    assigned to temporary variable <span class="nv">$2</span> of <span class="nb">type </span>int
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>普通に使えそうですね！</p>
+
+<p>またTab補完周りの機能については、我らの<a href="https://twitter.com/bitter_fox/">@bitter_foxくん</a>が実装に関わってるらしいので、補完機能が怪しかったら、ぜひレポートしてあげてください。</p>
+
+<blockquote class="twitter-tweet" data-conversation="none" lang="ja"><p><a href="https://twitter.com/zephiransas">@zephiransas</a> Tab補完周り僕の少し実装に関わってるんで，良ければフィードバックください！</p>&mdash; bitter_fox (@bitter_fox) <a href="https://twitter.com/bitter_fox/status/588512213050101760">2015, 4月 16</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<h2>参考にしたリンク</h2>
+
+<ul>
+<li>Java 9 REPL – Getting started guide &ndash; <a href="http://www.jclarity.com/2015/04/15/java-9-repl-getting-started-guide/">http://www.jclarity.com/2015/04/15/java-9-repl-getting-started-guide/</a></li>
+<li>REPLで遊ぼう &ndash; <a href="http://d.hatena.ne.jp/bitter_fox/20150331/1427754868">http://d.hatena.ne.jp/bitter_fox/20150331/1427754868</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1569,72 +1838,6 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/12/23/daitokai2013/">牡蠣駆動勉強会を行いました</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-12-23T21:48:00+09:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>これは<a href="http://www.adventar.org/calendars/75">大都会アドベントカレンダー2013</a>の12/23分のエントリーです。</p>
-
-<p>前日は @mao_instantlife さんの<a href="http://d.hatena.ne.jp/mao_instantlife/20131222/1387674262">岡山のお気に入りな飲み屋</a></p>
-
-<p>明日は @kotanin さんです。</p>
-
-<p>大都会岡山には、皆さんご存知のように様々な勉強会が存在します。今回はその一つである<a href="http://local.aguuu.com/events/27433">牡蠣駆動勉強会</a>を紹介します。</p>
-
-<p><img src="/images/20131223/oister.JPG" alt="oister" /></p>
-
-<p>牡蠣駆動勉強会はその名の通り（？）牡蠣を食べる勉強会です。</p>
-
-<p>大都会岡山には牡蠣の産地として有名な日生がありますが、そこにある<a href="http://www.hinase.net/02kankou.html">「五味の市」</a>では、毎日採れたての新鮮な牡蠣を購入することができます。値段はだいたい1kg/¥1,000程度で殻付きの牡蠣を購入できます。某氏は¥2,000分ほど買って、売り子のおばちゃんと交渉してオマケをｹﾞｯﾄしたようですがw</p>
-
-<p>またこの牡蠣は持ち帰って食べるだけでなく、現地にあるBBQスペースを借りることで、その場で食べることもできます。今回の勉強会の目的は、そのBBQスペースを使って美味しい牡蠣を食べることです。ちなみにこの時期の牡蠣は身が大きいので、他の場所で食べるときっといいお値段がするんじゃないですかね？</p>
-
-<p>BBQスペースは五味の市の近くにある、海の駅「しおじ」というところでBBQスペースを¥1,000で90分借りることができます。ここでは必要なものがひと通りセットで提供されていて、受付で</p>
-
-<ul>
-<li>トング</li>
-<li>網</li>
-<li>牡蠣メス（牡蠣を開けたり、貝柱を切る専用のツール）</li>
-<li>軍手</li>
-<li>割り箸＆紙皿</li>
-</ul>
-
-
-<p>などを渡してくれます。席にはすでに火をおこした炭が準備されているので、特になにも持って行かなくても楽しめますが、上級者になると、ポン酢などのおこのみの調味料や、おにぎりを持ってきて焼きおにぎりにしたり、ビールを飲んだり、更にはワインを飲んだり（！）等々、楽しみかたはいろいろあります。
-しおじには牡蠣以外にも、ホタテや海老などの海産物も売っていますので、お子様でも安心です。</p>
-
-<p>というわけで、牡蠣駆動勉強会の紹介でした。ぜひ、シーズン中に行ってみてください！</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1661,6 +1864,10 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/16/project-kulla/">Project Kullaを試す</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/02/introduce-octocam/">GitHubのPull requestから、CHANGELOGっぽいものを作成するgemを作った</a>
       </li>
     
@@ -1674,10 +1881,6 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
     
       <li class="post">
         <a href="/blog/2014/03/20/pusher-with-chrome-extension/">Pusherを使ったChrome拡張を作る</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/15/what-you-shoud-eat-in-daitokai/">岡山の勉強会に参加する際の心構え</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2015-04-16T13:29:41+09:00</updated>
+  <updated>2015-05-31T22:58:57+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,45 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[JavaプログラマがKindle50%還元セールで買っておくべきIT技術書]]></title>
+    <link href="http://zephiransas.github.com/blog/2015/05/31/java-programmer-must-buy/"/>
+    <updated>2015-05-31T22:29:48+09:00</updated>
+    <id>http://zephiransas.github.com/blog/2015/05/31/java-programmer-must-buy</id>
+    <content type="html"><![CDATA[<p>Kindle Storeでセールをやってるようです。今回は50%をポイント還元するってセールらしいです。</p>
+
+<p>で、<a href="http://www.kinleit.link/web/post-4954#Web-2">こちら</a>を見てたらRubyやPHPはあっても、Javaがなかったので、ついカッとなってJavaプログラマ向けのオススメ技術書をチョイスしました。
+セールは<strong>6/1の正午まで</strong>ですので、お早めにどーぞ。</p>
+
+<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00MIM1KFC" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>これは店頭で目次を見た程度です。わりと初心者向けな印象なので、これからJavaを勉強したい人にオススメです。</p>
+
+<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00V2WMQNE" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>いわずと知れた「パーフェクトシリーズ」のJava版。広範囲に網羅されているので、手元に置いておけば長く使えると思います。初心者でも可。</p>
+
+<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00JS1EHH4" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>これも「逆引きレシピシリーズ」のJava版。リファレンス的に使うのならコイツは鉄板。</p>
+
+<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00XTOSYIY" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>そもそもJava EEの日本語の本は少ないのですが、最新のJava EE7に対応した本。</p>
+
+<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B0088L9I4W" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>1つ前のバージョンであるJava EE6の本。通称「金魚本」。Java EE6と多少古くはあるがJava EE7と全然違うというわけでもないので、未だに現役で使えるはず。内容はある程度Java EE6の仕組みを理解している人がリファレンス的に使う感じだと思います。</p>
+
+<p>現場からは以上です。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Project Kullaを試す]]></title>
@@ -2032,42 +2071,6 @@ weinreサーバはデフォルトの状態だとlocalhostからしか接続で�
 
 <p>RubyKaigiで撮った写真はこちらにまとめてます。
 <a href="http://www.flickr.com/photos/zephiransas/sets/72157633895505417/">http://www.flickr.com/photos/zephiransas/sets/72157633895505417/</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[GlassFishのアップグレード方法]]></title>
-    <link href="http://zephiransas.github.com/blog/2013/05/24/how-to-upgrade-gf/"/>
-    <updated>2013-05-24T15:46:00+09:00</updated>
-    <id>http://zephiransas.github.com/blog/2013/05/24/how-to-upgrade-gf</id>
-    <content type="html"><![CDATA[<p>会社で使ってるJenkinsさんはGlassFish上で動いているんですが、これのアップグレードを行ったので、そのメモ。</p>
-
-<p>具体的にはGlassFish 3.1.1からGlassFish 3.1.2へアップグレードしました。</p>
-
-<h2>updatetoolのインストール</h2>
-
-<p>まずはアップグレードに使用するupdatetoolをインストールします。</p>
-
-<p>方法はasadminと同じディレクトリにある、updatetoolを実行するだけ。</p>
-
-<p>初めてupdatetoolコマンドを実行した際に、updatetoolをインストールするか聞いてきますので、yを押してインストールするだけです。</p>
-
-<p>ちょっと時間がかかるので、アニメでも見ながらゆっくり待ちましょう。</p>
-
-<h2>updatetoolからGlassFishのアップグレード</h2>
-
-<p>上記の手順でupdatetoolのインストールが終了したら、もう一度updatetoolコマンドを実行します。するとGUIが立ち上がって来ますので、以下のようにするだけ。</p>
-
-<p><img src="http://zephiransas.github.com/images/20130524/updatetool.png" alt="updatetool" /></p>
-
-<p>あとは</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>./asadmin version
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>などで、アップグレードできていることを確認しましょう。</p>
 ]]></content>
   </entry>
   

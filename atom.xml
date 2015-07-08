@@ -4,7 +4,7 @@
   <title><![CDATA[zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2015-07-08T11:03:45+09:00</updated>
+  <updated>2015-07-08T12:50:39+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -233,7 +233,7 @@
 </span><span class='line'>  <span class="n">has_many</span> <span class="ss">:comments</span><span class="p">,</span> <span class="ss">conditions</span><span class="p">:</span> <span class="s1">&#39;comments.deleted_at is null&#39;</span>
 </span><span class='line'>  <span class="n">has_many</span> <span class="ss">:comments_with_deleted</span><span class="p">,</span>
 </span><span class='line'>           <span class="n">class_name</span><span class="p">:</span> <span class="s1">&#39;Comment&#39;</span><span class="p">,</span>
-</span><span class='line'>           <span class="n">foreign_key</span><span class="p">:</span> <span class="ss">:id</span>
+</span><span class='line'>           <span class="n">foreign_key</span><span class="p">:</span> <span class="ss">:post_id</span>
 </span><span class='line'><span class="k">end</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -276,7 +276,48 @@
 
 <p>最初のSQLでは、条件にcomments.deleted_at is nullが付与されていないので、これは期待通りなのですが、<strong>その後、なぜかN+1問題が再発</strong>しています。</p>
 
-<p>現在のところ、これを回避できる方法は見つけられていません。</p>
+<p><del>現在のところ、これを回避できる方法は見つけられていません。</del></p>
+
+<ul>
+<li>追記</li>
+</ul>
+
+
+<p>我らのひむひむセンセイから、アドバイスを頂きました。</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p lang="ja" dir="ltr"><a href="https://twitter.com/zephiransas">@zephiransas</a> &#10;Post.eager_load(:comments_with_deleted).each do |post|&#10; puts <a href="http://t.co/FVIFkHFf3H">http://t.co/FVIFkHFf3H</a>&#10;end&#10;的な感じじゃダメなんかね <a href="https://twitter.com/hashtag/%E3%81%A6%E3%81%8D%E3%81%A8%E3%81%86?src=hash">#てきとう</a></p>&mdash; えいる (@eielh) <a href="https://twitter.com/eielh/status/618621108854652929">2015, 7月 8</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>なるほど！やってみましょう。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Post</span><span class="o">.</span><span class="n">eager_load</span><span class="p">(</span><span class="ss">:comments_with_deleted</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">post</span><span class="o">|</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">post</span><span class="o">.</span><span class="n">comments_with_deleted</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>するとSQLは</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">SELECT</span> <span class="s2">&quot;posts&quot;</span><span class="o">.</span>
+</span><span class='line'><span class="no">SQL</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="n">*</span><span class="p">,</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">&quot;posts&quot;</span> <span class="no">LEFT</span> <span class="no">OUTER</span> <span class="no">JOIN</span>
+</span><span class='line'><span class="no">ON</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="s2">&quot;post_id&quot;</span> <span class="o">=</span> <span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="s2">&quot;id&quot;</span>
+</span><span class='line'><span class="no">WHERE</span> <span class="p">(</span><span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="n">deleted_at</span> <span class="no">IS</span> <span class="no">NULL</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となって、意図した結果になりましたとさ。</p>
+
+<p>でもこれ、実装時に意識しながら書ける自信ないですわ・・・(´・3・`)</p>
 
 <h2>結論</h2>
 

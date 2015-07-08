@@ -154,7 +154,7 @@ class Post < ActiveRecord::Base
   has_many :comments, conditions: 'comments.deleted_at is null'
   has_many :comments_with_deleted,
            class_name: 'Comment',
-           foreign_key: :id
+           foreign_key: :post_id
 end
 ```
 
@@ -183,7 +183,35 @@ Comment Load (0.1ms)  SELECT "comments".* FROM "comments" WHERE "comments"."post
 
 最初のSQLでは、条件にcomments.deleted_at is nullが付与されていないので、これは期待通りなのですが、**その後、なぜかN+1問題が再発**しています。
 
-現在のところ、これを回避できる方法は見つけられていません。
+~~現在のところ、これを回避できる方法は見つけられていません。~~
+
+- 追記
+
+我らのひむひむセンセイから、アドバイスを頂きました。
+
+<blockquote class="twitter-tweet" lang="ja"><p lang="ja" dir="ltr"><a href="https://twitter.com/zephiransas">@zephiransas</a> &#10;Post.eager_load(:comments_with_deleted).each do |post|&#10; puts <a href="http://t.co/FVIFkHFf3H">http://t.co/FVIFkHFf3H</a>&#10;end&#10;的な感じじゃダメなんかね <a href="https://twitter.com/hashtag/%E3%81%A6%E3%81%8D%E3%81%A8%E3%81%86?src=hash">#てきとう</a></p>&mdash; えいる (@eielh) <a href="https://twitter.com/eielh/status/618621108854652929">2015, 7月 8</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+なるほど！やってみましょう。
+
+```
+Post.eager_load(:comments_with_deleted).each do |post|
+  puts post.comments_with_deleted.first.name
+end
+```
+
+するとSQLは
+
+```
+SELECT "posts".
+SQL (0.2ms)  SELECT "posts".*, "comments".* FROM "posts" LEFT OUTER JOIN
+ON "comments"."post_id" = "posts"."id"
+WHERE ("posts".deleted_at IS NULL)
+```
+
+となって、意図した結果になりましたとさ。
+
+でもこれ、実装時に意識しながら書ける自信ないですわ・・・(´・3・`)
 
 ## 結論
 

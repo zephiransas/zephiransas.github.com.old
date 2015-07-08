@@ -9,8 +9,11 @@
   <meta name="author" content="Takafumi Yoshida (@zephiransas)">
 
   
-  <meta name="description" content="Kindle Storeでセールをやってるようです。今回は50%をポイント還元するってセールらしいです。 で、こちらを見てたらRubyやPHPはあっても、Javaがなかったので、ついカッとなってJavaプログラマ向けのオススメ技術書をチョイスしました。
-セールは6/1の正午までですので、 &hellip;">
+  <meta name="description" content="Railsアプリにて論理削除とeager_loadを合わせて使うとN+1問題が発生することに気づいたのでメモ。 N+1問題を確認する まずはN+1問題が起きるようなモデルを作成します。よくあるブログアプリのような、ブログのエントリがあり、それにコメントが複数あるパターンです。 1
+2
+3
+4
+5 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +81,314 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/08/eager-load-with-paranoia/">論理削除とeager_loadでN+1問題が発生する件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-08T09:53:55+09:00" pubdate data-updated="true">Jul 8<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Railsアプリにて論理削除とeager_loadを合わせて使うとN+1問題が発生することに気づいたのでメモ。</p>
+
+<h2>N+1問題を確認する</h2>
+
+<p>まずはN+1問題が起きるようなモデルを作成します。よくあるブログアプリのような、ブログのエントリがあり、それにコメントが複数あるパターンです。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Post</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">attr_accessible</span> <span class="ss">:title</span><span class="p">,</span>
+</span><span class='line'>                  <span class="ss">:content</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:comments</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Comment</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">attr_accessible</span> <span class="ss">:post_id</span><span class="p">,</span>
+</span><span class='line'>                  <span class="ss">:name</span><span class="p">,</span>
+</span><span class='line'>                  <span class="ss">:content</span>
+</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:post</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>適当なデータを入れた後、これに対してrails cで以下のようにレコードを取得します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Post</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">post</span><span class="o">|</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">post</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>すると、以下のようなSQLが発行されます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Post</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">&quot;posts&quot;</span>
+</span><span class='line'><span class="no">Comment</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">&quot;comments&quot;</span> <span class="no">WHERE</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="s2">&quot;post_id&quot;</span> <span class="o">=</span> <span class="mi">12</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+</span><span class='line'><span class="err">ユーザ</span><span class="mi">1</span>
+</span><span class='line'><span class="no">Comment</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">&quot;comments&quot;</span> <span class="no">WHERE</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="s2">&quot;post_id&quot;</span> <span class="o">=</span> <span class="mi">13</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+</span><span class='line'><span class="err">ユーザ</span><span class="mi">1</span>
+</span><span class='line'><span class="no">Comment</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">&quot;comments&quot;</span> <span class="no">WHERE</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="s2">&quot;post_id&quot;</span> <span class="o">=</span> <span class="mi">14</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+</span><span class='line'><span class="err">ユーザ</span><span class="mi">1</span>
+</span><span class='line'><span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="err">（以下続く</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この場合は、<strong>対象となったPostの件数分、CommentsテーブルへのSQLが発行されることになります。</strong> これがN+1問題です。</p>
+
+<h2>N+1問題に対処する</h2>
+
+<p>これを解決するには、eager_loadを使うことが一般的です。つまり</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Post</span><span class="o">.</span><span class="n">eager_load</span><span class="p">(</span><span class="ss">:comments</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">post</span><span class="o">|</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">post</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この場合のSQLは（一部簡略化しています）</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">SQL</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="n">*</span><span class="p">,</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">*</span>
+</span><span class='line'><span class="no">FROM</span> <span class="s2">&quot;posts&quot;</span> <span class="no">LEFT</span> <span class="no">OUTER</span> <span class="no">JOIN</span> <span class="s2">&quot;comments&quot;</span> <span class="no">ON</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="s2">&quot;post_id&quot;</span> <span class="o">=</span> <span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="s2">&quot;id&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となります。Postsテーブルと一緒にCommentsテーブルを取得しているので、SQLが1回だけ発行されていることがわかります。</p>
+
+<p>美しい理想の世界です。ﾊﾗｼｮｰ</p>
+
+<h2>paranoiaを導入する</h2>
+
+<p>さて本題。ここで<strong>うっかり論理削除を導入</strong>してみましょう。</p>
+
+<p>Railsには論理削除に関するgemは多数ありますが、現在のデファクトスタンダードは<a href="https://github.com/radar/paranoia">paranoia</a>だと思います。まずはparanoiaをGemfileに記述します。</p>
+
+<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;paranoia&#39;</span><span class="p">,</span> <span class="s1">&#39;~&gt; 1.0&#39;</span>  <span class="c1"># Rails3系には1.0系を使用</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>その後、モデルを以下のように変更します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Post</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">acts_as_paranoid</span>
+</span><span class='line'>  <span class="n">attr_accessible</span> <span class="ss">:title</span><span class="p">,</span>
+</span><span class='line'>                  <span class="ss">:content</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:comments</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Comment</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">acts_as_paranoid</span>
+</span><span class='line'>  <span class="n">attr_accessible</span> <span class="ss">:post_id</span><span class="p">,</span>
+</span><span class='line'>                  <span class="ss">:name</span><span class="p">,</span>
+</span><span class='line'>                  <span class="ss">:content</span>
+</span><span class='line'>  <span class="n">belongs_to</span> <span class="ss">:post</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>その後、eager_loadしてみます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Post</span><span class="o">.</span><span class="n">eager_load</span><span class="p">(</span><span class="ss">:comments</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">post</span><span class="o">|</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">post</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>するとSQLは以下の様に発行されます。（一部簡略化しています）</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">SQL</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="n">*</span><span class="p">,</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">*</span>
+</span><span class='line'><span class="no">FROM</span> <span class="s2">&quot;posts&quot;</span> <span class="no">LEFT</span> <span class="no">OUTER</span> <span class="no">JOIN</span> <span class="s2">&quot;comments&quot;</span> <span class="no">ON</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="s2">&quot;post_id&quot;</span> <span class="o">=</span> <span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="s2">&quot;id&quot;</span>
+</span><span class='line'><span class="no">WHERE</span> <span class="p">(</span><span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="n">deleted_at</span> <span class="no">IS</span> <span class="no">NULL</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>PostsテーブルのWHERE条件にdeleted_at is nullが付与されているのは期待通りですが、Commentsテーブルには付与されていないので、これでは<strong>論理削除されたCommentsテーブルの内容</strong>も取得してしまいます・・・</p>
+
+<p>では、以下のようにPostのcommentsにconditionsを付与するのはどうでしょう？</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Post</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">acts_as_paranoid</span>
+</span><span class='line'>  <span class="n">attr_accessible</span> <span class="ss">:title</span><span class="p">,</span>
+</span><span class='line'>                  <span class="ss">:content</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:comments</span><span class="p">,</span> <span class="ss">conditions</span><span class="p">:</span> <span class="s1">&#39;comments.deleted_at is null&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここで同様にeager_loadするとSQLは以下の様に発行されます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">SQL</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="n">*</span><span class="p">,</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">*</span>
+</span><span class='line'><span class="no">FROM</span> <span class="s2">&quot;posts&quot;</span> <span class="no">LEFT</span> <span class="no">OUTER</span> <span class="no">JOIN</span> <span class="s2">&quot;comments&quot;</span> <span class="no">ON</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="s2">&quot;post_id&quot;</span> <span class="o">=</span> <span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="s2">&quot;id&quot;</span> <span class="no">AND</span> <span class="n">comments</span><span class="o">.</span><span class="n">deleted_at</span> <span class="n">is</span> <span class="n">null</span>
+</span><span class='line'><span class="no">WHERE</span> <span class="p">(</span><span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="n">deleted_at</span> <span class="no">IS</span> <span class="no">NULL</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>WHERE条件が追加されて、なんだか、いい感じにeager_loadできました。</p>
+
+<h2>論理削除したデータも取得したい場合</h2>
+
+<p>さて、ここで少々頭がおかしくなって「削除したCommentも取りたい(^q^)」という気分になったとしましょう。</p>
+
+<p>そこでPostクラスにcomments_with_deletedなるアソシエーションを追加します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">Post</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+</span><span class='line'>  <span class="n">acts_as_paranoid</span>
+</span><span class='line'>  <span class="n">attr_accessible</span> <span class="ss">:title</span><span class="p">,</span>
+</span><span class='line'>                  <span class="ss">:content</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:comments</span><span class="p">,</span> <span class="ss">conditions</span><span class="p">:</span> <span class="s1">&#39;comments.deleted_at is null&#39;</span>
+</span><span class='line'>  <span class="n">has_many</span> <span class="ss">:comments_with_deleted</span><span class="p">,</span>
+</span><span class='line'>           <span class="n">class_name</span><span class="p">:</span> <span class="s1">&#39;Comment&#39;</span><span class="p">,</span>
+</span><span class='line'>           <span class="n">foreign_key</span><span class="p">:</span> <span class="ss">:id</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>さて、これを使ってeager_loadしてみましょう。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Post</span><span class="o">.</span><span class="n">eager_load</span><span class="p">(</span><span class="ss">:comments_with_deleted</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">post</span><span class="o">|</span>
+</span><span class='line'>  <span class="nb">puts</span> <span class="n">post</span><span class="o">.</span><span class="n">comments</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">name</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>すると、以下のようなSQLが発行されます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">SQL</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="n">*</span><span class="p">,</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">&quot;posts&quot;</span> <span class="no">LEFT</span> <span class="no">OUTER</span> <span class="no">JOIN</span> <span class="s2">&quot;comments&quot;</span> <span class="no">ON</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="s2">&quot;id&quot;</span> <span class="o">=</span> <span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="s2">&quot;id&quot;</span> <span class="no">WHERE</span> <span class="p">(</span><span class="s2">&quot;posts&quot;</span><span class="o">.</span><span class="n">deleted_at</span> <span class="no">IS</span> <span class="no">NULL</span><span class="p">)</span>
+</span><span class='line'><span class="no">Comment</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">&quot;comments&quot;</span> <span class="no">WHERE</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="s2">&quot;post_id&quot;</span> <span class="o">=</span> <span class="mi">12</span> <span class="no">AND</span> <span class="p">(</span><span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">deleted_at</span> <span class="no">IS</span> <span class="no">NULL</span><span class="p">)</span> <span class="no">AND</span> <span class="p">(</span><span class="n">comments</span><span class="o">.</span><span class="n">deleted_at</span> <span class="n">is</span> <span class="n">null</span><span class="p">)</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+</span><span class='line'><span class="err">ユーザ</span><span class="mi">2</span>
+</span><span class='line'><span class="no">Comment</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">&quot;comments&quot;</span> <span class="no">WHERE</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="s2">&quot;post_id&quot;</span> <span class="o">=</span> <span class="mi">13</span> <span class="no">AND</span> <span class="p">(</span><span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">deleted_at</span> <span class="no">IS</span> <span class="no">NULL</span><span class="p">)</span> <span class="no">AND</span> <span class="p">(</span><span class="n">comments</span><span class="o">.</span><span class="n">deleted_at</span> <span class="n">is</span> <span class="n">null</span><span class="p">)</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+</span><span class='line'><span class="err">ユーザ</span><span class="mi">1</span>
+</span><span class='line'><span class="no">Comment</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">&quot;comments&quot;</span> <span class="no">WHERE</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="s2">&quot;post_id&quot;</span> <span class="o">=</span> <span class="mi">14</span> <span class="no">AND</span> <span class="p">(</span><span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">deleted_at</span> <span class="no">IS</span> <span class="no">NULL</span><span class="p">)</span> <span class="no">AND</span> <span class="p">(</span><span class="n">comments</span><span class="o">.</span><span class="n">deleted_at</span> <span class="n">is</span> <span class="n">null</span><span class="p">)</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+</span><span class='line'><span class="err">ユーザ</span><span class="mi">1</span>
+</span><span class='line'><span class="no">Comment</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">&quot;comments&quot;</span> <span class="no">WHERE</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="s2">&quot;post_id&quot;</span> <span class="o">=</span> <span class="mi">15</span> <span class="no">AND</span> <span class="p">(</span><span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">deleted_at</span> <span class="no">IS</span> <span class="no">NULL</span><span class="p">)</span> <span class="no">AND</span> <span class="p">(</span><span class="n">comments</span><span class="o">.</span><span class="n">deleted_at</span> <span class="n">is</span> <span class="n">null</span><span class="p">)</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+</span><span class='line'><span class="err">ユーザ</span><span class="mi">1</span>
+</span><span class='line'><span class="no">Comment</span> <span class="no">Load</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="n">ms</span><span class="p">)</span>  <span class="no">SELECT</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="s2">&quot;comments&quot;</span> <span class="no">WHERE</span> <span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="s2">&quot;post_id&quot;</span> <span class="o">=</span> <span class="mi">16</span> <span class="no">AND</span> <span class="p">(</span><span class="s2">&quot;comments&quot;</span><span class="o">.</span><span class="n">deleted_at</span> <span class="no">IS</span> <span class="no">NULL</span><span class="p">)</span> <span class="no">AND</span> <span class="p">(</span><span class="n">comments</span><span class="o">.</span><span class="n">deleted_at</span> <span class="n">is</span> <span class="n">null</span><span class="p">)</span> <span class="no">LIMIT</span> <span class="mi">1</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最初のSQLでは、条件にcomments.deleted_at is nullが付与されていないので、これは期待通りなのですが、<strong>その後、なぜかN+1問題が再発</strong>しています。</p>
+
+<p>現在のところ、これを回避できる方法は見つけられていません。</p>
+
+<h2>結論</h2>
+
+<p>結論を<a href="http://blog.oukasoft.com/OS/">社畜ちゃん</a>にまとめていただきます。</p>
+
+<p><img src="/images/20150708/summary.png" alt="summary" /></p>
+
+<p>とは言っても論理武装が必要でしょうから、こちらも合わせてどうぞ。</p>
+
+<ul>
+<li>DELETE_FLAG を付ける前に確認したいこと。 &ndash; <a href="http://qiita.com/Jxck_/items/156d0a231c6968f2a474">http://qiita.com/Jxck_/items/156d0a231c6968f2a474</a></li>
+<li>論理削除が云々について &ndash; <a href="http://mike-neck.hatenadiary.com/entry/2015/03/24/231422">http://mike-neck.hatenadiary.com/entry/2015/03/24/231422</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1561,253 +1872,6 @@ lambda-behaveを使うと、このようなDSLっぽい記述のテストを、J
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/23/webkit-on-wercker/">werckerでrspecとcucumberのCI環境を作る</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-23T14:30:00+09:00" pubdate data-updated="true">Jan 23<span>rd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>去年作った<a href="http://www.photo-leaf.com/">Photo Leaf</a>というWebサービスがあるのですが、これのCI環境を作成したいなぁと思っていたところwerckerというCIサービスを使って構築できたので、そのまとめです。</p>
-
-<h2>werckerとは？</h2>
-
-<p><a href="http://wercker.com/">wercker</a>は<a href="https://travis-ci.org/">TravisCI</a>などに代表されるように、外部でビルド（というかテスト）やデプロイを行ってくれるCI（継続的インテグレーション）サービスです。</p>
-
-<p>使い方としては、リモートリポジトリに変更がpushされた時点でこれをフックして、CIサービス側でテストしたり、場合によってはそのまま本番環境に自動デプロイとかもしてしまえば、変更内容を安全、かつ迅速にリリースできる仕組みが出来上がるわけです。イマドキっぽいですね！</p>
-
-<p>werckerの特徴としては</p>
-
-<h4>GithubとBitbucketに対応</h4>
-
-<p>TravisCIはGithubにあるリポジトリしかビルド対象にできません。Githubのサービスなんだから、当たり前といえば当たり前ですが・・・</p>
-
-<h4>（今のところ）無料</h4>
-
-<p>2014/1/23現在はベータのようです。将来的にはどうなるのかわからないですが、今のところ無料で使えます。制限としては「<strong>1つのビルドが25分以内に完了すること</strong>」ぐらいです。エンタープライズなシステムだとキツイかもですが、そこそこの規模なら問題ないんじゃないでしょうか。</p>
-
-<h4>テストを実行するための仮想環境が豊富に用意されている</h4>
-
-<p>werckerでビルドを実行する際にはBoxという仮想環境内で実行されます。これが予め様々な種類が用意されています。通常のRuby(Rails)の環境とかだけではなく、JavaやAndroidといった環境も用意されています。また<a href="http://devcenter.wercker.com/articles/boxes/">Boxを自分で作る</a>こともできるようです。</p>
-
-<h4>privateリポジトリもビルドできる</h4>
-
-<p>TracisCIは無課金だとprivateリポジトリはビルドできません。しかしwerckerはprivateリポジトリをビルドできます。
-Photo LeafのソースはBitbucket上のprivateリポジトリで管理しているため、今までCIサービスを利用することができなかったのですが、werckerはprivateリポジトリでもビルドできるので便利です。</p>
-
-<h2>wercker.ymlの設定</h2>
-
-<p>Photo Leafでは、テストをrspecとcucumberで書いています。cucumberではjavascriptのドライバとしてcapybara-webkitを使ってます。そのためwerckerで動かすには設定が若干面倒です。</p>
-
-<p>werckerにログインして、とりあえず普通にビルドするまでの手順は、以下の記事に詳しいのでこちらを参照してください。</p>
-
-<ul>
-<li><a href="http://blog.mah-lab.com/2014/01/08/rails-wercker-heroku-deploy/">Githubのプライベートリポジトリでも無料で使えるCI、Werckerを使ってrails newからHerokuのデプロイまでやってみる</a></li>
-</ul>
-
-
-<p>上記で設定したwercker.ymlに対して、rspecとcucumberを実行するように設定していきます。自分が設定したwercker.ymlは以下のような感じ</p>
-
-<figure class='code'><figcaption><span>wercker.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">box</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">wercker/rvm</span>
-</span><span class='line'><span class="c1"># Build definition</span>
-</span><span class='line'><span class="c1"># See the Rails section on the wercker devcenter:</span>
-</span><span class='line'><span class="c1"># http://devcenter.wercker.com/articles/languages/ruby/settingup-rails4.html</span>
-</span><span class='line'><span class="c1"># You will want to define your database as follows:</span>
-</span><span class='line'><span class="l-Scalar-Plain">services</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">wercker/postgresql</span>
-</span><span class='line'><span class="c1"># See more about services on our devcenter:</span>
-</span><span class='line'><span class="c1"># http://devcenter.wercker.com/articles/services/</span>
-</span><span class='line'>
-</span><span class='line'><span class="l-Scalar-Plain">build</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">steps</span><span class="p-Indicator">:</span>
-</span><span class='line'>        <span class="c1"># Uncomment this to force RVM to use a specific Ruby version</span>
-</span><span class='line'>        <span class="c1"># - rvm-use:</span>
-</span><span class='line'>        <span class="c1">#       version: 2.1.0</span>
-</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Make tmp directory</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mkdir tmp</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Enable virtual display</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="p-Indicator">|-</span>
-</span><span class='line'>              <span class="no"># Start xvfb which gives the context an virtual display</span>
-</span><span class='line'>              <span class="no"># which is required for tests that require an GUI</span>
-</span><span class='line'>              <span class="no">export DISPLAY=:99.0</span>
-</span><span class='line'>              <span class="no">start-stop-daemon --start --quiet --pidfile /tmp/xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1024x768x24 -ac +extension GLX +render -noreset</span>
-</span><span class='line'>
-</span><span class='line'>              <span class="no"># Give xvfb time to start. 3 seconds is the default for all xvfb-run commands.</span>
-</span><span class='line'>              <span class="no">sleep 3</span>
-</span><span class='line'>        <span class="c1"># Install (apt-get) packages</span>
-</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">install-packages</span><span class="p-Indicator">:</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">packages</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">libqtwebkit-dev</span>
-</span><span class='line'>        <span class="c1"># A step that executes `bundle install` command</span>
-</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">bundle-install</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1"># A step that prepares the database.yml using the database in services</span>
-</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">rails-database-yml</span><span class="p-Indicator">:</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">service</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">postgresql</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1"># A custom script step, name value is used in the UI</span>
-</span><span class='line'>        <span class="c1"># and the code value contains the command that get executed</span>
-</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">echo ruby information</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
-</span><span class='line'>                <span class="no">echo &quot;ruby version $(ruby --version) running&quot;</span>
-</span><span class='line'>                <span class="no">echo &quot;from location $(which ruby)&quot;</span>
-</span><span class='line'>                <span class="no">echo -p &quot;gem list: $(gem list)&quot;</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Set up db</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">RAILS_ENV=test bundle exec rake db:schema:load</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Run RSpec</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">bundle exec rspec spec</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Run Cucumber</span>
-</span><span class='line'>            <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">bundle exec cucumber features</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>16~18行目 &ndash; テスト用のtmpディレクトリを作成（rspecのテストでtmpを使ってるので、必要なければ不要です）</li>
-<li>6~7,37~38行目 &ndash; テスト用のPostgreSQLを実行する</li>
-<li>53~55行目 &ndash; rspecを実行</li>
-<li>57~59行目 &ndash; cucumberを実行</li>
-</ul>
-
-
-<h2>capybara-webkitを動かすための注意点</h2>
-
-<p>capybara-webkitを動かすにはX11が使用できる必要があります。なのでXvfbを仮想環境で実行する必要があります。その設定が以下の部分。</p>
-
-<figure class='code'><figcaption><span>wercker.yml</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Enable virtual display</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="p-Indicator">|-</span>
-</span><span class='line'>      <span class="no"># Start xvfb which gives the context an virtual display</span>
-</span><span class='line'>      <span class="no"># which is required for tests that require an GUI</span>
-</span><span class='line'>      <span class="no">export DISPLAY=:99.0</span>
-</span><span class='line'>      <span class="no">start-stop-daemon --start --quiet --pidfile /tmp/xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1024x768x24 -ac +extension GLX +render -noreset</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="no"># Give xvfb time to start. 3 seconds is the default for all xvfb-run commands.</span>
-</span><span class='line'>      <span class="no">sleep 3</span>
-</span><span class='line'><span class="c1"># Install (apt-get) packages</span>
-</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">install-packages</span><span class="p-Indicator">:</span>
-</span><span class='line'>    <span class="l-Scalar-Plain">packages</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">libqtwebkit-dev</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上記の設定で仮想環境上でXvfbを実行できます。</p>
-
-<h2>まとめ</h2>
-
-<ul>
-<li>werckerはGithubとBitbucket両方に対応してるよ！</li>
-<li>werckerは無料でprivateリポジトリもビルドできるよ！</li>
-<li>capyabara-webkitを使うときにはXvfbを実行してよ！</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1834,6 +1898,10 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/07/08/eager-load-with-paranoia/">論理削除とeager_loadでN+1問題が発生する件</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/05/31/java-programmer-must-buy/">JavaプログラマがKindle50%還元セールで買っておくべきIT技術書</a>
       </li>
     
@@ -1847,10 +1915,6 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
     
       <li class="post">
         <a href="/blog/2014/12/16/about-lambda-behave/">Lambda-behaveでテストを書こう</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/17/attend-jjug-ccc-2014-fall/">JJUG CCC 2014 Fallで発表してきた</a>
       </li>
     
   </ul>

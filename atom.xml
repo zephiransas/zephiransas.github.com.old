@@ -4,7 +4,7 @@
   <title><![CDATA[zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2015-07-08T12:50:39+09:00</updated>
+  <updated>2015-07-29T17:06:13+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,181 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Unicorn-worker-killerが便利だった件]]></title>
+    <link href="http://zephiransas.github.com/blog/2015/07/29/unicorn-worker-killer/"/>
+    <updated>2015-07-29T15:57:26+09:00</updated>
+    <id>http://zephiransas.github.com/blog/2015/07/29/unicorn-worker-killer</id>
+    <content type="html"><![CDATA[<p>自分が現在関わっているプロジェクトでは、nginx + unicornの構成で運用しているのですが、この構成でサーバのメモリが足りなくなるという現象に悩まされていました。</p>
+
+<p>unicornのワーカプロセスは、通常では起動したままユーザからのリクエストを処理し、再起動されることはありません。
+その関係で、長時間運用していると、そのワーカプロセスがメモリをあるだけ食いつぶすような挙動になります。</p>
+
+<p>こんな時に便利なのが「<a href="https://github.com/kzk/unicorn-worker-killer">unicorn-worker-killer</a>」です。</p>
+
+<p>unicorn-worker-killerを使うことで、ワーカプロセスが以下の条件の場合に、自動的に再起動してくれます。</p>
+
+<ul>
+<li>ワーカプロセスが指定回数のリクエストを処理した場合</li>
+<li>ワーカプロセスが指定量のメモリを使用している場合</li>
+</ul>
+
+
+<p>いずれの場合でもワーカプロセスの再起動は、現在のリクエストを処理した後に再起動（いわゆるgraceful restart）されます。</p>
+
+<h2>設定のしかた</h2>
+
+<p>設定はconfig.ruにて行います。</p>
+
+<h3>リクエストの回数基準で再起動する</h3>
+
+<figure class='code'><figcaption><span>config.ru</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">use</span> <span class="ss">Unicorn</span><span class="p">:</span><span class="ss">:WorkerKiller</span><span class="o">::</span><span class="no">MaxRequests</span><span class="p">,</span> <span class="mi">3072</span><span class="p">,</span> <span class="mi">4096</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これはワーカプロセスが、3072回~4096回のいずれかの回数リクエストを処理したら再起動する設定です。</p>
+
+<figure class='code'><figcaption><span>config.ru</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">use</span> <span class="ss">Unicorn</span><span class="p">:</span><span class="ss">:WorkerKiller</span><span class="o">::</span><span class="no">MaxRequests</span><span class="p">,</span> <span class="mi">3072</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="kp">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすることで、unicorn.rbのstderr_pathで指定されたパスに状況を出力することができます。</p>
+
+<h3>メモリの使用量を基準に再起動する</h3>
+
+<figure class='code'><figcaption><span>config.ru</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">use</span> <span class="ss">Unicorn</span><span class="p">:</span><span class="ss">:WorkerKiller</span><span class="o">::</span><span class="no">Oom</span><span class="p">,</span> <span class="p">(</span><span class="mi">192</span><span class="o">*</span><span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">2</span><span class="p">)),</span> <span class="p">(</span><span class="mi">256</span><span class="o">*</span><span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">2</span><span class="p">)),</span> <span class="mi">16</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これはワーカプロセスが16回リクエストを処理する度に、自身のメモリ使用量をチェックし、これが192M~256Mのいずれかの使用量をオーバーしていた場合に、再起動する設定です。</p>
+
+<h3>設定が2つある理由</h3>
+
+<p>リクエスト回数とメモリ使用量の設定両方とも、しきい値を範囲で指定するようになっていますが、これには理由があります。</p>
+
+<p>1つのしきい値だと、各ワーカが再起動するタイミングが、ほぼ同じになるからです。同じタイミングで全てのワーカプロセスが再起動してしまうと、その間リクエストを処理することができなくなってしまうので、これは好ましくありません。</p>
+
+<p>ですので、しきい値を範囲で指定し、その範囲内のいずれかの値を実際のしきい値として採用するという仕組みになっています。</p>
+
+<p>なので、しきい値の範囲は狭いより、広いほうが、ベターです。</p>
+
+<h2>unicorn-worker-killerを試してみる</h2>
+
+<p>では、unicorn-worker-killerがちゃんとワーカプロセスをKillできているかを確認してみます。</p>
+
+<p>シナリオとしては</p>
+
+<ul>
+<li>config/unicorn.rbのworker_processesは1として、ワーカプロセスは1つだけにする</li>
+<li>unicorn-worker-killerの設定は100回〜120回のリクエストを受けたタイミングで、ワーカプロセスを再起動するようにする</li>
+</ul>
+
+
+<p>まずはGemfileに</p>
+
+<figure class='code'><figcaption><span>Gemfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">gem</span> <span class="s1">&#39;unicorn-worker-killer&#39;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と設定します。config.ruの設定は、以下のようになります。</p>
+
+<figure class='code'><figcaption><span>config.ru</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">use</span> <span class="ss">Unicorn</span><span class="p">:</span><span class="ss">:WorkerKiller</span><span class="o">::</span><span class="no">MaxRequests</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="kp">true</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>unicorn-worker-killerの詳細なログを出力するように設定しておきます。</p>
+
+<p>この設定でunicornを起動します。すると以下ような感じでログが出力されます。</p>
+
+<figure class='code'><figcaption><span>config.ru</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">38</span><span class="p">:</span><span class="mi">31</span><span class="o">.</span><span class="mi">589102</span> <span class="c1">#29745]  INFO -- : worker=0 spawning...</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">38</span><span class="p">:</span><span class="mi">31</span><span class="o">.</span><span class="mi">591242</span> <span class="c1">#29745]  INFO -- : master process ready</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">38</span><span class="p">:</span><span class="mi">31</span><span class="o">.</span><span class="mi">593001</span> <span class="c1">#29752]  INFO -- : worker=0 spawned pid=29752</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">38</span><span class="p">:</span><span class="mi">31</span><span class="o">.</span><span class="mi">593581</span> <span class="c1">#29752]  INFO -- : Refreshing Gem list</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">38</span><span class="p">:</span><span class="mi">47</span><span class="o">.</span><span class="mo">035570</span> <span class="c1">#29752]  INFO -- : worker=0 ready</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>pid=29752でワーカプロセスが1つ立ち上がりました。psで確認すると</p>
+
+<figure class='code'><figcaption><span>config.ru</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">zephiransas</span> <span class="mi">29752</span> <span class="mi">30</span><span class="o">.</span><span class="mi">0</span>  <span class="mi">2</span><span class="o">.</span><span class="mi">8</span> <span class="mi">544708</span> <span class="mi">235984</span> <span class="o">?</span>       <span class="no">Sl</span>   <span class="mi">16</span><span class="p">:</span><span class="mi">38</span>   <span class="mi">0</span><span class="p">:</span><span class="mi">15</span> <span class="n">unicorn</span> <span class="n">worker</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">config</span><span class="o">/</span><span class="n">unicorn</span><span class="o">.</span><span class="n">rb</span> <span class="o">-</span><span class="n">E</span> <span class="n">production</span> <span class="o">-</span><span class="n">D</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>のような感じです。ここでブラウザから何度かアクセスすると、unicornのログに以下のように出力されます。</p>
+
+<figure class='code'><figcaption><span>config.ru</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">37</span><span class="o">.</span><span class="mi">156111</span> <span class="c1">#29752]  INFO -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 29752) has 119 left before being killed</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">37</span><span class="o">.</span><span class="mi">349161</span> <span class="c1">#29752]  INFO -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 29752) has 118 left before being killed</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">37</span><span class="o">.</span><span class="mi">559274</span> <span class="c1">#29752]  INFO -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 29752) has 117 left before being killed</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">37</span><span class="o">.</span><span class="mi">649334</span> <span class="c1">#29752]  INFO -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 29752) has 116 left before being killed</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">47</span><span class="o">.</span><span class="mi">690545</span> <span class="c1">#29752]  INFO -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 29752) has 115 left before being killed</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>pid=29752のワーカプロセスがあと何回リクエストを処理できるかが分かります。またリクエストするたびに1つづつ減っています。</p>
+
+<p>では、引き続きブラウザからアクセスし、ワーカプロセスのメモリ使用状況を確認してみましょう。</p>
+
+<figure class='code'><figcaption><span>config.ru</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">zephiransas</span> <span class="mi">29752</span>  <span class="mi">7</span><span class="o">.</span><span class="mi">1</span>  <span class="mi">3</span><span class="o">.</span><span class="mi">2</span> <span class="mi">785940</span> <span class="mi">269420</span> <span class="o">?</span>       <span class="no">Sl</span>   <span class="mi">16</span><span class="p">:</span><span class="mi">38</span>   <span class="mi">0</span><span class="p">:</span><span class="mi">26</span> <span class="n">unicorn</span> <span class="n">worker</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">config</span><span class="o">/</span><span class="n">unicorn</span><span class="o">.</span><span class="n">rb</span> <span class="o">-</span><span class="n">E</span> <span class="n">production</span> <span class="o">-</span><span class="n">D</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>メモリ使用量が少し増えているのがわかります。次にリクエストの残り回数を使い切り、ワーカプロセスが正しく再起動されるか確認します。</p>
+
+<p>ブラウザからリクエストを投げ続けると、unicornのログに以下のように出力されます。</p>
+
+<figure class='code'><figcaption><span>config.ru</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">W</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">47</span><span class="p">:</span><span class="mo">00</span><span class="o">.</span><span class="mi">539055</span> <span class="c1">#29752]  WARN -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 29752) exceeds max number of requests (limit: 119)</span>
+</span><span class='line'><span class="n">W</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">47</span><span class="p">:</span><span class="mo">00</span><span class="o">.</span><span class="mi">539621</span> <span class="c1">#29752]  WARN -- : Unicorn::WorkerKiller send SIGQUIT (pid: 29752) alive: 383 sec (trial 1)</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">47</span><span class="p">:</span><span class="mo">03</span><span class="o">.</span><span class="mi">467363</span> <span class="c1">#29745]  INFO -- : reaped #&lt;Process::Status: pid 29752 exit 0&gt; worker=0</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">47</span><span class="p">:</span><span class="mo">03</span><span class="o">.</span><span class="mi">467928</span> <span class="c1">#29745]  INFO -- : worker=0 spawning...</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">47</span><span class="p">:</span><span class="mo">03</span><span class="o">.</span><span class="mi">472507</span> <span class="c1">#7549]  INFO -- : worker=0 spawned pid=7549</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">47</span><span class="p">:</span><span class="mo">03</span><span class="o">.</span><span class="mi">473377</span> <span class="c1">#7549]  INFO -- : Refreshing Gem list</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">47</span><span class="p">:</span><span class="mi">19</span><span class="o">.</span><span class="mi">137831</span> <span class="c1">#7549]  INFO -- : worker=0 ready</span>
+</span><span class='line'><span class="n">I</span><span class="p">,</span> <span class="o">[</span><span class="mi">2015</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">29</span><span class="ss">T16</span><span class="p">:</span><span class="mi">47</span><span class="p">:</span><span class="mi">20</span><span class="o">.</span><span class="mi">251309</span> <span class="c1">#7549]  INFO -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 7549) has 101 left before being killed</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>1行目でpid=29752がリクエスト回数上限の119回に達したことがわかります。</p>
+
+<p>2行目ワーカプロセスに対してQUITシグナルを送信しています。</p>
+
+<p>その後、別のワーカプロセスがpid=7549で起動しています。試しにpid=7549のメモリ使用量を見ると</p>
+
+<figure class='code'><figcaption><span>config.ru</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">zephiransas</span>  <span class="mi">7549</span>  <span class="mi">5</span><span class="o">.</span><span class="mi">7</span>  <span class="mi">3</span><span class="o">.</span><span class="mi">1</span> <span class="mi">705752</span> <span class="mi">261532</span> <span class="o">?</span>       <span class="no">Sl</span>   <span class="mi">16</span><span class="p">:</span><span class="mi">47</span>   <span class="mi">0</span><span class="p">:</span><span class="mi">18</span> <span class="n">unicorn</span> <span class="n">worker</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">config</span><span class="o">/</span><span class="n">unicorn</span><span class="o">.</span><span class="n">rb</span> <span class="o">-</span><span class="n">E</span> <span class="n">production</span> <span class="o">-</span><span class="n">D</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>となり、以前より減っていることがわかります。</p>
+
+<p>Railsアプリを実運用するときには必須のgemだと思います。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[論理削除とeager_loadでN+1問題が発生する件]]></title>
@@ -2300,31 +2475,6 @@ weinreサーバはデフォルトの状態だとlocalhostからしか接続で�
 <p>ぜひ、Photo Leafで自分の写真をフォトブックにしてみてください！</p>
 
 <p>新しい写真の楽しみ方が、見つかると思います。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Java Day Tokyo 2013報告会@岡山を開催してきた]]></title>
-    <link href="http://zephiransas.github.com/blog/2013/06/18/jdt2013-okayama-report/"/>
-    <updated>2013-06-18T16:24:00+09:00</updated>
-    <id>http://zephiransas.github.com/blog/2013/06/18/jdt2013-okayama-report</id>
-    <content type="html"><![CDATA[<p>2013年6月15日（土）に、奉還町リブラホールにて「<a href="http://local.aguuu.com/events/15432">Java Day Tokyo 2013報告会@岡山</a>」を開催してきました。</p>
-
-<p>自分は「Java Day Tokyo2013基調公演より」と題して、報告をさせていただきました。</p>
-
-<script async class="speakerdeck-embed" data-id="ebf8f340b7a20130a14b7e8eb314bbb5" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
-
-
-<p>当日のTwitterのまとめは、<a href="http://togetter.com/li/518745">こちら</a></p>
-
-<p>その他、岡山Javaユーザ会の運営メンバーと、<a href="https://twitter.com/soudai1025">@soudai1025氏</a>にはJJUG CCCの感想についてもセッションをしていただきました。また角田さんの会社の同僚お二人にもJava Day Tokyoに参加しての感想を話していただきました。</p>
-
-<p>また東京からは櫻庭さんにも来て頂き、JJUG CCCでセッションされた「Project Lambda Essential」を再演していただきました。Java8で最も注目されている機能、Project Lambdaの大事なところを丁寧にお話をしていただきましたので、参加者の皆さんのLambdaに対する理解が深まったものと思います。</p>
-
-<p>この後の懇親会でも次のネタについて、いくつか話あったんですが、個人的には次はハンズオンをやりたいかなーと思っています。</p>
-
-<p>いまのセッション形式もいいのですが、それだとどうしても参加者同士で交流が深まらないように思っていて、これを改善するためにはハンズオン形式のほうがいいのではないだろうか、と考えています。
-で、実際にやるとすればJavaEEとかJavaFXあたりを題材にして、ハンズオンをやろうと考えています。</p>
 ]]></content>
   </entry>
   

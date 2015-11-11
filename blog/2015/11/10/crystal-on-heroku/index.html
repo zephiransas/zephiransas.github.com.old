@@ -1,0 +1,424 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>CrystalをHerokuで動かしてみた - zephiransasのチラシの裏</title>
+  <meta name="author" content="Takafumi Yoshida (@zephiransas)">
+
+  
+  <meta name="description" content="最近ちょっと話題のcrystal。これをHerokuで動かしてみました。 Herokuの準備 まずはHerokuにアプリケーションを作成します。 Herokuでは当然crystalをサポートしていませんので、crystalのコンパイラを自前でインストールする必要があります。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zephiransas.github.com/blog/2015/11/10/crystal-on-heroku">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="zephiransasのチラシの裏" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-41139724-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">zephiransasのチラシの裏</a></h1>
+  
+    <h2>とあるJava/Rubyプログラマのメモ代わりブログ</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zephiransas.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">CrystalをHerokuで動かしてみた</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-10T12:28:48+09:00" pubdate data-updated="true">Nov 10<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>最近ちょっと話題のcrystal。これをHerokuで動かしてみました。</p>
+
+<h2>Herokuの準備</h2>
+
+<p>まずはHerokuにアプリケーションを作成します。</p>
+
+<p>Herokuでは当然crystalをサポートしていませんので、crystalのコンパイラを自前でインストールする必要があります。
+Herokuにはこういったことを実現するために、buildpackという仕組みが用意されています。</p>
+
+<p>crystal用のbuildpackは既にあるので、今回はこれを利用します。</p>
+
+<ul>
+<li>zamith/heroku-buildpack-crystal &ndash; <a href="https://github.com/zamith/heroku-buildpack-crystal">https://github.com/zamith/heroku-buildpack-crystal</a></li>
+</ul>
+
+
+<p>heroku createする際に上記のbuildpackを指定しておきます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>heroku create --buildpack https://github.com/zamith/heroku-buildpack-crystal
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ちなみに、これはあとから指定することも可能です。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>heroku
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>アプリケーションの準備</h2>
+
+<p>次にcrystalで簡単なWebサーバを実装します。といっても<a href="http://crystal-lang.org/">crystalの公式ページ</a>にあるサンプルに手を加えた簡単なものです。</p>
+
+<p>app.crというファイル名で以下のファイルを準備します。</p>
+
+<figure class='code'><figcaption><span>app.cr</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;http/server&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;option_parser&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">server_port</span> <span class="o">=</span> <span class="mi">8080</span>
+</span><span class='line'><span class="no">OptionParser</span><span class="o">.</span><span class="n">parse!</span> <span class="k">do</span> <span class="o">|</span><span class="n">opts</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">opts</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s2">&quot;-p PORT&quot;</span><span class="p">,</span> <span class="s2">&quot;--port PORT&quot;</span><span class="p">,</span> <span class="s2">&quot;define port to run server&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">port</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">server_port</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">to_i</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">server</span> <span class="o">=</span> <span class="ss">HTTP</span><span class="p">:</span><span class="ss">:Server</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">server_port</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">request</span><span class="o">|</span>
+</span><span class='line'>  <span class="ss">HTTP</span><span class="p">:</span><span class="ss">:Response</span><span class="o">.</span><span class="n">ok</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello world, got </span><span class="si">#{</span><span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">!&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">puts</span> <span class="s2">&quot;Listening on http://0.0.0.0:</span><span class="si">#{</span><span class="n">server_port</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="n">server</span><span class="o">.</span><span class="n">listen</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意するところは2点。</p>
+
+<p>1点目は、option_parserを使って起動時のオプションでWebサーバのポート番号を指定できるようにしています。デフォルトでは8080ポートで起動します。</p>
+
+<p>Herokuの場合、サーバのポートは$PORTの値を使用しなければいけませんので、起動時にその値を渡せるようにするためです。</p>
+
+<p>2点目は、以下のようにServerのインスタンス生成時に&#8221;0.0.0.0&#8221;を指定することです。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">server</span> <span class="o">=</span> <span class="ss">HTTP</span><span class="p">:</span><span class="ss">:Server</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">server_port</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">request</span><span class="o">|</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうすることで、localhost以外からでもアクセス可能にしてあります。これを指定していない場合は、Herokuでの起動時に</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Error R10 <span class="o">(</span>Boot timeout<span class="o">)</span> -&gt; Web process failed to <span class="nb">bind </span>to <span class="nv">$PORT</span> within 60 seconds of launch
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というエラーが発生します。</p>
+
+<p>できたら早速、起動してみましょう。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>crystal run app.cr
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ブラウザからlocalhost:8080にアクセスし、以下の用に表示されれば、Webサーバが正しく起動しています。</p>
+
+<p><img src="/images/20151110/screen.png" alt="screen" /></p>
+
+<h2>その他のファイルの準備</h2>
+
+<p>次にProcfileを以下のように準備します。</p>
+
+<figure class='code'><figcaption><span>Procfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>web: ./app -p <span class="nv">$PORT</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>起動時に$PORTをWebサーバのポートとして、指定しています。</p>
+
+<p>次にProjectfileを準備します。中身は空でOKです。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>touch Projectfile
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これは本来は不要なファイルなのですが、crystalのbuildpack内でProjectfileがない場合は、crystalのアプリケーションとして認識してくれないため、空のファイルを作成しています。</p>
+
+<h2>Herokuへデプロイ</h2>
+
+<p>app.cr、Procfile、Projectfileの3つが準備できたら、Herokuにデプロイしてみましょう。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git init
+</span><span class='line'>git add .
+</span><span class='line'>git commit -m <span class="s1">&#39;First commit&#39;</span>
+</span><span class='line'>heroku git:remote --app <span class="o">[</span>APPNAME<span class="o">]</span>
+</span><span class='line'>git push heroku master
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あとは、Herokuにアクセスして、正しく動作していればOKです。</p>
+
+<h2>まとめ</h2>
+
+<p>今回作成したコードはこちらにおいてありますので、参考にしてください。</p>
+
+<p><a href="https://github.com/zephiransas/crystal-heroku">https://github.com/zephiransas/crystal-heroku</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Takafumi Yoshida (@zephiransas)</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-10T12:28:48+09:00" pubdate data-updated="true">Nov 10<span>th</span>, 2015</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/crystal/'>crystal,</a>, <a class='category' href='/blog/categories/heroku/'>heroku</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://zephiransas.github.com/blog/2015/11/10/crystal-on-heroku/" data-via="" data-counturl="http://zephiransas.github.com/blog/2015/11/10/crystal-on-heroku/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/07/29/unicorn-worker-killer/" title="Previous Post: unicorn-worker-killerが便利だった件">&laquo; unicorn-worker-killerが便利だった件</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+<section>
+  <h1>About Me</h1>
+  <img style="display:block;float:left;" src="http://www.gravatar.com/avatar/ab963de01b53e635d6e699d6d7d162b1" alt="Gravatar of Takafumi Yoshida (@zephiransas) " title="Gravatar of Takafumi Yoshida (@zephiransas)" />
+  <p>
+    Takafumi Yoshida<br/>
+    Java/Ruby/Scala<br/>
+    Programmer at Okayama<br/>
+    <a href="http://twitter.com/zephiransas">@zephiransas</a>
+  </p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/11/10/crystal-on-heroku/">CrystalをHerokuで動かしてみた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/29/unicorn-worker-killer/">Unicorn-worker-killerが便利だった件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/08/eager-load-with-paranoia/">論理削除とeager_loadでN+1問題が発生する件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/05/31/java-programmer-must-buy/">JavaプログラマがKindle50%還元セールで買っておくべきIT技術書</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/04/16/project-kulla/">Project Kullaを試す</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/zephiransas">@zephiransas</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'zephiransas',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Takafumi Yoshida (@zephiransas) -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

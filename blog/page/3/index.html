@@ -9,7 +9,7 @@
   <meta name="author" content="Takafumi Yoshida (@zephiransas)">
 
   
-  <meta name="description" content="2013年6月15日（土）に、奉還町リブラホールにて「Java Day Tokyo 2013報告会@岡山」を開催してきました。 自分は「Java Day Tokyo2013基調公演より」と題して、報告をさせていただきました。 当日のTwitterのまとめは、こちら その他、 &hellip;">
+  <meta name="description" content="本日、フォトブック作成サービス「Photo Leaf」をリリースしました。 Photo Leafは1冊¥500でフォトブックを作成できるサービス「TOLOT」と連携して、flickrにアップした自分の写真からフォトブックを簡単に作成できます。 Photo Leafの利用は無料ですので、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,87 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/27/photoleaf-release/">Photo Leafをリリースしました</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-27T22:16:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本日、フォトブック作成サービス「<a href="http://www.photo-leaf.com">Photo Leaf</a>」をリリースしました。</p>
+
+<p><img src="/images/20130627/photo-leaf.png" alt="photo-leaf" /></p>
+
+<p>Photo Leafは1冊¥500でフォトブックを作成できるサービス「<a href="http://tolot.com/">TOLOT</a>」と連携して、<a href="http://www.flickr.com/">flickr</a>にアップした自分の写真からフォトブックを簡単に作成できます。</p>
+
+<p>Photo Leafの利用は無料ですので、ぜひ使ってみてください！</p>
+
+<h2>仕組みについて</h2>
+
+<p>具体的なPhoto Leafの仕組みですが、実際にはPhoto Leafだけでフォトブックを作れるわけではありません。</p>
+
+<p>Photo LeafはTOLOTの連携ファイルを作り、これをTOLOTアプリに読み込ませることによって、flickrの写真からフォトブックを作成することができるサービスです。</p>
+
+<p>TOLOTの連携ファイルにはフォトブックのタイトルなどの情報と一緒に、各ページに印刷する写真についての情報をセットしています。これには画像へのURLもセット可能ですので、これにflickrの画像ファイルへのURLをセットするようになっています。</p>
+
+<p>この連携ファイルをTOLOTアプリで読み込むと、画像データをflickrからダウンロードし、フォトブックを作成する仕組みになっています。</p>
+
+<p>ちなみに、Photo Leafは<a href="https://developers.tolot.com/">TOLOTのマネタイズAPI</a>を使用していますので、皆さんがPhoto Leafからフォトブックを注文すると、その一部が私の収益になります。</p>
+
+<h2>実行環境について</h2>
+
+<p>サービスの開発には主に</p>
+
+<ul>
+<li>Ruby 2.0</li>
+<li>Ruby on Rails 4.0</li>
+<li>FlickRaw</li>
+</ul>
+
+
+<p>などを使用しています。Ruby2.0もRails4.0も最近リリースされたばかりですので、かなり新しいものを使用しています。特にRuby2.0は1.9系に比べるとかなりパフォーマンスが改善されていますので、Rails4.0と合わせることで、かなり高速に動作します。もちろん、自分の勉強がてらというのもあるのですが。</p>
+
+<p>また実行時のプラットフォームとしては<a href="https://www.heroku.com/">Heroku</a>を使用しています。</p>
+
+<p>最初は<a href="http://sqale.jp/">Sqale</a>も検討したのですが、まだ収益があがるようなものではないだろうなぁと思っていますので、できる限りコストをかけずに運用するには、現在のところはHerokuが最適と判断しました。</p>
+
+<h2>まとめ</h2>
+
+<p>最初にこのサービスを思いついたのは、<a href="http://uzulla.hateblo.jp/entry/2013/05/08/124552">InstgramからTOLOTの連携ファイルを作成するサービス</a>を作られた方がいて、そこからTOLOTのマネタイズAPIを知ったことがきっかけです。</p>
+
+<p>自分自身も写真をかなり撮るので、フォトブックにもかなり興味があったものあります。実際に、カメラのキタムラが運営している「<a href="http://photobook.jp/photobon/top/">フォト本</a>」などで、フォトブックを作ったこともあります。フォト本は大きめのフォトブックを作るにはかなり良いサービスだと思うのですが、普段のスナップなどを手軽にフォトブックにしたい、といったニーズにはちょっと高い。TOLOTなら文庫本62ページのフォトブックを¥500で作成できるので、かなりコストパフォーマンスはいいと思います。</p>
+
+<p>ぜひ、Photo Leafで自分の写真をフォトブックにしてみてください！</p>
+
+<p>新しい写真の楽しみ方が、見つかると思います。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -926,6 +1007,10 @@ src/main/scalaにMain.scalaを作成し、以下のように記述します。</
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/11/10/crystal-on-heroku/">CrystalをHerokuで動かしてみた</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/07/29/unicorn-worker-killer/">Unicorn-worker-killerが便利だった件</a>
       </li>
     
@@ -939,10 +1024,6 @@ src/main/scalaにMain.scalaを作成し、以下のように記述します。</
     
       <li class="post">
         <a href="/blog/2015/04/16/project-kulla/">Project Kullaを試す</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/04/02/introduce-octocam/">GitHubのPull requestから、CHANGELOGっぽいものを作成するgemを作った</a>
       </li>
     
   </ul>

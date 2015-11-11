@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: heroku | zephiransasのチラシの裏]]></title>
+  <link href="http://zephiransas.github.com/blog/categories/heroku/atom.xml" rel="self"/>
+  <link href="http://zephiransas.github.com/"/>
+  <updated>2015-11-11T11:36:49+09:00</updated>
+  <id>http://zephiransas.github.com/</id>
+  <author>
+    <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[CrystalをHerokuで動かしてみた]]></title>
+    <link href="http://zephiransas.github.com/blog/2015/11/10/crystal-on-heroku/"/>
+    <updated>2015-11-10T12:28:48+09:00</updated>
+    <id>http://zephiransas.github.com/blog/2015/11/10/crystal-on-heroku</id>
+    <content type="html"><![CDATA[<p>最近ちょっと話題のcrystal。これをHerokuで動かしてみました。</p>
+
+<h2>Herokuの準備</h2>
+
+<p>まずはHerokuにアプリケーションを作成します。</p>
+
+<p>Herokuでは当然crystalをサポートしていませんので、crystalのコンパイラを自前でインストールする必要があります。
+Herokuにはこういったことを実現するために、buildpackという仕組みが用意されています。</p>
+
+<p>crystal用のbuildpackは既にあるので、今回はこれを利用します。</p>
+
+<ul>
+<li>zamith/heroku-buildpack-crystal &ndash; <a href="https://github.com/zamith/heroku-buildpack-crystal">https://github.com/zamith/heroku-buildpack-crystal</a></li>
+</ul>
+
+
+<p>heroku createする際に上記のbuildpackを指定しておきます。</p>
+
+<p><code>bash
+heroku create --buildpack https://github.com/zamith/heroku-buildpack-crystal
+</code></p>
+
+<p>ちなみに、これはあとから指定することも可能です。</p>
+
+<p><code>bash
+heroku
+</code></p>
+
+<h2>アプリケーションの準備</h2>
+
+<p>次にcrystalで簡単なWebサーバを実装します。といっても<a href="http://crystal-lang.org/">crystalの公式ページ</a>にあるサンプルに手を加えた簡単なものです。</p>
+
+<p>app.crというファイル名で以下のファイルを準備します。</p>
+
+<p>``` ruby app.cr
+require &ldquo;http/server&rdquo;
+require &ldquo;option_parser&rdquo;</p>
+
+<p>server_port = 8080
+OptionParser.parse! do |opts|
+  opts.on(&ldquo;-p PORT&rdquo;, &ldquo;&mdash;port PORT&rdquo;, &ldquo;define port to run server&rdquo;) do |port|</p>
+
+<pre><code>server_port = port.to_i
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>server = <a href="HTTP::Server.new">HTTP::Server.new</a>(&ldquo;0.0.0.0&rdquo;, server_port) do |request|
+  <a href="HTTP::Response.ok">HTTP::Response.ok</a> &ldquo;text/plain&rdquo;, &ldquo;Hello world, got #{request.path}!&rdquo;
+end</p>
+
+<p>puts &ldquo;Listening on <a href="http://0.0.0.0:#">http://0.0.0.0:#</a>{server_port}&rdquo;
+server.listen
+```</p>
+
+<p>注意するところは2点。</p>
+
+<p>1点目は、option_parserを使って起動時のオプションでWebサーバのポート番号を指定できるようにしています。デフォルトでは8080ポートで起動します。</p>
+
+<p>Herokuの場合、サーバのポートは$PORTの値を使用しなければいけませんので、起動時にその値を渡せるようにするためです。</p>
+
+<p>2点目は、以下のようにServerのインスタンス生成時に"0.0.0.0"を指定することです。</p>
+
+<p><code>ruby
+server = HTTP::Server.new("0.0.0.0", server_port) do |request|
+</code></p>
+
+<p>こうすることで、localhost以外からでもアクセス可能にしてあります。これを指定していない場合は、Herokuでの起動時に</p>
+
+<p><code>bash
+Error R10 (Boot timeout) -&gt; Web process failed to bind to $PORT within 60 seconds of launch
+</code></p>
+
+<p>というエラーが発生します。</p>
+
+<p>できたら早速、起動してみましょう。</p>
+
+<p><code>bash
+crystal run app.cr
+</code></p>
+
+<p>ブラウザからlocalhost:8080にアクセスし、以下の用に表示されれば、Webサーバが正しく起動しています。</p>
+
+<p><img src="/images/20151110/screen.png" alt="screen" /></p>
+
+<h2>その他のファイルの準備</h2>
+
+<p>次にProcfileを以下のように準備します。</p>
+
+<p><code>bash Procfile
+web: ./app -p $PORT
+</code></p>
+
+<p>起動時に$PORTをWebサーバのポートとして、指定しています。</p>
+
+<p>次にProjectfileを準備します。中身は空でOKです。</p>
+
+<p><code>bash
+touch Projectfile
+</code></p>
+
+<p>これは本来は不要なファイルなのですが、crystalのbuildpack内でProjectfileがない場合は、crystalのアプリケーションとして認識してくれないため、空のファイルを作成しています。</p>
+
+<h2>Herokuへデプロイ</h2>
+
+<p>app.cr、Procfile、Projectfileの3つが準備できたら、Herokuにデプロイしてみましょう。</p>
+
+<p><code>bash
+git init
+git add .
+git commit -m 'First commit'
+heroku git:remote --app [APPNAME]
+git push heroku master
+</code></p>
+
+<p>あとは、Herokuにアクセスして、正しく動作していればOKです。</p>
+
+<h2>まとめ</h2>
+
+<p>今回作成したコードはこちらにおいてありますので、参考にしてください。</p>
+
+<p><a href="https://github.com/zephiransas/crystal-heroku">https://github.com/zephiransas/crystal-heroku</a></p>
+]]></content>
+  </entry>
+  
+</feed>

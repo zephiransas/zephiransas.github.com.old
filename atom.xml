@@ -4,7 +4,7 @@
   <title><![CDATA[zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.com/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.com/"/>
-  <updated>2015-07-29T17:06:13+09:00</updated>
+  <updated>2015-11-11T11:36:49+09:00</updated>
   <id>http://zephiransas.github.com/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,162 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[CrystalをHerokuで動かしてみた]]></title>
+    <link href="http://zephiransas.github.com/blog/2015/11/10/crystal-on-heroku/"/>
+    <updated>2015-11-10T12:28:48+09:00</updated>
+    <id>http://zephiransas.github.com/blog/2015/11/10/crystal-on-heroku</id>
+    <content type="html"><![CDATA[<p>最近ちょっと話題のcrystal。これをHerokuで動かしてみました。</p>
+
+<h2>Herokuの準備</h2>
+
+<p>まずはHerokuにアプリケーションを作成します。</p>
+
+<p>Herokuでは当然crystalをサポートしていませんので、crystalのコンパイラを自前でインストールする必要があります。
+Herokuにはこういったことを実現するために、buildpackという仕組みが用意されています。</p>
+
+<p>crystal用のbuildpackは既にあるので、今回はこれを利用します。</p>
+
+<ul>
+<li>zamith/heroku-buildpack-crystal &ndash; <a href="https://github.com/zamith/heroku-buildpack-crystal">https://github.com/zamith/heroku-buildpack-crystal</a></li>
+</ul>
+
+
+<p>heroku createする際に上記のbuildpackを指定しておきます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>heroku create --buildpack https://github.com/zamith/heroku-buildpack-crystal
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ちなみに、これはあとから指定することも可能です。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>heroku
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>アプリケーションの準備</h2>
+
+<p>次にcrystalで簡単なWebサーバを実装します。といっても<a href="http://crystal-lang.org/">crystalの公式ページ</a>にあるサンプルに手を加えた簡単なものです。</p>
+
+<p>app.crというファイル名で以下のファイルを準備します。</p>
+
+<figure class='code'><figcaption><span>app.cr</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="nb">require</span> <span class="s2">&quot;http/server&quot;</span>
+</span><span class='line'><span class="nb">require</span> <span class="s2">&quot;option_parser&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">server_port</span> <span class="o">=</span> <span class="mi">8080</span>
+</span><span class='line'><span class="no">OptionParser</span><span class="o">.</span><span class="n">parse!</span> <span class="k">do</span> <span class="o">|</span><span class="n">opts</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">opts</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s2">&quot;-p PORT&quot;</span><span class="p">,</span> <span class="s2">&quot;--port PORT&quot;</span><span class="p">,</span> <span class="s2">&quot;define port to run server&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">port</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">server_port</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">to_i</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">server</span> <span class="o">=</span> <span class="ss">HTTP</span><span class="p">:</span><span class="ss">:Server</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">server_port</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">request</span><span class="o">|</span>
+</span><span class='line'>  <span class="ss">HTTP</span><span class="p">:</span><span class="ss">:Response</span><span class="o">.</span><span class="n">ok</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello world, got </span><span class="si">#{</span><span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">!&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="nb">puts</span> <span class="s2">&quot;Listening on http://0.0.0.0:</span><span class="si">#{</span><span class="n">server_port</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="n">server</span><span class="o">.</span><span class="n">listen</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意するところは2点。</p>
+
+<p>1点目は、option_parserを使って起動時のオプションでWebサーバのポート番号を指定できるようにしています。デフォルトでは8080ポートで起動します。</p>
+
+<p>Herokuの場合、サーバのポートは$PORTの値を使用しなければいけませんので、起動時にその値を渡せるようにするためです。</p>
+
+<p>2点目は、以下のようにServerのインスタンス生成時に&#8221;0.0.0.0&#8221;を指定することです。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">server</span> <span class="o">=</span> <span class="ss">HTTP</span><span class="p">:</span><span class="ss">:Server</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">server_port</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">request</span><span class="o">|</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうすることで、localhost以外からでもアクセス可能にしてあります。これを指定していない場合は、Herokuでの起動時に</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>Error R10 <span class="o">(</span>Boot timeout<span class="o">)</span> -&gt; Web process failed to <span class="nb">bind </span>to <span class="nv">$PORT</span> within 60 seconds of launch
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>というエラーが発生します。</p>
+
+<p>できたら早速、起動してみましょう。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>crystal run app.cr
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ブラウザからlocalhost:8080にアクセスし、以下の用に表示されれば、Webサーバが正しく起動しています。</p>
+
+<p><img src="http://zephiransas.github.com/images/20151110/screen.png" alt="screen" /></p>
+
+<h2>その他のファイルの準備</h2>
+
+<p>次にProcfileを以下のように準備します。</p>
+
+<figure class='code'><figcaption><span>Procfile</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>web: ./app -p <span class="nv">$PORT</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>起動時に$PORTをWebサーバのポートとして、指定しています。</p>
+
+<p>次にProjectfileを準備します。中身は空でOKです。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>touch Projectfile
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これは本来は不要なファイルなのですが、crystalのbuildpack内でProjectfileがない場合は、crystalのアプリケーションとして認識してくれないため、空のファイルを作成しています。</p>
+
+<h2>Herokuへデプロイ</h2>
+
+<p>app.cr、Procfile、Projectfileの3つが準備できたら、Herokuにデプロイしてみましょう。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git init
+</span><span class='line'>git add .
+</span><span class='line'>git commit -m <span class="s1">&#39;First commit&#39;</span>
+</span><span class='line'>heroku git:remote --app <span class="o">[</span>APPNAME<span class="o">]</span>
+</span><span class='line'>git push heroku master
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あとは、Herokuにアクセスして、正しく動作していればOKです。</p>
+
+<h2>まとめ</h2>
+
+<p>今回作成したコードはこちらにおいてありますので、参考にしてください。</p>
+
+<p><a href="https://github.com/zephiransas/crystal-heroku">https://github.com/zephiransas/crystal-heroku</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Unicorn-worker-killerが便利だった件]]></title>
@@ -2421,60 +2577,6 @@ weinreサーバはデフォルトの状態だとlocalhostからしか接続で�
 
 <iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00DCM3W26" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Photo Leafをリリースしました]]></title>
-    <link href="http://zephiransas.github.com/blog/2013/06/27/photoleaf-release/"/>
-    <updated>2013-06-27T22:16:00+09:00</updated>
-    <id>http://zephiransas.github.com/blog/2013/06/27/photoleaf-release</id>
-    <content type="html"><![CDATA[<p>本日、フォトブック作成サービス「<a href="http://www.photo-leaf.com">Photo Leaf</a>」をリリースしました。</p>
-
-<p><img src="http://zephiransas.github.com/images/20130627/photo-leaf.png" alt="photo-leaf" /></p>
-
-<p>Photo Leafは1冊¥500でフォトブックを作成できるサービス「<a href="http://tolot.com/">TOLOT</a>」と連携して、<a href="http://www.flickr.com/">flickr</a>にアップした自分の写真からフォトブックを簡単に作成できます。</p>
-
-<p>Photo Leafの利用は無料ですので、ぜひ使ってみてください！</p>
-
-<h2>仕組みについて</h2>
-
-<p>具体的なPhoto Leafの仕組みですが、実際にはPhoto Leafだけでフォトブックを作れるわけではありません。</p>
-
-<p>Photo LeafはTOLOTの連携ファイルを作り、これをTOLOTアプリに読み込ませることによって、flickrの写真からフォトブックを作成することができるサービスです。</p>
-
-<p>TOLOTの連携ファイルにはフォトブックのタイトルなどの情報と一緒に、各ページに印刷する写真についての情報をセットしています。これには画像へのURLもセット可能ですので、これにflickrの画像ファイルへのURLをセットするようになっています。</p>
-
-<p>この連携ファイルをTOLOTアプリで読み込むと、画像データをflickrからダウンロードし、フォトブックを作成する仕組みになっています。</p>
-
-<p>ちなみに、Photo Leafは<a href="https://developers.tolot.com/">TOLOTのマネタイズAPI</a>を使用していますので、皆さんがPhoto Leafからフォトブックを注文すると、その一部が私の収益になります。</p>
-
-<h2>実行環境について</h2>
-
-<p>サービスの開発には主に</p>
-
-<ul>
-<li>Ruby 2.0</li>
-<li>Ruby on Rails 4.0</li>
-<li>FlickRaw</li>
-</ul>
-
-
-<p>などを使用しています。Ruby2.0もRails4.0も最近リリースされたばかりですので、かなり新しいものを使用しています。特にRuby2.0は1.9系に比べるとかなりパフォーマンスが改善されていますので、Rails4.0と合わせることで、かなり高速に動作します。もちろん、自分の勉強がてらというのもあるのですが。</p>
-
-<p>また実行時のプラットフォームとしては<a href="https://www.heroku.com/">Heroku</a>を使用しています。</p>
-
-<p>最初は<a href="http://sqale.jp/">Sqale</a>も検討したのですが、まだ収益があがるようなものではないだろうなぁと思っていますので、できる限りコストをかけずに運用するには、現在のところはHerokuが最適と判断しました。</p>
-
-<h2>まとめ</h2>
-
-<p>最初にこのサービスを思いついたのは、<a href="http://uzulla.hateblo.jp/entry/2013/05/08/124552">InstgramからTOLOTの連携ファイルを作成するサービス</a>を作られた方がいて、そこからTOLOTのマネタイズAPIを知ったことがきっかけです。</p>
-
-<p>自分自身も写真をかなり撮るので、フォトブックにもかなり興味があったものあります。実際に、カメラのキタムラが運営している「<a href="http://photobook.jp/photobon/top/">フォト本</a>」などで、フォトブックを作ったこともあります。フォト本は大きめのフォトブックを作るにはかなり良いサービスだと思うのですが、普段のスナップなどを手軽にフォトブックにしたい、といったニーズにはちょっと高い。TOLOTなら文庫本62ページのフォトブックを¥500で作成できるので、かなりコストパフォーマンスはいいと思います。</p>
-
-<p>ぜひ、Photo Leafで自分の写真をフォトブックにしてみてください！</p>
-
-<p>新しい写真の楽しみ方が、見つかると思います。</p>
 ]]></content>
   </entry>
   

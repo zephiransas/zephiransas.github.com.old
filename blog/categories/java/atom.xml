@@ -1,0 +1,761 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Java | zephiransasのチラシの裏]]></title>
+  <link href="http://zephiransas.github.io/blog/categories/java/atom.xml" rel="self"/>
+  <link href="http://zephiransas.github.io/"/>
+  <updated>2015-12-09T17:51:59+09:00</updated>
+  <id>http://zephiransas.github.io/</id>
+  <author>
+    <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[JavaプログラマがKindle50%還元セールで買っておくべきIT技術書]]></title>
+    <link href="http://zephiransas.github.io/blog/2015/05/31/java-programmer-must-buy/"/>
+    <updated>2015-05-31T22:29:48+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2015/05/31/java-programmer-must-buy</id>
+    <content type="html"><![CDATA[<p>Kindle Storeでセールをやってるようです。今回は50%をポイント還元するってセールらしいです。</p>
+
+<p>で、<a href="http://www.kinleit.link/web/post-4954#Web-2">こちら</a>を見てたらRubyやPHPはあっても、Javaがなかったので、ついカッとなってJavaプログラマ向けのオススメ技術書をチョイスしました。
+セールは<strong>6/1の正午まで</strong>ですので、お早めにどーぞ。</p>
+
+<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00MIM1KFC" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>これは店頭で目次を見た程度です。わりと初心者向けな印象なので、これからJavaを勉強したい人にオススメです。</p>
+
+<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00V2WMQNE" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>いわずと知れた「パーフェクトシリーズ」のJava版。広範囲に網羅されているので、手元に置いておけば長く使えると思います。初心者でも可。</p>
+
+<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00JS1EHH4" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>これも「逆引きレシピシリーズ」のJava版。リファレンス的に使うのならコイツは鉄板。</p>
+
+<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00XTOSYIY" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>そもそもJava EEの日本語の本は少ないのですが、最新のJava EE7に対応した本。</p>
+
+<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B0088L9I4W" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>1つ前のバージョンであるJava EE6の本。通称「金魚本」。Java EE6と多少古くはあるがJava EE7と全然違うというわけでもないので、未だに現役で使えるはず。内容はある程度Java EE6の仕組みを理解している人がリファレンス的に使う感じだと思います。</p>
+
+<p>現場からは以上です。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Project Kullaを試す]]></title>
+    <link href="http://zephiransas.github.io/blog/2015/04/16/project-kulla/"/>
+    <updated>2015-04-16T12:26:30+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2015/04/16/project-kulla</id>
+    <content type="html"><![CDATA[<p>以前から気になっていたJavaのREPL、Project Kullaを動かしてみました。</p>
+
+<p>REPLとはRead-eval-print loopの略で、CUIからコードを直接入力していって、その場で動作を確認できるツールです。
+Rubyであればirbやpryなどが有名ですね。</p>
+
+<p>Project KullaはOpenJDKにて開発されている、JavaのREPL環境をつくるプロジェクトです。
+ちなみにこの機能はJDK9で、正式導入される予定になっています。</p>
+
+<h2>JLine2のインストール</h2>
+
+<p>早速REPL環境を動かしてみたいところですが、まずは前準備として、Kullaに必要なJLine2というライブラリをビルドします。</p>
+
+<p>ソースコードは<a href="https://github.com/jline/jline2">GitHubのリポジトリ</a>でホストされていますので</p>
+
+<p><code>bash
+git clone git@github.com:jline/jline2.git
+cd jline2
+mvn install
+</code></p>
+
+<p>ちなみにJLine2はJDK8以前でないとビルドできないので注意です。</p>
+
+<p>ビルドに成功するとjline2/targetディレクトリにjline-2.13-SNAPSHOT.jarが作成されます。Kullaからは、このjarを利用します。</p>
+
+<h2>JDK9 EAのインストール</h2>
+
+<p>KullaのビルドにはJDK9が必要です。<a href="https://jdk9.java.net/download/">こちら</a>からJDK9をダウンロードし、インストールします。
+自分がインストールしたのは、以下のバージョン。</p>
+
+<p><code>
+java version "1.9.0-ea"
+Java(TM) SE Runtime Environment (build 1.9.0-ea-b59)
+Java HotSpot(TM) 64-Bit Server VM (build 1.9.0-ea-b59, mixed mode)
+</code></p>
+
+<p>その後、使用するJAVA_HOMEをJDK9に設定します。</p>
+
+<p>普段、自分はJAVA_HOMEの設定にjava_homeコマンドを使用しているので、.bash_profileに</p>
+
+<p><code>
+export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+</code></p>
+
+<p>としてJDK8を使用しています。今回はJDK9を使いたいので、これを</p>
+
+<p><code>
+export JAVA_HOME=`/usr/libexec/java_home -v 1.9`
+</code></p>
+
+<p>とし</p>
+
+<p><code>bash
+source ~/.bash_profile
+</code></p>
+
+<p>として、JDK9を有効にします。</p>
+
+<h2>Kullaのビルド</h2>
+
+<p>いよいよKullaのソースをダウンロードしてビルドします。</p>
+
+<p><code>bash
+hg clone http://hg.openjdk.java.net/kulla/dev ~/kulla
+cd ~/kulla
+</code></p>
+
+<p>次に、その他必要なソース類を取得します。
+<code>bash
+chmod 755 get_source.sh
+./get_source.sh
+</code></p>
+
+<p>しばらく待つと、終了します。次にビルドスクリプトを環境に合わせて修正します。</p>
+
+<p><code>bash
+cd langtools/repl
+</code></p>
+
+<p>scripts/compileを以下のように修正します。</p>
+
+<p>``` bash scripts/compile</p>
+
+<h1>!/bin/sh</h1>
+
+<p>JLINE2LIB=/Users/[ユーザ名]/jline2/target/jline-2.13-SNAPSHOT.jar
+JAVAC_BIN_HOME=/Library/Java/JavaVirtualMachines/jdk1.9.0.jdk/Contents/Home/bin</p>
+
+<p>mkdir -p build
+$JAVAC_BIN_HOME/javac -Xlint:unchecked -Xdiags:verbose -cp ${JLINE2LIB} -d build src/<em>/</em>.java
+```</p>
+
+<p>1行目 &ndash; OSXの環境に合わせて"#!/bin/sh"に修正
+2行目 &ndash; jline2のjarを指定
+3行目 &ndash; JDK9のjavacのあるディレクトリを指定
+6行目 &ndash; 先頭に"$JAVAC_BIN_HOME"を追加</p>
+
+<p>修正できたら</p>
+
+<p><code>bash
+scripts/compile
+</code></p>
+
+<p>でビルドしましょう。なにもエラーがでなければ、成功しています。</p>
+
+<h2>REPLを実行する</h2>
+
+<p>実行前にscripts/runを以下のように修正します。</p>
+
+<p>``` bash scripts/run</p>
+
+<h1>!/bin/sh</h1>
+
+<p>JLINE2LIB=/Users/[ユーザ名]/jline2/target/jline-2.13-SNAPSHOT.jar
+JAVA_BIN_HOME=/Library/Java/JavaVirtualMachines/jdk1.9.0.jdk/Contents/Home/bin/
+$JAVA_BIN_HOME/java -ea -esa -cp build:${JLINE2LIB} tool.Repl &ldquo;$@&rdquo;
+```</p>
+
+<p>先になおしたスクリプトとほぼ同じです。</p>
+
+<p>修正できたら、早速実行してみましょう。</p>
+
+<p><code>bash
+scripts/run
+</code></p>
+
+<p>すると、以下のようにプロンプトが表示されます。</p>
+
+<p>```
+|  Welcome to the Java REPL &mdash; Version 0.411
+|  Type /help for help</p>
+
+<p>&ndash;>
+```</p>
+
+<p>あとは普通にJavaのプログラムが書けます！</p>
+
+<p><code>
+-&gt; System.out.println("Hello!");
+</code></p>
+
+<p>また、CUIなどと同じようにタブによる補完もできます。</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p><a href="https://twitter.com/zephiransas">@zephiransas</a> ちなみにSHIFT+TABでメソッドのシグネチャが表示されます．&#10;new String([SHIFT+TAB]みたいな感じで</p>&mdash; bitter_fox (@bitter_fox) <a href="https://twitter.com/bitter_fox/status/588512374845411328">2015, 4月 16</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>Shift + Tab補完もなかなかステキ。</p>
+
+<p>当然ですがクラスを定義することもできます。</p>
+
+<p>```
+&ndash;> class Hoge {</p>
+
+<blockquote><blockquote><p>public static String fuga(){ return &ldquo;FUGA!!&rdquo;; }
+}
+|  Added class Hoge</p></blockquote></blockquote>
+
+<p>&ndash;> Hoge.fuga();
+|  Expression value is: &ldquo;FUGA!!&rdquo;
+|    assigned to temporary variable $1 of type String
+```</p>
+
+<p>面白いのは、<strong>いきなりメソッド定義</strong>もできます！</p>
+
+<p>```
+&ndash;> int add(int x, int y){ return x + y;}
+|  Added method add</p>
+
+<p>&ndash;> add(2,3);
+|  Expression value is: 5
+|    assigned to temporary variable $2 of type int
+```</p>
+
+<p>普通に使えそうですね！</p>
+
+<p>またTab補完周りの機能については、我らの<a href="https://twitter.com/bitter_fox/">@bitter_foxくん</a>が実装に関わってるらしいので、補完機能が怪しかったら、ぜひレポートしてあげてください。</p>
+
+<blockquote class="twitter-tweet" data-conversation="none" lang="ja"><p><a href="https://twitter.com/zephiransas">@zephiransas</a> Tab補完周り僕の少し実装に関わってるんで，良ければフィードバックください！</p>&mdash; bitter_fox (@bitter_fox) <a href="https://twitter.com/bitter_fox/status/588512213050101760">2015, 4月 16</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<h2>参考にしたリンク</h2>
+
+<ul>
+<li>Java 9 REPL – Getting started guide &ndash; <a href="http://www.jclarity.com/2015/04/15/java-9-repl-getting-started-guide/">http://www.jclarity.com/2015/04/15/java-9-repl-getting-started-guide/</a></li>
+<li>REPLで遊ぼう &ndash; <a href="http://d.hatena.ne.jp/bitter_fox/20150331/1427754868">http://d.hatena.ne.jp/bitter_fox/20150331/1427754868</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[lambda-behaveでテストを書こう]]></title>
+    <link href="http://zephiransas.github.io/blog/2014/12/16/about-lambda-behave/"/>
+    <updated>2014-12-16T18:17:15+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2014/12/16/about-lambda-behave</id>
+    <content type="html"><![CDATA[<p>これは<a href="http://qiita.com/advent-calendar/2014/java">Javaアドベントカレンダー2014</a>の12/16分の記事です。</p>
+
+<p>昨日は<a href="https://github.com/grimrose">grimrose</a>さんの、<a href="http://grimrose.blogspot.jp/2014/12/gradle.html">[書評] Gradle徹底入門</a> でした。</p>
+
+<p>明日は<a href="https://twitter.com/com4dc">@com4dc</a>さんの、<a href="http://dev.classmethod.jp/server-side/what-a-wonderful-stream-world/">はじめて触るStreamの世界</a> です。</p>
+
+<p>自分はJavaのテストフレームワークである、<a href="https://github.com/RichardWarburton/lambda-behave">lambda-behave</a>について紹介します。</p>
+
+<p>自分は普段はRailsでの開発を行っているのですが、現場では主にRSpecを使ってテストを記述しています。RSpecでのテストは以下のような感じです。</p>
+
+<p>``` ruby
+describe &lsquo;Sample&rsquo; do
+  context &lsquo;hogeメソッドについて&rsquo; do</p>
+
+<pre><code>it 'fugaを返すこと' do
+  Sample.hoge.should == "fuga"
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>RSpecでは上記のようにDSLを使って、なにをテストしているかを構造的に記述することができます。
+lambda-behaveを使うと、このようなDSLっぽい記述のテストを、Java8のLambdaを使って書くことができるようになります。</p>
+
+<h2>最初のテスト</h2>
+
+<p>まずはテスト対象となるメソッドを準備します。</p>
+
+<p>``` java
+public class Sample {</p>
+
+<pre><code>public static int includeTax(Integer price) {
+    return 0;
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>上記のようなstaticなメソッドを準備します。includeTaxメソッドは引数を一つ取り、その税込み金額を返すメソッドとします。<strong>実にギョーミーですね！</strong></p>
+
+<p>今回はTDD的なノリで実装していきますので、ここでは中身の実装はおこないません。</p>
+
+<p>それでは実際のテストを書いて行きましょう。ここでのテストシナリオは</p>
+
+<ul>
+<li>includeTaxメソッドに100を渡した場合に、108が返ってくること</li>
+</ul>
+
+
+<p>をテストするとします。これをlambda-behaveで書くと、以下のようになります。</p>
+
+<p>
+``` java
+import static com.insightfullogic.lambdabehave.Suite.*;</p>
+
+<p>@RunWith(JunitSuiteRunner.class)
+public class SampleSpec {{</p>
+
+<pre><code>describe("includeTax", it -&gt; {
+    it.should("税込み価格が取得できること", expect -&gt;
+        expect.that(Sample.includeTax(100)).is(108)
+    );
+});
+</code></pre>
+
+<p>}}
+```
+</p>
+
+<p>static importを使ってlambda-behaveのメソッドを使えるようにし、こられを使って記述していきます。</p>
+
+<p>JUnitのランナーも用意されていますので、これを@RunWithで指定すれば、IDEからも簡単にテストを実行可能です。早速、テストを実行してみましょう。</p>
+
+<p><img src="/images/20141216/screen1.png" alt="screen1" /></p>
+
+<p>includeTaxは、まだ実装をおこなっていませんので、当然このとおりテストが失敗します。</p>
+
+<p>次に、includeTaxを実装してみます。</p>
+
+<p>``` java
+public class Sample {</p>
+
+<pre><code>public static int includeTax(Integer price) {
+    final float TAX_RATE = 0.08;
+    return (int)Math.floor(price * (1 + TAX_RATE));
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>再度、テストを実行すれば、テストが成功しています。</p>
+
+<p><img src="/images/20141216/screen2.png" alt="screen2" /></p>
+
+<h2>複数のテストデータでチェック</h2>
+
+<p>先の例では1つの値でしかテストしませんでしたが、lambda-behaveでは同時に複数の値でテストすることもできます。以下のようになります。</p>
+
+<p>``` java
+it.uses(100, 108)
+  .and(200, 216)
+  .toShow(&ldquo;税込み価格が取得できること&rdquo;, (expect, price, includeTax) &ndash;> {</p>
+
+<pre><code> expect.that(Sample.includeTax(price)).is(includeTax);
+</code></pre>
+
+<p>  });
+```</p>
+
+<p>itのあとにuseとandをチェインして値を準備し、これを使ってtoShowメソッド内でテストを行います。toShowメソッド内ではlambdaの引数で準備した値を利用できますので、lambda内でその値をexpectするようにしています。</p>
+
+<h2>生成した値でチェック</h2>
+
+<p>lambda-behaveではランダムな値を生成する機能も準備されています。適当な数値を5つほど生成して、そのテストを行うコードは以下のようになります。</p>
+
+<p>（あまり例がよくないですが・・・）</p>
+
+<p>``` java
+it.requires(5)
+  .example(Generator.integersUpTo(1000))
+  .toShow(&ldquo;税込み価格が取得できること&rdquo;, (expect, price) &ndash;> {</p>
+
+<pre><code>expect.that(Sample.includeTax(price)).is((int)Math.floor(price * 1.08));
+</code></pre>
+
+<p>  });
+```
+requiresでランダムに準備する値の数を指定します。</p>
+
+<p>exampleではどのようなテストデータを生成するかを指定します。ここではlambda-behaveで準備されたGenerator.integersUpToを使用しています。この他にも適当な文字列を生成するasciiStringsメソッドなどもあります</p>
+
+<h2>例外が発生することをチェック</h2>
+
+<p>引数にnullが渡された場合にNullPointerExceptionの発生をチェックすることも、JUnitと同様に可能です。</p>
+
+<p>まず、includeTaxにnullチェックを記述します。</p>
+
+<p>``` java
+public class Sample {</p>
+
+<pre><code>public static int includeTax(Integer price) {
+    if(price == null) {
+        throw new NullPointerException();
+    }
+    final float TAX_RATE = 0.08f;
+    return (int)Math.floor(price * (1 + TAX_RATE));
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>これをテストするlambda-behaveのコードは以下のようになります。</p>
+
+<p>``` java
+it.should(&ldquo;nullの場合ぬるぽ&rdquo;, expect &ndash;> {</p>
+
+<pre><code>expect.exception(NullPointerException.class, () -&gt; {
+    Sample.includeTax(null);
+});
+</code></pre>
+
+<p>});
+```</p>
+
+<p>exceptionメソッドの第1引数に、発生する予定の例外を指定し、第2引数には例外が発生する処理をlambdaで記述します。</p>
+
+<p>lambdaに慣れていないと少々書きづらいかもしれないですが、DSLちっくに書けるのはJavaっぽくなくてステキですよね！</p>
+
+<p>こちらからは以上です。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[JJUG CCC 2014 Fallで発表してきた]]></title>
+    <link href="http://zephiransas.github.io/blog/2014/11/17/attend-jjug-ccc-2014-fall/"/>
+    <updated>2014-11-17T20:40:56+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2014/11/17/attend-jjug-ccc-2014-fall</id>
+    <content type="html"><![CDATA[<p>11月15日に、東京は新宿の西新宿ベルサールにて開催された<a href="http://www.java-users.jp/?page_id=1284">JJUG CCC 2014 Fall</a>に参加してきました。</p>
+
+<p>JJUC CCC（クロス・コミュニティ・カンファレンス）日本Javaユーザ会が春/秋と、年に2回開催している、JJUG主催としては最大のイベントです。</p>
+
+<p>今回はこれのセッション公募(CfP)に応募したところ嬉しい事にセッション枠を1つ受け持つことになったので、それも兼ねて東京まで参加してきました。
+久々に東京のJavaコミュニティの勉強会で、普段はTL上でしか面識のない人たちに会えるのも、楽しみの一つ。</p>
+
+<p>いつもの面々（失礼）もそうですが、今回は以前からお会いしたいと思っていた <a href="https://twitter.com/kikutaro_">@kikutaro_</a> さんと、お昼をご一緒させていただくことができました。TL上での発言を見て「真面目な好青年っぽいなー」という印象を持っていましたが、会ってもやはり好青年でした。</p>
+
+<p><strong>普段から何をツイートするか、考えて発言しないといけませんね！！</strong> （ｹﾞﾌﾝｹﾞﾌﾝ</p>
+
+<p>それから余談ですが、実は大都会ITクラスタは過去、JJUG CCCのスピーカを3人輩出しています。</p>
+
+<p>最初は独立国家福山に住む「<a href="https://twitter.com/soudai1025">@soudai1025</a> 氏」</p>
+
+<p>それから岡山Javaユーザ会/倉敷天領Scala勉強会に所属する「<a href="https://twitter.com/razon">@razon</a> 氏」</p>
+
+<p>あとは「<a href="https://twitter.com/mao_instantlife">@mao_instantlife</a> 氏」</p>
+
+<p>他の地方で、これだけスピーカが出てるところはないように思うので、ちょっと自慢していいような気もしますw</p>
+
+<h3>自分のセッションについて</h3>
+
+<p>今回自分はRailsライクなWebフレームワーク「<a href="http://www.ninjaframework.org/">ninjaframework</a>」について、セッションを行いました。以下はその資料。</p>
+
+<script async class="speakerdeck-embed" data-id="425e04e04edd01329d885e31c290001e" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+
+
+<p>一番小さい部屋だったので、おそらく40~50人程度の方がいらしていたと思います。</p>
+
+<p>当日、他のセッションでSpring Bootのセッションとハンズオンがあり「これはネタを選択し間違えた感・・・」と思ったのは内緒。</p>
+
+<p>久々の発表だったり、資料作りが思うように進まなくて、練習もろくにできなかったりで、たどたどしいことこの上ないセッションになってしまったような気がします・・・</p>
+
+<p>しかも50分の予定が40分程度で終わってしまい、困ったなーと思っていたところ、Q&amp;Aで意外にも多くの方から質問を頂きました。その結果、きっちり50分！</p>
+
+<p>あまりうまくいかなかった部分もありましたが、最後まで聞いていただいた皆さん、大変にありがとうございます！</p>
+
+<h3>Java女子部の台頭</h3>
+
+<p>以下はセッションの内容とはあまり関係ない、参加して自分が肌で感じたことです。</p>
+
+<p>今回のCCCで一番思ったことが、女性の参加者が多いこと。</p>
+
+<p>個人的にですが、エンジニアの世界はまだまだ男性中心な世界だなと感じていて、女性でバリバリコード書いたり、勉強会で発表してる人って少ないのが現状です。（それが良いとも悪いともいいません。それは本質ではないので。）</p>
+
+<p>なので、今回のCCCに多くの女性エンジニアがいたことには正直驚きました。最近、女性エンジニアの有志を中心に「<a href="http://javajo.doorkeeper.jp/">Java女子部</a>」なるコミュニティが発足したことは知っていましたが、それが広まってきてる感じです。</p>
+
+<p>エンジニアという職業が成熟していく過程に、女性が活躍できる環境というのは必須だと思います。また、それがエンジニアという仕事を一生の仕事にするためにも、必要なことだと思います。</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p>Java女子部の女の子たちみんな可愛かったのでみんなJavaやるべき</p>&mdash; しょぼちむ@どうもネカマです (@syobochim) <a href="https://twitter.com/syobochim/status/533626307267928065">2014, 11月 15</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<h3>Javaコミュニティの復活の兆し</h3>
+
+<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4774169315" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<p>つい先日発売された「Javaエンジニア養成読本」（通称「妖精本」）の巻頭記事に、Javaのコミュニティの歴史について触れている部分があります。</p>
+
+<p>自分がJavaのコミュニティに最初に触れたのは、Seasarが流行っていた時代です。</p>
+
+<p>その後Javaのコミュニティは、Sunの不振などもあり少しづつ勢いを失ってきたように思います。</p>
+
+<p>しかし今回のCCCの参加登録数は約650名で過去最高。また懇親会の参加者も受付開始するとあっという間に満席になり、最終的には100名とこちらも過去最高。自分にとっても最高に楽しい時間でした。</p>
+
+<ul>
+<li>JJUG CCC 2014 Fall 懇親会 &ndash; <a href="https://www.flickr.com/photos/zephiransas/sets/72157648917084929/">https://www.flickr.com/photos/zephiransas/sets/72157648917084929/</a></li>
+</ul>
+
+
+<blockquote class="twitter-tweet" lang="ja"><p>この飲み会、Java最盛期っぽい！</p>&mdash; きしだﬗ (@kis) <a href="https://twitter.com/kis/status/533619083271352322">2014, 11月 15</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>これもひとえに2007年4月にJJUGが発足以来、地道に活動してこられた多くの人たちの努力の賜物です。</p>
+
+<p>自分が感じたことは、<strong>Javaコミュニティは再びかつての勢いを取り戻しはじめている</strong>、ということです。</p>
+
+<p>そして言語としてのJavaもJava8で導入されたLambdaを皮切りに、これからも進化を続けていって欲しいと思います。</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p>もはやJavaダサいとかいてるほうがダサい　<a href="https://twitter.com/hashtag/jjug_ccc?src=hash">#jjug_ccc</a> <a href="https://twitter.com/hashtag/ccc_r17?src=hash">#ccc_r17</a></p>&mdash; Takafumi Yoshida (@zephiransas) <a href="https://twitter.com/zephiransas/status/533561483234267136">2014, 11月 15</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Java8で始めるLambda（基礎編）]]></title>
+    <link href="http://zephiransas.github.io/blog/2014/03/12/java8lambda/"/>
+    <updated>2014-03-12T16:33:00+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2014/03/12/java8lambda</id>
+    <content type="html"><![CDATA[<p>まもなくリリース予定のJava8。その中でも最も大きなインパクトを持つというProject Lambdaについて、ここ数日調べてみました。
+今からLambdaをはじめようとする人向けに、何回かに分けてまとめてみたいと思います。</p>
+
+<h2>インターフェースの宣言</h2>
+
+<p>まずは手始めに、引数で指定された文字列の前後に"[&ldquo;と&rdquo;]&ldquo;をつける処理を考えてみましょう。</p>
+
+<p>Lambdaを使用するには、まずインターフェースを宣言する必要があります。上記の仕様から考えると</p>
+
+<ul>
+<li>引数はString型の引数が1つ</li>
+<li>戻り値もString型</li>
+</ul>
+
+
+<p>となるので、この場合は以下の様なインターフェースを宣言します。</p>
+
+<p><code>java LambdaInterface.class
+public interface LambdaInterface {
+  String method(String value);
+}
+</code></p>
+
+<p>ここで注意するべきことが1つ。Java8のLambdaとして使えるインターフェースには決まりがあるのですが、もっとも重要なのが<strong>インターフェースのメソッドが1つだけ</strong>ということです。インターフェースのメソッドが2つ以上ある場合には、それをLambdaとして使用することはできません。</p>
+
+<p>これはLambdaの実装部分を書く際に、どのメソッドの内容を実装しているのかを書かないため、Lambdaを書いた場合は<strong>そのインターフェースがもつ唯一のメソッド</strong>に対して実装をおこなったとみなすからです。</p>
+
+<p>一見、これは不便なように思ってしまうかもしれないですが、普段使うパターンのインターフェースのほとんどがjava.util.functionパッケージ内で用意されているので、実際にはそれ程不便ではありません。むしろ自分でインターフェースを用意するほうが稀かもしれません。</p>
+
+<h2>Lambdaを使った記述</h2>
+
+<p>早速、先に宣言したインターフェースを使ってLambdaを書いてみましょう。Lambdaを記述する際の基本となる文法は、以下のようになっています。</p>
+
+<p><code>java
+[インターフェース名] [lambda式の名前] = (引数の型 引数,...) -&gt; {
+  （実装）
+};
+</code></p>
+
+<p>よってLambdaInterfaceを使って書くと、以下のようになります。</p>
+
+<p>``` java Sample.class
+public class Sample {</p>
+
+<p>  public static void main(String&hellip; args) {</p>
+
+<pre><code>LambdaInterface lambda = (String value) -&gt; {
+  return "[" + value + "]";
+};
+System.out.println(lambda.method("HOGE"));
+</code></pre>
+
+<p>  }</p>
+
+<p>}
+```
+実行すると"[HOGE]&ldquo;と出力されていることがわかると思います。</p>
+
+<p>このように、匿名クラスを使った場合などと比べて、少ない記述量で実装できると思います。</p>
+
+<h2>Lambdaの省略記法</h2>
+
+<p>また、このLambdaの記述では、以下のルールで、省略した記述を使用することもできます。</p>
+
+<ul>
+<li>引数の型は（型推論できるので）省略できる</li>
+<li>引数が1つの場合は、引数の()を省略できる</li>
+<li>但し、引数なしの場合は省略できない</li>
+<li>実装部分が1行の場合は、{}を省略可能。さらにreturn文も不要</li>
+</ul>
+
+
+<p>上記ルールに沿ったLambdaであれば省略可能です。ですので先ほどのコードも以下の様に省略できます。</p>
+
+<p>``` java Sample.class
+public class Sample {</p>
+
+<p>  public static void main(String&hellip; args) {</p>
+
+<pre><code>LambdaInterface lambda = value -&gt; "[" + value + "]";
+System.out.println(lambda.method("HOGE"));
+</code></pre>
+
+<p>  }</p>
+
+<p>}
+```</p>
+
+<p>かなりスッキリしましたね！</p>
+
+<h2>java.util.functionで提供されるインターフェースを使う</h2>
+
+<p>先ほど少し触れましたが、上記のLambdaInterfaceのような普段Lambdaとして使うインターフェースはjava.util.function内にいろいろ用意されています。
+例えば、LambdaInterfaceの様に「String型の引数を1つ取り、String型の戻り値を持つ」インターフェースはjava.utl.functionパッケージ内にあるFunctionインターフェースを使います。</p>
+
+<p><code>
+public interface Function&lt;T, R&gt; {
+  R apply(T t);
+}
+</code></p>
+
+<p>最初の型引数Tには1つ目の引数の型、2つ目の型引数Rには戻り値の型を指定します。またapplyメソッドが実装対象となるメソッドです。</p>
+
+<p>先のコードをFunctionインターフェースを使って書き直すと。</p>
+
+<p>``` java Sample.class
+public class Sample {</p>
+
+<p>  public static void main(String&hellip; args) {</p>
+
+<pre><code>Function&lt;String, String&gt; lambda = value -&gt; "[" + value + "]";
+System.out.println(lambda.apply("HOGE"));
+</code></pre>
+
+<p>  }</p>
+
+<p>}
+```</p>
+
+<p>となります。Functionの他にも</p>
+
+<ul>
+<li>引数を1つ持ち、戻り値がないConsumer</li>
+<li>引数がなく、戻り値があるSupplier</li>
+<li>引数を1つ持ち、戻り値がboolean型のPredicate</li>
+<li>引数を1つ持ち、かつこれが戻り値と同じ場合のUnaryOperator</li>
+</ul>
+
+
+<p>などのインターフェースが提供されています。</p>
+
+<p>どういった場合に、どのインターフェースを使えばよいかについては、Qiitaにまとめておきましたので、参考にしてみてください。</p>
+
+<ul>
+<li><a href="http://qiita.com/zephiransas/items/3b03af4f9044df3182d0">Java8関数型インターフェース チートシート</a></li>
+</ul>
+
+
+<p>通常は、ここで提供されているインターフェースを使い、それ以外のパターンが発生した場合のみ、自分でインターフェースを宣言するほうがよいでしょう。</p>
+
+<h2>メソッド参照を使う</h2>
+
+<p>メソッド参照もJava8で新しく追加された機能です。</p>
+
+<p>メソッド参照を使うと、他のクラスのクラスメソッドやインスタンスメソッドを、Lambdaの実装として利用することができるようになります。メソッド参照はドット(.)でメソッドを呼ぶ代わりに、コロン2つで呼び出します。</p>
+
+<p><code>
+</code></p>
+
+<p>例えば先の文字列の前後にカッコをつけるメソッドが以下のようにSampleクラスのstaticメソッドとして定義されていた場合</p>
+
+<p>``` java Sample.class
+public class Sample {</p>
+
+<p>  public static void main(String&hellip; args) {</p>
+
+<pre><code>...
+</code></pre>
+
+<p>  }</p>
+
+<p>  private static String add(String value) {</p>
+
+<pre><code>return "[" + value + "]";
+</code></pre>
+
+<p>  }</p>
+
+<p>}
+```</p>
+
+<p>Sample.addをメソッド参照するには</p>
+
+<p>``` java Sample.class
+public class Sample {</p>
+
+<p>  public static void main(String&hellip; args) {</p>
+
+<pre><code>Function&lt;String, String&gt; lambda = Sample::add;
+System.out.println(lambda.apply("HOGE"));
+</code></pre>
+
+<p>  }</p>
+
+<p>  private static String add(String value) {</p>
+
+<pre><code>return "[" + value + "]";
+</code></pre>
+
+<p>  }</p>
+
+<p>}
+```</p>
+
+<p>ここではstaticなクラスメソッドを使いましたが、インスタンスメソッドの場合も同様に、インスタンスを生成し、そこからメソッド参照をすることができます。</p>
+
+<p>``` java Sample.class
+public class Sample {</p>
+
+<p>  public static void main(String&hellip; args) {</p>
+
+<pre><code>Sample sample = new Sample();
+Function&lt;String, String&gt; lambda = sample::add;
+System.out.println(lambda.apply("HOGE"));
+</code></pre>
+
+<p>  }</p>
+
+<p>  public static String add(String value) {</p>
+
+<pre><code>return "[" + value + "]";
+</code></pre>
+
+<p>  }</p>
+
+<p>}
+```</p>
+]]></content>
+  </entry>
+  
+</feed>

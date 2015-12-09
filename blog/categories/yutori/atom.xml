@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: ゆとり | zephiransasのチラシの裏]]></title>
+  <link href="http://zephiransas.github.io/blog/categories/yutori/atom.xml" rel="self"/>
+  <link href="http://zephiransas.github.io/"/>
+  <updated>2015-12-09T17:51:59+09:00</updated>
+  <id>http://zephiransas.github.io/</id>
+  <author>
+    <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[写真で振り返るゆとり]]></title>
+    <link href="http://zephiransas.github.io/blog/2013/05/20/yutori-advent-calendar/"/>
+    <updated>2013-05-20T00:06:00+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2013/05/20/yutori-advent-calendar</id>
+    <content type="html"><![CDATA[<p>これは「<a href="http://atnd.org/events/39189">ゆとりアドベントカレンダー</a>」の5/20分のエントリです</p>
+
+<p>前日は <a href="http://twitter.com/btnrouge">@btnrouge</a> さんの「<a href="http://www.coppermine.jp/docs/programming/2013/05/weblogic-di.html">WebLogicのDIは果たして出来損ないなのか？</a>」でした。</p>
+
+<p>そもそも、このゆとりアドベントカレンダーが何なのかよく分からず、しかも誰に言われるまでもなく、（空気を呼んで）勝手にエントリした身ですので、何もネタがありません（ぉぃ</p>
+
+<p>なので、自分とゆとりさんとの出会いを、写真で振り返ってみたいと思います( ･`ω･´)</p>
+
+<h2>First Contact</h2>
+
+<p>多分直接お会いしたのはTDDBC岡山 1.0の時ではないでしょうか。TDDBC前日にデミカツ丼で有名な「やまと」という店で会ったような気がします。当然、それはまではTL上でしか絡みがなかったので、お会いしてそのガタイのデカさに驚いた記憶があります。また、その時にJava7の日本語ドキュメントがさー的な話をしたような気がします。</p>
+
+<p>TDDBCでは、JavaのTAの一人として活躍して頂きました。</p>
+
+<p><img src="http://farm9.staticflickr.com/8299/7865342634_04ee1d6462_n.jpg"/></p>
+
+<h2>その後</h2>
+
+<p>TDDBCの後は、多分去年のJavaOne Tokyoでお会いしたのかな・・・？</p>
+
+<p>つい最近は、先日のJava Day Tokyoで。長身にぐるぐるTシャツで、離れたところからでもすぐ確認できました。さすが、環境にやさしいゆとりさんですね！</p>
+
+<p>なんか最近はJJUGの幹事にもなられたらしいので、これからも日本のJava界の為、頑張ってくれると思われます。ゆとりさん、頑張ってー</p>
+
+<p><img src="http://farm8.staticflickr.com/7281/8740171565_cc77c9a9e9_n.jpg"/></p>
+]]></content>
+  </entry>
+  
+</feed>

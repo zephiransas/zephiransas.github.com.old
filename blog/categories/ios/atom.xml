@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: iOS | zephiransasのチラシの裏]]></title>
+  <link href="http://zephiransas.github.io/blog/categories/ios/atom.xml" rel="self"/>
+  <link href="http://zephiransas.github.io/"/>
+  <updated>2015-12-09T17:51:59+09:00</updated>
+  <id>http://zephiransas.github.io/</id>
+  <author>
+    <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[weinreでiOSのブラウザのデバッグを行う手順]]></title>
+    <link href="http://zephiransas.github.io/blog/2013/08/20/debug-with-weinre/"/>
+    <updated>2013-08-20T13:27:00+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2013/08/20/debug-with-weinre</id>
+    <content type="html"><![CDATA[<p>モバイル対応のWeb開発をしている時、iPhoneやiPadのブラウザでのデバッグに苦労したことはないですか？</p>
+
+<p>PCの場合であれば、Chormeのデベロッパーツールとかでかなり簡単にデバッグを行うことができますが、iOSとかのSafariではデバッグツールをつかうことができません。</p>
+
+<p>そんな時に便利なのが<a href="http://people.apache.org/~pmuellr/weinre/docs/latest/">weinre</a>です。weinreを使うことで、iOS側で表示されたWebページのデバッグツールの情報を、PCから見ることができる大変便利なツールです。</p>
+
+<p>今回はweinreの使い方を紹介します。</p>
+
+<h2>weinreのインストール</h2>
+
+<p>まずはweinreをインストールします。weinreはnpmで提供されているので、以下のコマンドでインストールします。
+npmをインストールしてない場合は、先に<a href="http://nodejs.org/">node.jsをインストール</a>してください。</p>
+
+<p><code>bash
+$ sudo npm -g install weinre
+</code></p>
+
+<p>自分の環境ではsudoを要求されたのですが、sudoなしでインストールできれば、それでもいいかと思います。</p>
+
+<h2>weinreサーバの起動</h2>
+
+<p>次にweinreサーバを、以下のコマンドで起動します。</p>
+
+<p><code>bash
+$ weinre --boundHost 192.168.0.x
+</code>
+上記のboundHostにはlocalhostのIPアドレスを設定します。
+weinreサーバはデフォルトの状態だとlocalhostからしか接続できません。この後iPad側から接続する必要がありますので、上記のようにboundHostを設定して、他のデバイスからも接続可能にしておく必要があります。</p>
+
+<p>無事、起動できれば</p>
+
+<p><code>bash
+weinre: starting server at http://192.168.0.x:8080
+</code>
+と表示され、8080ポートでサーバが起動します。早速これをブラウザから見てみましょう。</p>
+
+<p><img src="/images/20130820/weinre_server.png" alt="weinre_server" /></p>
+
+<p>上記の画面が表示されれば、サーバが起動しています。</p>
+
+<h2>iOSデバイスでブックマークレットの登録</h2>
+
+<p>次に、iOSデバイスでweinreサーバへ接続するためのブックマークレットを登録します。直接ブックマークレットを作れればいいのですが、iOSではそれができないようなので、ここでは新規にブックマークを作成して、これを編集することでブックマークレットを作成しています。</p>
+
+<p>まずiOSデバイスのブラウザでweinreサーバ(ex: <a href="http://192.168.0.3:8080">http://192.168.0.3:8080</a>)を開きます。
+そして、以下のjavascriptをクリップボードにコピーしておきます。</p>
+
+<p><img src="/images/20130820/bookmarklet.png" alt="bookmarklet" /></p>
+
+<p>次にiOSデバイスのブラウザで適当なWebページを開き、それをブックマークしておきます。</p>
+
+<p>そしてそのブックマークを編集して、先ほどコピーしたjavascriptをペーストします。</p>
+
+<p><img src="/images/20130820/ios_bookmarklet.png" alt="ios_bookmarklet" /></p>
+
+<h2>デバッグの手順</h2>
+
+<p>以上で全ての準備が整ったので、実際にデバッグを行ってみます。</p>
+
+<p>まずはPC側のブラウザでweinreサーバを開き、接続中のクライアント一覧を表示します。</p>
+
+<p><img src="/images/20130820/client.png" alt="client" /></p>
+
+<p>上記のリンクをクリックすると</p>
+
+<p><img src="/images/20130820/client_list.png" alt="client_list" /></p>
+
+<p>このような画面が表示されます。iOSデバイスから接続されると、上記のTargets一覧に表示されます。</p>
+
+<p>iOSデバイス側からは、まずデバッグしたいWebページを表示し、その後、先に登録したブックマークレットを実行します。するとTargetが以下のようになります。</p>
+
+<p><img src="/images/20130820/connect.png" alt="connect" /></p>
+
+<p>あとはこの画面から、普通にデバッグツールを使用することができます。</p>
+
+<p><img src="/images/20130820/debug.png" alt="debug" /></p>
+
+<p>当然、デバッグツール側でHTML要素を変更してやれば、それがそのままiOSデバイス側のブラウザに反映されますので</p>
+
+<p><img src="/images/20130820/debug1.png" alt="debug1" /></p>
+
+<p>と変更してやれば、iOS側も</p>
+
+<p><img src="/images/20130820/debug2.png" alt="debug2" /></p>
+
+<p>といった感じで、即反映されます。</p>
+
+<h2>補足</h2>
+
+<p>今回はiOSデバイスしか手元になかったため未検証ですが、当然Androidでも同様にデバッグすることができます。</p>
+]]></content>
+  </entry>
+  
+</feed>

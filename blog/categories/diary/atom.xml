@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Diary | zephiransasのチラシの裏]]></title>
+  <link href="http://zephiransas.github.io/blog/categories/diary/atom.xml" rel="self"/>
+  <link href="http://zephiransas.github.io/"/>
+  <updated>2015-12-09T17:51:59+09:00</updated>
+  <id>http://zephiransas.github.io/</id>
+  <author>
+    <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[ブログを引越しました]]></title>
+    <link href="http://zephiransas.github.io/blog/2013/04/06/blog-moved/"/>
+    <updated>2013-04-06T14:00:00+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2013/04/06/blog-moved</id>
+    <content type="html"><![CDATA[<p>以前使っていた、<a href="http://d.hatena.ne.jp/zephiransas">はてなダイアリー</a>からGithub Pagesへ移行しようとおもって、はや４ヶ月・・・
+ようやく引越しました。</p>
+
+<p>本当は今年始めの転職と同時に移行したかったんですが、あれよあれよという間に時間だけが経過して・・・</p>
+
+<p>今後はこちらをメインのブログとして使用していきたいと思います。はてダもそのまま残しておきます。</p>
+
+<p>というわけで、ｺﾝｺﾞﾄﾓﾖﾛｼｸ&hellip;.</p>
+]]></content>
+  </entry>
+  
+</feed>

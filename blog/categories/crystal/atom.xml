@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Crystal | zephiransasのチラシの裏]]></title>
+  <link href="http://zephiransas.github.io/blog/categories/crystal/atom.xml" rel="self"/>
+  <link href="http://zephiransas.github.io/"/>
+  <updated>2015-12-09T17:51:59+09:00</updated>
+  <id>http://zephiransas.github.io/</id>
+  <author>
+    <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[合同勉強会でCrystalの話をしてきた]]></title>
+    <link href="http://zephiransas.github.io/blog/2015/12/09/talk-about-crystal-on-gbdaitokai/"/>
+    <updated>2015-12-09T17:24:39+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2015/12/09/talk-about-crystal-on-gbdaitokai</id>
+    <content type="html"><![CDATA[<p>これは<a href="http://www.adventar.org/calendars/800">Crystalアドベントカレンダー2015</a>の12/9のエントリです。</p>
+
+<p>昨日は<a href="https://twitter.com/pine613">pine613</a>さんの<a href="https://gist.github.com/pine613/0e07a92660666508fc72">「Crystal-JP の活動紹介と、今後の活動について」</a>でした。</p>
+
+<p>12/5に岡山県立大学にて行われた、<a href="https://gbdaitokai.doorkeeper.jp/events/31149">合同勉強会 in 大都会岡山 -2015 Winter-</a>にて、Crystalの紹介のセッションを行いました。</p>
+
+<p>スライドはこちら。</p>
+
+<script async class="speakerdeck-embed" data-id="964ceffc800542a8ae57ba44ca3c4d82" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+
+
+<p>主に伝えたかった内容としては</p>
+
+<ul>
+<li>CrystalはRubyistには簡単に使えます</li>
+<li>Crystalは型があります</li>
+<li>コンパイルして高速に実行できます</li>
+</ul>
+
+
+<p>といった3点を主題としました。</p>
+
+<p>時間配分がいい感じだったので、実際にRubyでの実行速度と、Crystalでの実行速度の違いをデモすることができたのは、良かったのではないでしょうか。</p>
+
+<p>途中うっかり「Rubyには型がないので云々」といったおかげで、現場の型警察のみなさんに</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p lang="ja" dir="ltr">型警察が登壇者を見守っています <a href="https://twitter.com/hashtag/gbdaitokai?src=hash">#gbdaitokai</a></p>&mdash; 人マン (@razon) <a href="https://twitter.com/razon/status/672989595659710464">2015, 12月 5</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet" lang="ja"><p lang="ja" dir="ltr">「Rubyには型がないんですね」&#10;「「「いやあるあるあるある！」」」&#10;<a href="https://twitter.com/hashtag/gbdaitokai?src=hash">#gbdaitokai</a> <a href="https://twitter.com/hashtag/%E3%81%8A%E3%81%8B%E3%82%84%E3%81%BE%E3%81%93%E3%82%8F%E3%81%84?src=hash">#おかやまこわい</a></p>&mdash; mzsm@3日目東シ58a(てくぶ) (@mzsm_j) <a href="https://twitter.com/mzsm_j/status/672989634536673280">2015, 12月 5</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>となったのは迂闊でしたw</p>
+
+<p>岡山の大きな勉強会で使う懇親会場に「座・スタジアム」というちょっと珍しい会場があります。</p>
+
+<p><img src="/images/20151209/gbdaitokai.jpg" alt="screen" /></p>
+
+<p>ここでLTしたいがために、東京、大阪からやってくる人もいるくらい、懇親会に最適な会場です。次はオープンセミナー岡山2016という勉強会がありますので、ぜひ県外の皆様にもお越しいただきたいですね。</p>
+
+<ul>
+<li>Togetter &ndash; <a href="http://togetter.com/li/908723">合同勉強会 in 大都会岡山 -2015 Winter- &amp; 忘年会議2015 まとめ #gbdaitokai #忘年会議</a></li>
+<li>flickr &ndash; <a href="https://www.flickr.com/photos/zephiransas/albums/72157659745544384">合同勉強会 in 大都会岡山 -2015 Winter-</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

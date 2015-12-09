@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: playframework | zephiransasのチラシの裏]]></title>
+  <link href="http://zephiransas.github.io/blog/categories/playframework/atom.xml" rel="self"/>
+  <link href="http://zephiransas.github.io/"/>
+  <updated>2015-12-09T17:51:59+09:00</updated>
+  <id>http://zephiransas.github.io/</id>
+  <author>
+    <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[slickを使う（基礎編）]]></title>
+    <link href="http://zephiransas.github.io/blog/2013/04/24/slickwoshi-u/"/>
+    <updated>2013-04-24T12:42:00+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2013/04/24/slickwoshi-u</id>
+    <content type="html"><![CDATA[<p>最近playframework2.1をちゃんと使いたいなぁと思ったので、Scala含めて色々調べてます。
+で、ドキュメントを眺めてて気になったのがO/Rマッパ。play1.2系のころはEBean等のO/Rマッパを利用できたんですが、play2.1系ではなくなってる！一応Anormという仕組みでSQLを発行出来ますが、SQL直書きするのは小学生までよねー？！的な感じ。</p>
+
+<p>で、更に調べてみると、typesafeで<a href="http://slick.typesafe.com/">Slick</a>というO/Rマッパがあるので、これが良さそうじゃね？ってことで、試してみました。
+本来はplayから利用するのがベストですが、実験なのでスタンドアロンで。</p>
+
+<h2>build.sbtとplugin.sbtの準備</h2>
+
+<p>まずはsbtで環境を作るところから。以下のようにbuild.sbtを作成
+``` scala build.sbt
+name := &ldquo;slicksample&rdquo;</p>
+
+<p>version := &ldquo;1.0&rdquo;</p>
+
+<p>scalaVersion := &ldquo;2.10.0&rdquo;</p>
+
+<p>libraryDependencies ++= List(
+  &ldquo;com.typesafe.slick&rdquo; %% &ldquo;slick&rdquo; % &ldquo;1.0.0&rdquo;,
+  &ldquo;org.slf4j&rdquo; % &ldquo;slf4j-nop&rdquo; % &ldquo;1.6.4&rdquo;,
+  &ldquo;com.h2database&rdquo; % &ldquo;h2&rdquo; % &ldquo;1.3.166&rdquo;,
+  &ldquo;com.github.tototoshi&rdquo; %% &ldquo;slick-joda-mapper&rdquo; % &ldquo;0.1.0&rdquo;
+)
+```
+11行目では<a href="http://d.hatena.ne.jp/tototoshi/20130323/1364013170">slick-joda-mapper</a>を指定しています。</p>
+
+<p>Slickでは日付はjava.sql.Dateで扱うらしいのですが、今更java.sql.Dateなんて触りたくないなーと思っていたところ、JodaTimeへマッピングしてくれるプラグインがあったのでこれを使います。</p>
+
+<p>また、今回はIDEにIntelliJを使うので、<a href="https://github.com/mpeltonen/sbt-idea">sbt-ideaプラグイン</a>を使うように、plugin.sbtを設定します。
+<code>scala project/plugin.sbt
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.4.0")
+</code></p>
+
+<p>あとはsbtからgen-ideaするだけ</p>
+
+<p><code>bash
+$ sbt gen-idea
+</code>
+ついでにscalaのソースファイル置き場であるsrc/main/scalaディレクトリも作っておきましょう。そして、これをIntelliJに読み込ませます。読み込ませるとこんな感じ。</p>
+
+<p><img src="/images/20130424/image1.png" alt="image1" /></p>
+
+<h2>モデルの作成</h2>
+
+<p>次にモデルを作成します。今回はUSERSテーブルにアクセスするUser objectを作成してみます。カラムは</p>
+
+<ul>
+<li>id &ndash; Integer（主キー）</li>
+<li>name &ndash; String</li>
+<li>birthday &ndash; Option[LocalDate]
+ぐらいで。</li>
+</ul>
+
+
+<p>src/main/scalaにUser.scalaを作成し、以下のように記述します。</p>
+
+<p>``` scala User.scala
+import org.joda.time.LocalDate
+import scala.slick.driver.H2Driver.simple.<em>
+import com.github.tototoshi.slick.JodaSupport.</em></p>
+
+<p>object User extends Table<a href="" title="USERS">(Int, String, Option[LocalDate])</a> {
+  def id = column<a href="" title="id&quot;, O.PrimaryKey)
+  def name = column[String](&quot;name">Int</a>
+  def birthday = column<a href="" title="birthday">Option[LocalDate]</a>
+  def * = id ~ name ~ birthday
+}
+<code>
+まず2行目でSlickのクラスをインポートしておきます。注意すべきは使用するDBに合わせて、インポートするクラスを変えるってところ。今回はDBにH2を使うので
+</code> scala
+import scala.slick.driver.H2Driver.simple.<em>
+<code>
+としてます。例えばPostgreSQLを使う場合は
+</code> scala
+import scala.slick.driver.PostgresDriver.simple.</em>
+```
+とします。</p>
+
+<p>3行目は先述したslick-joda-mapperを使うのに必要です。IntteliJだと、Unusedで警告がでるのがアレですが・・・</p>
+
+<h2>データのINSERTとSELECT</h2>
+
+<p>次に、このUserモデルを使ってテーブルを作成しデータをINSERT、その後SELECTして内容を表示するコードを書いてきましょう。
+src/main/scalaにMain.scalaを作成し、以下のように記述します。</p>
+
+<p>``` scala src/main/Main.scala
+import org.joda.time.LocalDate
+import scala.slick.driver.H2Driver.simple._</p>
+
+<p>import Database.threadLocalSession</p>
+
+<p>object Main {
+  def main(args:Array[String]):Unit = {</p>
+
+<pre><code>Database.forURL("jdbc:h2:mem:test1", driver = "org.h2.Driver") withSession {
+  User.ddl.create
+
+  User.insert(1, "hoge", Some(new LocalDate(2013, 4, 10)))
+  User.insert(2, "fuga", Some(new LocalDate(2013, 4, 11)))
+
+  //select all
+  Query(User) foreach { case (id, name, birthday) =&gt;
+    println(id + ":" + name + ":" + birthday)
+  }
+
+  //name = "hoge"のみ抽出
+  val q1 = for{ u &lt;- User if u.name === "hoge" } yield u.name
+  q1 foreach println
+}
+</code></pre>
+
+<p>  }
+}
+```
+まず8行目でDBへの接続を行なっています。</p>
+
+<p>次の9行目ではUSERSテーブルのCREATE文を実行して、テーブルの作成を行なっています。</p>
+
+<p>11,12行目でデータのINSERT。15行目以降で、SELECTを行ない、標準出力で出力しています。</p>
+
+<h2>まとめ</h2>
+
+<p>こうして見ると、まだ自分がScalaのListの扱いに慣れてないせいもあって、SELECT周りの書き方にはちょっと違和感を感じますが、O/Rマッパとしての基本的な機能は十分に押さえていそうな感じです。</p>
+
+<h2>参考サイト</h2>
+
+<ul>
+<li><a href="http://slick.typesafe.com/doc/1.0.0/">Slick1.0.0公式ドキュメント</a></li>
+<li><a href="http://d.hatena.ne.jp/tototoshi/20121204/1354615421">tototoshiの日記 &ndash; slickガイド</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

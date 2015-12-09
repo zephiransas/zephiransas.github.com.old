@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Photo Leafをリリースしました - zephiransasのチラシの裏</title>
+  <meta name="author" content="Takafumi Yoshida (@zephiransas)">
+
+  
+  <meta name="description" content="本日、フォトブック作成サービス「Photo Leaf」をリリースしました。 Photo Leafは1冊¥500でフォトブックを作成できるサービス「TOLOT」と連携して、flickrにアップした自分の写真からフォトブックを簡単に作成できます。 Photo Leafの利用は無料ですので、 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://zephiransas.github.io/blog/2013/06/27/photoleaf-release">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="zephiransasのチラシの裏" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-41139724-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">zephiransasのチラシの裏</a></h1>
+  
+    <h2>とあるJava/Rubyプログラマのメモ代わりブログ</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:zephiransas.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Photo Leafをリリースしました</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-27T22:16:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>本日、フォトブック作成サービス「<a href="http://www.photo-leaf.com">Photo Leaf</a>」をリリースしました。</p>
+
+<p><img src="/images/20130627/photo-leaf.png" alt="photo-leaf" /></p>
+
+<p>Photo Leafは1冊¥500でフォトブックを作成できるサービス「<a href="http://tolot.com/">TOLOT</a>」と連携して、<a href="http://www.flickr.com/">flickr</a>にアップした自分の写真からフォトブックを簡単に作成できます。</p>
+
+<p>Photo Leafの利用は無料ですので、ぜひ使ってみてください！</p>
+
+<h2>仕組みについて</h2>
+
+<p>具体的なPhoto Leafの仕組みですが、実際にはPhoto Leafだけでフォトブックを作れるわけではありません。</p>
+
+<p>Photo LeafはTOLOTの連携ファイルを作り、これをTOLOTアプリに読み込ませることによって、flickrの写真からフォトブックを作成することができるサービスです。</p>
+
+<p>TOLOTの連携ファイルにはフォトブックのタイトルなどの情報と一緒に、各ページに印刷する写真についての情報をセットしています。これには画像へのURLもセット可能ですので、これにflickrの画像ファイルへのURLをセットするようになっています。</p>
+
+<p>この連携ファイルをTOLOTアプリで読み込むと、画像データをflickrからダウンロードし、フォトブックを作成する仕組みになっています。</p>
+
+<p>ちなみに、Photo Leafは<a href="https://developers.tolot.com/">TOLOTのマネタイズAPI</a>を使用していますので、皆さんがPhoto Leafからフォトブックを注文すると、その一部が私の収益になります。</p>
+
+<h2>実行環境について</h2>
+
+<p>サービスの開発には主に</p>
+
+<ul>
+<li>Ruby 2.0</li>
+<li>Ruby on Rails 4.0</li>
+<li>FlickRaw</li>
+</ul>
+
+
+<p>などを使用しています。Ruby2.0もRails4.0も最近リリースされたばかりですので、かなり新しいものを使用しています。特にRuby2.0は1.9系に比べるとかなりパフォーマンスが改善されていますので、Rails4.0と合わせることで、かなり高速に動作します。もちろん、自分の勉強がてらというのもあるのですが。</p>
+
+<p>また実行時のプラットフォームとしては<a href="https://www.heroku.com/">Heroku</a>を使用しています。</p>
+
+<p>最初は<a href="http://sqale.jp/">Sqale</a>も検討したのですが、まだ収益があがるようなものではないだろうなぁと思っていますので、できる限りコストをかけずに運用するには、現在のところはHerokuが最適と判断しました。</p>
+
+<h2>まとめ</h2>
+
+<p>最初にこのサービスを思いついたのは、<a href="http://uzulla.hateblo.jp/entry/2013/05/08/124552">InstgramからTOLOTの連携ファイルを作成するサービス</a>を作られた方がいて、そこからTOLOTのマネタイズAPIを知ったことがきっかけです。</p>
+
+<p>自分自身も写真をかなり撮るので、フォトブックにもかなり興味があったものあります。実際に、カメラのキタムラが運営している「<a href="http://photobook.jp/photobon/top/">フォト本</a>」などで、フォトブックを作ったこともあります。フォト本は大きめのフォトブックを作るにはかなり良いサービスだと思うのですが、普段のスナップなどを手軽にフォトブックにしたい、といったニーズにはちょっと高い。TOLOTなら文庫本62ページのフォトブックを¥500で作成できるので、かなりコストパフォーマンスはいいと思います。</p>
+
+<p>ぜひ、Photo Leafで自分の写真をフォトブックにしてみてください！</p>
+
+<p>新しい写真の楽しみ方が、見つかると思います。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Takafumi Yoshida (@zephiransas)</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-27T22:16:00+09:00" pubdate data-updated="true">Jun 27<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://zephiransas.github.io/blog/2013/06/27/photoleaf-release/" data-via="" data-counturl="http://zephiransas.github.io/blog/2013/06/27/photoleaf-release/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/06/18/jdt2013-okayama-report/" title="Previous Post: Java Day Tokyo 2013報告会@岡山を開催してきた">&laquo; Java Day Tokyo 2013報告会@岡山を開催してきた</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/08/16/resque-timemachine/" title="Next Post: TimeMachineで検証エラーが発生した場合の復旧方法">TimeMachineで検証エラーが発生した場合の復旧方法 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+<section>
+  <h1>About Me</h1>
+  <img style="display:block;float:left;" src="http://www.gravatar.com/avatar/ab963de01b53e635d6e699d6d7d162b1" alt="Gravatar of Takafumi Yoshida (@zephiransas) " title="Gravatar of Takafumi Yoshida (@zephiransas)" />
+  <p>
+    Takafumi Yoshida<br/>
+    Java/Ruby/Scala<br/>
+    Programmer at Okayama<br/>
+    <a href="http://twitter.com/zephiransas">@zephiransas</a>
+  </p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/12/09/talk-about-crystal-on-gbdaitokai/">合同勉強会でCrystalの話をしてきた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/10/crystal-on-heroku/">CrystalをHerokuで動かしてみた</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/29/unicorn-worker-killer/">Unicorn-worker-killerが便利だった件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/07/08/eager-load-with-paranoia/">論理削除とeager_loadでN+1問題が発生する件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/05/31/java-programmer-must-buy/">JavaプログラマがKindle50%還元セールで買っておくべきIT技術書</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/zephiransas">@zephiransas</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'zephiransas',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Takafumi Yoshida (@zephiransas) -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

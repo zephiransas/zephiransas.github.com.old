@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Ruby, | zephiransasのチラシの裏]]></title>
+  <link href="http://zephiransas.github.io/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://zephiransas.github.io/"/>
+  <updated>2015-12-09T17:51:59+09:00</updated>
+  <id>http://zephiransas.github.io/</id>
+  <author>
+    <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[unicorn-worker-killerが便利だった件]]></title>
+    <link href="http://zephiransas.github.io/blog/2015/07/29/unicorn-worker-killer/"/>
+    <updated>2015-07-29T15:57:26+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2015/07/29/unicorn-worker-killer</id>
+    <content type="html"><![CDATA[<p>自分が現在関わっているプロジェクトでは、nginx + unicornの構成で運用しているのですが、この構成でサーバのメモリが足りなくなるという現象に悩まされていました。</p>
+
+<p>unicornのワーカプロセスは、通常では起動したままユーザからのリクエストを処理し、再起動されることはありません。
+その関係で、長時間運用していると、そのワーカプロセスがメモリをあるだけ食いつぶすような挙動になります。</p>
+
+<p>こんな時に便利なのが「<a href="https://github.com/kzk/unicorn-worker-killer">unicorn-worker-killer</a>」です。</p>
+
+<p>unicorn-worker-killerを使うことで、ワーカプロセスが以下の条件の場合に、自動的に再起動してくれます。</p>
+
+<ul>
+<li>ワーカプロセスが指定回数のリクエストを処理した場合</li>
+<li>ワーカプロセスが指定量のメモリを使用している場合</li>
+</ul>
+
+
+<p>いずれの場合でもワーカプロセスの再起動は、現在のリクエストを処理した後に再起動（いわゆるgraceful restart）されます。</p>
+
+<h2>設定のしかた</h2>
+
+<p>設定はconfig.ruにて行います。</p>
+
+<h3>リクエストの回数基準で再起動する</h3>
+
+<p><code>ruby config.ru
+use Unicorn::WorkerKiller::MaxRequests, 3072, 4096
+</code></p>
+
+<p>これはワーカプロセスが、3072回~4096回のいずれかの回数リクエストを処理したら再起動する設定です。</p>
+
+<p><code>ruby config.ru
+use Unicorn::WorkerKiller::MaxRequests, 3072, 4096, true
+</code></p>
+
+<p>とすることで、unicorn.rbのstderr_pathで指定されたパスに状況を出力することができます。</p>
+
+<h3>メモリの使用量を基準に再起動する</h3>
+
+<p><code>ruby config.ru
+use Unicorn::WorkerKiller::Oom, (192*(1024**2)), (256*(1024**2)), 16
+</code></p>
+
+<p>これはワーカプロセスが16回リクエストを処理する度に、自身のメモリ使用量をチェックし、これが192M~256Mのいずれかの使用量をオーバーしていた場合に、再起動する設定です。</p>
+
+<h3>設定が2つある理由</h3>
+
+<p>リクエスト回数とメモリ使用量の設定両方とも、しきい値を範囲で指定するようになっていますが、これには理由があります。</p>
+
+<p>1つのしきい値だと、各ワーカが再起動するタイミングが、ほぼ同じになるからです。同じタイミングで全てのワーカプロセスが再起動してしまうと、その間リクエストを処理することができなくなってしまうので、これは好ましくありません。</p>
+
+<p>ですので、しきい値を範囲で指定し、その範囲内のいずれかの値を実際のしきい値として採用するという仕組みになっています。</p>
+
+<p>なので、しきい値の範囲は狭いより、広いほうが、ベターです。</p>
+
+<h2>unicorn-worker-killerを試してみる</h2>
+
+<p>では、unicorn-worker-killerがちゃんとワーカプロセスをKillできているかを確認してみます。</p>
+
+<p>シナリオとしては</p>
+
+<ul>
+<li>config/unicorn.rbのworker_processesは1として、ワーカプロセスは1つだけにする</li>
+<li>unicorn-worker-killerの設定は100回〜120回のリクエストを受けたタイミングで、ワーカプロセスを再起動するようにする</li>
+</ul>
+
+
+<p>まずはGemfileに</p>
+
+<p><code>ruby Gemfile
+gem 'unicorn-worker-killer'
+</code></p>
+
+<p>と設定します。config.ruの設定は、以下のようになります。</p>
+
+<p><code>ruby config.ru
+use Unicorn::WorkerKiller::MaxRequests, 100, 120, true
+</code></p>
+
+<p>unicorn-worker-killerの詳細なログを出力するように設定しておきます。</p>
+
+<p>この設定でunicornを起動します。すると以下ような感じでログが出力されます。</p>
+
+<p><code>
+I, [2015-07-29T16:38:31.589102 #29745]  INFO -- : worker=0 spawning...
+I, [2015-07-29T16:38:31.591242 #29745]  INFO -- : master process ready
+I, [2015-07-29T16:38:31.593001 #29752]  INFO -- : worker=0 spawned pid=29752
+I, [2015-07-29T16:38:31.593581 #29752]  INFO -- : Refreshing Gem list
+I, [2015-07-29T16:38:47.035570 #29752]  INFO -- : worker=0 ready
+</code></p>
+
+<p>pid=29752でワーカプロセスが1つ立ち上がりました。psで確認すると</p>
+
+<p><code>
+zephiransas 29752 30.0  2.8 544708 235984 ?       Sl   16:38   0:15 unicorn worker[0] -c config/unicorn.rb -E production -D  
+</code></p>
+
+<p>のような感じです。ここでブラウザから何度かアクセスすると、unicornのログに以下のように出力されます。</p>
+
+<p><code>
+I, [2015-07-29T16:40:37.156111 #29752]  INFO -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 29752) has 119 left before being killed
+I, [2015-07-29T16:40:37.349161 #29752]  INFO -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 29752) has 118 left before being killed
+I, [2015-07-29T16:40:37.559274 #29752]  INFO -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 29752) has 117 left before being killed
+I, [2015-07-29T16:40:37.649334 #29752]  INFO -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 29752) has 116 left before being killed
+I, [2015-07-29T16:40:47.690545 #29752]  INFO -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 29752) has 115 left before being killed
+</code></p>
+
+<p>pid=29752のワーカプロセスがあと何回リクエストを処理できるかが分かります。またリクエストするたびに1つづつ減っています。</p>
+
+<p>では、引き続きブラウザからアクセスし、ワーカプロセスのメモリ使用状況を確認してみましょう。</p>
+
+<p><code>
+zephiransas 29752  7.1  3.2 785940 269420 ?       Sl   16:38   0:26 unicorn worker[0] -c config/unicorn.rb -E production -D
+</code></p>
+
+<p>メモリ使用量が少し増えているのがわかります。次にリクエストの残り回数を使い切り、ワーカプロセスが正しく再起動されるか確認します。</p>
+
+<p>ブラウザからリクエストを投げ続けると、unicornのログに以下のように出力されます。</p>
+
+<p><code>
+W, [2015-07-29T16:47:00.539055 #29752]  WARN -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 29752) exceeds max number of requests (limit: 119)
+W, [2015-07-29T16:47:00.539621 #29752]  WARN -- : Unicorn::WorkerKiller send SIGQUIT (pid: 29752) alive: 383 sec (trial 1)
+I, [2015-07-29T16:47:03.467363 #29745]  INFO -- : reaped #&lt;Process::Status: pid 29752 exit 0&gt; worker=0
+I, [2015-07-29T16:47:03.467928 #29745]  INFO -- : worker=0 spawning...
+I, [2015-07-29T16:47:03.472507 #7549]  INFO -- : worker=0 spawned pid=7549
+I, [2015-07-29T16:47:03.473377 #7549]  INFO -- : Refreshing Gem list
+I, [2015-07-29T16:47:19.137831 #7549]  INFO -- : worker=0 ready
+I, [2015-07-29T16:47:20.251309 #7549]  INFO -- : #&lt;Unicorn::HttpServer:0x0000000343fa00&gt;: worker (pid: 7549) has 101 left before being killed
+</code></p>
+
+<p>1行目でpid=29752がリクエスト回数上限の119回に達したことがわかります。</p>
+
+<p>2行目ワーカプロセスに対してQUITシグナルを送信しています。</p>
+
+<p>その後、別のワーカプロセスがpid=7549で起動しています。試しにpid=7549のメモリ使用量を見ると</p>
+
+<p><code>
+zephiransas  7549  5.7  3.1 705752 261532 ?       Sl   16:47   0:18 unicorn worker[0] -c config/unicorn.rb -E production -D
+</code></p>
+
+<p>となり、以前より減っていることがわかります。</p>
+
+<p>Railsアプリを実運用するときには必須のgemだと思います。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[論理削除とeager_loadでN+1問題が発生する件]]></title>
+    <link href="http://zephiransas.github.io/blog/2015/07/08/eager-load-with-paranoia/"/>
+    <updated>2015-07-08T09:53:55+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2015/07/08/eager-load-with-paranoia</id>
+    <content type="html"><![CDATA[<p>Railsアプリにて論理削除とeager_loadを合わせて使うとN+1問題が発生することに気づいたのでメモ。</p>
+
+<h2>N+1問題を確認する</h2>
+
+<p>まずはN+1問題が起きるようなモデルを作成します。よくあるブログアプリのような、ブログのエントリがあり、それにコメントが複数あるパターンです。</p>
+
+<p>``` ruby
+class Post &lt; ActiveRecord::Base
+  attr_accessible :title,</p>
+
+<pre><code>              :content
+</code></pre>
+
+<p>  has_many :comments
+end</p>
+
+<p>class Comment &lt; ActiveRecord::Base
+  attr_accessible :post_id,</p>
+
+<pre><code>              :name,
+              :content
+</code></pre>
+
+<p>  belongs_to :post
+end
+```</p>
+
+<p>適当なデータを入れた後、これに対してrails cで以下のようにレコードを取得します。</p>
+
+<p><code>ruby
+Post.all.each do |post|
+  puts post.comments.first.name
+end
+</code></p>
+
+<p>すると、以下のようなSQLが発行されます。</p>
+
+<p><code>
+Post Load (0.1ms)  SELECT "posts".* FROM "posts"
+Comment Load (0.1ms)  SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = 12 LIMIT 1
+ユーザ1
+Comment Load (0.1ms)  SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = 13 LIMIT 1
+ユーザ1
+Comment Load (0.1ms)  SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = 14 LIMIT 1
+ユーザ1
+...
+（以下続く
+</code></p>
+
+<p>この場合は、<strong>対象となったPostの件数分、CommentsテーブルへのSQLが発行されることになります。</strong> これがN+1問題です。</p>
+
+<h2>N+1問題に対処する</h2>
+
+<p>これを解決するには、eager_loadを使うことが一般的です。つまり</p>
+
+<p><code>ruby
+Post.eager_load(:comments).each do |post|
+  puts post.comments.first.name
+end
+</code></p>
+
+<p>この場合のSQLは（一部簡略化しています）</p>
+
+<p><code>
+SQL (0.2ms)  SELECT "posts".*, "comments".*
+FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id"
+</code></p>
+
+<p>となります。Postsテーブルと一緒にCommentsテーブルを取得しているので、SQLが1回だけ発行されていることがわかります。</p>
+
+<p>美しい理想の世界です。ﾊﾗｼｮｰ</p>
+
+<h2>paranoiaを導入する</h2>
+
+<p>さて本題。ここで<strong>うっかり論理削除を導入</strong>してみましょう。</p>
+
+<p>Railsには論理削除に関するgemは多数ありますが、現在のデファクトスタンダードは<a href="https://github.com/radar/paranoia">paranoia</a>だと思います。まずはparanoiaをGemfileに記述します。</p>
+
+<p><code>ruby Gemfile
+gem 'paranoia', '~&gt; 1.0'  # Rails3系には1.0系を使用
+</code></p>
+
+<p>その後、モデルを以下のように変更します。</p>
+
+<p>``` ruby
+class Post &lt; ActiveRecord::Base
+  acts_as_paranoid
+  attr_accessible :title,</p>
+
+<pre><code>              :content
+</code></pre>
+
+<p>  has_many :comments
+end</p>
+
+<p>class Comment &lt; ActiveRecord::Base
+  acts_as_paranoid
+  attr_accessible :post_id,</p>
+
+<pre><code>              :name,
+              :content
+</code></pre>
+
+<p>  belongs_to :post
+end
+```</p>
+
+<p>その後、eager_loadしてみます。</p>
+
+<p><code>ruby
+Post.eager_load(:comments).each do |post|
+  puts post.comments.first.name
+end
+</code></p>
+
+<p>するとSQLは以下の様に発行されます。（一部簡略化しています）</p>
+
+<p><code>
+SQL (0.2ms)  SELECT "posts".*, "comments".*
+FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id"
+WHERE ("posts".deleted_at IS NULL)
+</code></p>
+
+<p>PostsテーブルのWHERE条件にdeleted_at is nullが付与されているのは期待通りですが、Commentsテーブルには付与されていないので、これでは<strong>論理削除されたCommentsテーブルの内容</strong>も取得してしまいます・・・</p>
+
+<p>では、以下のようにPostのcommentsにconditionsを付与するのはどうでしょう？</p>
+
+<p>``` ruby
+class Post &lt; ActiveRecord::Base
+  acts_as_paranoid
+  attr_accessible :title,</p>
+
+<pre><code>              :content
+</code></pre>
+
+<p>  has_many :comments, conditions: &lsquo;comments.deleted_at is null&rsquo;
+end
+```</p>
+
+<p>ここで同様にeager_loadするとSQLは以下の様に発行されます。</p>
+
+<p><code>
+SQL (0.2ms)  SELECT "posts".*, "comments".*
+FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" AND comments.deleted_at is null
+WHERE ("posts".deleted_at IS NULL)
+</code></p>
+
+<p>WHERE条件が追加されて、なんだか、いい感じにeager_loadできました。</p>
+
+<h2>論理削除したデータも取得したい場合</h2>
+
+<p>さて、ここで少々頭がおかしくなって「削除したCommentも取りたい(^q^)」という気分になったとしましょう。</p>
+
+<p>そこでPostクラスにcomments_with_deletedなるアソシエーションを追加します。</p>
+
+<p>``` ruby
+class Post &lt; ActiveRecord::Base
+  acts_as_paranoid
+  attr_accessible :title,</p>
+
+<pre><code>              :content
+</code></pre>
+
+<p>  has_many :comments, conditions: &lsquo;comments.deleted_at is null&rsquo;
+  has_many :comments_with_deleted,</p>
+
+<pre><code>       class_name: 'Comment',
+       foreign_key: :post_id
+</code></pre>
+
+<p>end
+```</p>
+
+<p>さて、これを使ってeager_loadしてみましょう。</p>
+
+<p><code>
+Post.eager_load(:comments_with_deleted).each do |post|
+  puts post.comments.first.name
+end
+</code></p>
+
+<p>すると、以下のようなSQLが発行されます。</p>
+
+<p><code>
+SQL (0.2ms)  SELECT "posts".*, "comments".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."id" = "posts"."id" WHERE ("posts".deleted_at IS NULL)
+Comment Load (0.1ms)  SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = 12 AND ("comments".deleted_at IS NULL) AND (comments.deleted_at is null) LIMIT 1
+ユーザ2
+Comment Load (0.1ms)  SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = 13 AND ("comments".deleted_at IS NULL) AND (comments.deleted_at is null) LIMIT 1
+ユーザ1
+Comment Load (0.1ms)  SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = 14 AND ("comments".deleted_at IS NULL) AND (comments.deleted_at is null) LIMIT 1
+ユーザ1
+Comment Load (0.1ms)  SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = 15 AND ("comments".deleted_at IS NULL) AND (comments.deleted_at is null) LIMIT 1
+ユーザ1
+Comment Load (0.1ms)  SELECT "comments".* FROM "comments" WHERE "comments"."post_id" = 16 AND ("comments".deleted_at IS NULL) AND (comments.deleted_at is null) LIMIT 1
+</code></p>
+
+<p>最初のSQLでは、条件にcomments.deleted_at is nullが付与されていないので、これは期待通りなのですが、<strong>その後、なぜかN+1問題が再発</strong>しています。</p>
+
+<p><del>現在のところ、これを回避できる方法は見つけられていません。</del></p>
+
+<ul>
+<li>追記</li>
+</ul>
+
+
+<p>我らのひむひむセンセイから、アドバイスを頂きました。</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p lang="ja" dir="ltr"><a href="https://twitter.com/zephiransas">@zephiransas</a> &#10;Post.eager_load(:comments_with_deleted).each do |post|&#10; puts <a href="http://t.co/FVIFkHFf3H">http://t.co/FVIFkHFf3H</a>&#10;end&#10;的な感じじゃダメなんかね <a href="https://twitter.com/hashtag/%E3%81%A6%E3%81%8D%E3%81%A8%E3%81%86?src=hash">#てきとう</a></p>&mdash; えいる (@eielh) <a href="https://twitter.com/eielh/status/618621108854652929">2015, 7月 8</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>なるほど！やってみましょう。</p>
+
+<p><code>
+Post.eager_load(:comments_with_deleted).each do |post|
+  puts post.comments_with_deleted.first.name
+end
+</code></p>
+
+<p>するとSQLは</p>
+
+<p><code>
+SELECT "posts".
+SQL (0.2ms)  SELECT "posts".*, "comments".* FROM "posts" LEFT OUTER JOIN
+ON "comments"."post_id" = "posts"."id"
+WHERE ("posts".deleted_at IS NULL)
+</code></p>
+
+<p>となって、意図した結果になりましたとさ。</p>
+
+<p>でもこれ、実装時に意識しながら書ける自信ないですわ・・・(´・3・`)</p>
+
+<h2>結論</h2>
+
+<p>結論を<a href="http://blog.oukasoft.com/OS/">社畜ちゃん</a>にまとめていただきます。</p>
+
+<p><img src="/images/20150708/summary.png" alt="summary" /></p>
+
+<p>とは言っても論理武装が必要でしょうから、こちらも合わせてどうぞ。</p>
+
+<ul>
+<li>DELETE_FLAG を付ける前に確認したいこと。 &ndash; <a href="http://qiita.com/Jxck_/items/156d0a231c6968f2a474">http://qiita.com/Jxck_/items/156d0a231c6968f2a474</a></li>
+<li>論理削除が云々について &ndash; <a href="http://mike-neck.hatenadiary.com/entry/2015/03/24/231422">http://mike-neck.hatenadiary.com/entry/2015/03/24/231422</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

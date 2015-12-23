@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>GitHubのPull requestから、CHANGELOGっぽいものを作成するgemを作った - zephiransasのチラシの裏</title>
+  <title>zephiransasのチラシの裏</title>
   <meta name="author" content="Takafumi Yoshida (@zephiransas)">
 
   
-  <meta name="description" content="gemを作りました。名前はoctocamです。 octocam &ndash; https://rubygems.org/gems/octocam 主な機能としては「GitHubから指定された日付期間にマージされたPull requestを抽出し、CHANGELOGっぽいMarkdownを生成する &hellip;">
+  <meta name="description" content="以前使っていた、はてなダイアリーからGithub Pagesへ移行しようとおもって、はや４ヶ月・・・
+ようやく引越しました。 本当は今年始めの転職と同時に移行したかったんですが、あれよあれよという間に時間だけが経過して・・・ 今後はこちらをメインのブログとして使用していきたいと思います。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://zephiransas.github.io/blog/2015/04/02/introduce-octocam">
+  <link rel="canonical" href="http://zephiransas.github.io/blog/page/4">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="zephiransasのチラシの裏" type="application/atom+xml">
@@ -75,12 +76,15 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">GitHubのPull requestから、CHANGELOGっぽいものを作成するgemを作った</h1>
+      <h1 class="entry-title"><a href="/blog/2013/04/06/blog-moved/">ブログを引越しました</a></h1>
     
     
       <p class="meta">
@@ -96,126 +100,36 @@
   
 
 
-<time datetime="2015-04-02T17:31:42+09:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2015</time>
+<time datetime="2013-04-06T14:00:00+09:00" pubdate data-updated="true">Apr 6<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>gemを作りました。名前はoctocamです。</p>
+  <div class="entry-content"><p>以前使っていた、<a href="http://d.hatena.ne.jp/zephiransas">はてなダイアリー</a>からGithub Pagesへ移行しようとおもって、はや４ヶ月・・・
+ようやく引越しました。</p>
 
-<ul>
-<li>octocam &ndash; <a href="https://rubygems.org/gems/octocam">https://rubygems.org/gems/octocam</a></li>
-</ul>
+<p>本当は今年始めの転職と同時に移行したかったんですが、あれよあれよという間に時間だけが経過して・・・</p>
 
+<p>今後はこちらをメインのブログとして使用していきたいと思います。はてダもそのまま残しておきます。</p>
 
-<p>主な機能としては「GitHubから指定された日付期間にマージされたPull requestを抽出し、CHANGELOGっぽいMarkdownを生成する」というgemです。</p>
-
-<p>定期的にリリースを行っている場合に、以前リリースされたときからどのような機能が増えたかをCHANGELOGとかに書き出しますが、そういった時に便利に使えると思います。</p>
-
-<p>似たような機能を持つものはgemやnpmを探すと、結構あります。<a href="https://github.com/skywinder/Github-Changelog-Generator/wiki/Alternatives">この辺り</a>とか。ただ、いずれも</p>
-
-<ul>
-<li>日付の指定ができない。できたとしてもPull requestの作成日とか。</li>
-<li>issueやcommitを含めてしまう。</li>
-<li>Markdownで出力できない。</li>
-<li>認証に対応してない。</li>
-</ul>
-
-
-<p>などなど、要求を満たすものではなかったので、gemの作り方を勉強がてら作ってみました。</p>
-
-<p>ワークフローとして、 <strong>必ずPull requestでレビューをしてから、マージをおこなうワークフロー</strong> を採用しているところであれば、フィットするように思います。</p>
-
-<h2>インストール</h2>
-
-<p>以下のようにしてインストールします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>gem install octocam
-</span><span class='line'>rbenv rehash  # rbenvを使ってる人はrehash</span></code></pre></td></tr></table></div></figure>
-
-
-<p>もしプライベートなリポジトリにアクセスしたい場合は、<a href="https://github.com/settings/applications">こちら</a>からPersonal access tokensを生成します。
-あとは、生成したトークンを.bash_profileあたりから、環境変数「OCTOCAM_GITHUB_TOKEN」に設定しておきます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>export OCTOCAM_GITHUB_TOKEN="your-40-digit-github-token"</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>使い方</h2>
-
-<p>インストールされるとoctocamコマンドが使えるようになるので、以下のようにして実行します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>octocam -o zephiransas -r octocam -f 2015-01-01 -t 2015-01-31</span></code></pre></td></tr></table></div></figure>
-
-
-<p>-f,-tオプションにPull requestがマージされた日付を指定でききます。</p>
-
-<p><strong> カレントディレクトリがgitのローカルリポジトリで、かつ、originがGitHubに設定されている場合であれば-o,-rオプションは省略できます。 </strong></p>
-
-<p>欲しい機能ありましたら、issueを立てて頂くか、Pull requestを投げてください。</p>
+<p>というわけで、ｺﾝｺﾞﾄﾓﾖﾛｼｸ&hellip;.</p>
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">Takafumi Yoshida (@zephiransas)</span></span>
-
-      
-
-
-
-
-
-
-
-
   
 
 
-<time datetime="2015-04-02T17:31:42+09:00" pubdate data-updated="true">Apr 2<span>nd</span>, 2015</time>
-      
-
-<span class="categories">
+    </article>
   
-    <a class='category' href='/blog/categories/ruby/'>Ruby</a>
-  
-</span>
-
-
-    </p>
+  <div class="pagination">
     
-      <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://zephiransas.github.io/blog/2015/04/02/introduce-octocam/" data-via="" data-counturl="http://zephiransas.github.io/blog/2015/04/02/introduce-octocam/" >Tweet</a>
-  
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
+    <a href="/blog/archives">Blog Archives</a>
     
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2014/12/16/about-lambda-behave/" title="Previous Post: lambda-behaveでテストを書こう">&laquo; lambda-behaveでテストを書こう</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2015/04/16/project-kulla/" title="Next Post: Project Kullaを試す">Project Kullaを試す &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
+    <a class="next" href="/blog/page/3/">Newer &rarr;</a>
+    
+  </div>
 </div>
-
 <aside class="sidebar">
   
     
@@ -259,7 +173,7 @@
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   
   <a href="https://github.com/zephiransas">@zephiransas</a> on GitHub
@@ -288,7 +202,6 @@
 
   
 </aside>
-
 
     </div>
   </div>

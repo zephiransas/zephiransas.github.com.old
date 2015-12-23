@@ -4,7 +4,7 @@
   <title><![CDATA[zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2015-12-09T17:54:21+09:00</updated>
+  <updated>2015-12-23T23:48:27+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,117 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Past, Present and Future]]></title>
+    <link href="http://zephiransas.github.io/blog/2015/12/20/past-present-and-future/"/>
+    <updated>2015-12-20T17:09:17+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2015/12/20/past-present-and-future</id>
+    <content type="html"><![CDATA[<p>これは<a href="http://luna3.heteml.jp/etc/entry-12.html">大都会アドベントカレンダー</a>24日目の記事です。</p>
+
+<p>昨日は<a href="https://twitter.com/yantona">@yantonaさん</a>の<a href="http://luna3.heteml.jp/etc/entry-12.html">君は「玉野音頭」を知っているか</a>でした。</p>
+
+<p>不覚にも自分は知りませんでした・・・瀬戸大橋音頭なら・・・！</p>
+
+<p>実は今年の大都会アドベントカレンダー、12日目のきよくらさんが自分とIT勉強会とのかかわり合いについて書かれていて、これにインスパイアされたので、便乗して自分が岡山のIT勉強会に関わって、岡山Javaユーザ会を開催するようになるまでを、まとめてみようと思います。</p>
+
+<h1>岡山でJavaの勉強会をスタートするまで</h1>
+
+<h2>2010年</h2>
+
+<p>2010年、当時自分は岡山にある小さなSIerで仕事をしていました。当時やっていたのは主にJavaを使ってのWeb開発で、Apache,Seasarなどのオープンソースソフトウェアを好んで使っていました。小さな会社だったこともあり、新しい技術の導入には比較的寛容な環境だったかもしれません。</p>
+
+<p>そんなとき、ネットで偶然見かけたのがオープンラボ岡山でした。勉強会についてはほとんど知らなかったし、それほど興味も無かったのですが、偶然Seasarの作者であるひがやすおさんが、岡山に来られるということだけで参加しに行きました。</p>
+
+<ul>
+<li>第15回オープンラボ岡山 &ndash; <a href="http://openlab.okaya.ma/wiki.cgi?page=%CA%D9%B6%AF%B2%F1%2F%C2%E8015%B2%F3">http://openlab.okaya.ma/wiki.cgi?page=%CA%D9%B6%AF%B2%F1%2F%C2%E8015%B2%F3</a></li>
+</ul>
+
+
+<p>この時にはSeasarの開発も一時期よりは落ち着いてきて、ひがさん自身も「これからはクラウドだ！GAEだ！Slim3だ！」と、Slim3についての話をされていたことを覚えています。</p>
+
+<p>同時に年末だったこともあり、忘年会議も開催されていますが、これには参加してませんでした・・・</p>
+
+<p>思えば、ここが最初のスタートです。</p>
+
+<h2>2011年</h2>
+
+<p>去年参加したオープンラボをキッカケに、2011年からは勉強会にも積極的に参加するようになりました。</p>
+
+<p>このころはオープンラボ岡山は月に1度のペースで開催されていましたので、ほぼ毎月参加していたように思います。そしてそのなかで、いろいろな人から、技術に関する話を聞くうちに、勉強会に参加する面白さを感じることができるようになったと思います。</p>
+
+<p>当時は勉強会に登壇する人全てが、雲の上の人のように感じていましたね。</p>
+
+<p>それと同時に「人の話を聞いてるだけじゃなく、自分も話せるようになって、みんなに喜んで欲しい」という気持ちも同時に芽生え始めたように思います。</p>
+
+<p>そして転機は第19回オープンラボ岡山のときです。</p>
+
+<ul>
+<li>第19回オープンラボ岡山 &ndash; <a href="http://openlab.okaya.ma/wiki.cgi?page=%CA%D9%B6%AF%B2%F1%2F%C2%E8019%B2%F3">http://openlab.okaya.ma/wiki.cgi?page=%CA%D9%B6%AF%B2%F1%2F%C2%E8019%B2%F3</a></li>
+</ul>
+
+
+<p>この回はJava特集ということで、当時は日本オラクル所属だった寺田佳央さんと、RedHatの木村貴由さんのお二人からJavaについての話を聞きました。そこで寺田さんはGlassFishの話をされたのですが、これが個人的に一番興味をそそられたので、その後も個人的にいろいろ調べ、以下のブログを書きました。</p>
+
+<ul>
+<li>Glassfish 3.1の自己増殖クラスタを試す &ndash; <a href="http://d.hatena.ne.jp/zephiransas/20110707/1310027466">http://d.hatena.ne.jp/zephiransas/20110707/1310027466</a></li>
+</ul>
+
+
+<p>このエントリを書いたことをキッカケに、オープンラボ岡山の常連であり、隣国？である福山で「オープンラボ備後」を主催されていた、Yさんから「GlassFishの話してみない？」という依頼がありました。そして第10回オープンラボ備後で初登壇することになります。</p>
+
+<ul>
+<li>第10回オープンラボ備後 &ndash; <a href="https://sites.google.com/site/openlabbingo/home/di10huiopunrabo-bei-hou">https://sites.google.com/site/openlabbingo/home/di10huiopunrabo-bei-hou</a></li>
+</ul>
+
+
+<p>図らずも「いつか自分も発表できるようになりたい」と思っていたことが、たった1つのブログエントリから1年たたずに実現したわけです。しかしこれは運とかではなく、岡山周辺のIT勉強会コミュニティに、いろいろな人を登壇させていこうという風土のようなものが、ちゃんと根付いていたことの現れではないかと思っています。</p>
+
+<p>そしてこの登壇あと、主催のYさんが唐突に「吉田さん、岡山でJavaのコミュニティやってくれない？」という話がありました。</p>
+
+<p>聞けば、以前、岡山にはJavaのコミュニティがあったのですが、主催の方の転勤とともに開店休業状態にあるということ。そこで、自分にコミュニティの主催をやってみないか？ということでした。</p>
+
+<p>今回が初登壇だった自分にいきなりそんなこと・・・とは、正直思いましたが、オープンラボ備後のYさんの勧めや、オープンラボ岡山の主催Hさんからもサポートしていただける、とのことだったので、岡山でJavaのコミュニティを始めることにしました。</p>
+
+<p>幸いにも、自分ひとりでのスタートではなく、いつもScalaや関数型の話でみなをﾎﾟｶﾝとさせる<a href="https://twitter.com/razon">@razonさん</a>や、Twitterの裏垢で下ネタをつぶやいてばかりの<a href="https://twitter.com/ryosms">@ryosmsさん</a>、そして唯一？の常識人の<a href="https://twitter.com/o310yusuke">@o310yusukeさん</a>、などのこころ強い（？）メンバーの助けを借りつつ、岡山Javaユーザ会をスタートさせることになります。</p>
+
+<p>その他にも助けて頂いた方はたくさんいますが、誰一人欠けても今までコミュニティを継続させることはできなかったと思います。</p>
+
+<p>この場を借りて、関わった全ての皆様に深く感謝したいと思います。</p>
+
+<h1>あなたはエンジニアの仕事、好きですか？</h1>
+
+<p>ところで、あなたはエンジニアの仕事、好きですか？</p>
+
+<p>エンジニアでない人、今の仕事好きですか？</p>
+
+<p>私はエンジニアの仕事が大好きです。</p>
+
+<p>自分はプログラマを目指して大学に入ったものの挫折し、その後のフリーター生活を経て、24歳の時に故郷に戻って運良くプログラマとして就職することができました。それから約16年。何事にも中途半端だった自分が、こうやって一つの仕事を続けてこられたのは、ひとえに「この仕事が好き」だからです。</p>
+
+<p>だからこそ、このエンジニアという仕事を選んだ人たちが、楽しく仕事ができるようになればいいと思い、いままで岡山のIT勉強会コミュニティに関わってきました。</p>
+
+<p>そしてその想いは、今でもかわることはありません。これからも岡山のIT勉強会コミュニティを影となって支えて参ります。</p>
+
+<h1>the Future</h1>
+
+<p>そしてもう一つ。来年に新しいことをスタートしようと考えています。</p>
+
+<p>それが子供向けプログラミング教室です。</p>
+
+<p>自分がはじめてプログラミングをしたのは、小学校の時に触れたファミリーベーシックでした。そこで説明書のプログラム通りに、右手の人差し指1本で、おぼつかない手でコードを書き、エラーを直し、実行し、そして画面でマリオが動いた時のあの感動。</p>
+
+<p>この教室を通じて、自分が幼いときに感じた「自分で考え、自分で作って、動かす」そんな感動を子供たちに感じてもらい「プログラミングって楽しい！」と感じてくれる子供が一人でも増えてくれれば、これに勝る喜びはありません。</p>
+
+<p>あくまでボランティアベースの教室になるので、塾のように授業料をもらうこともないです。なので成果を保証することもしません。子供たちがやりたいことを最優先に。やりたいことが見つからなければ、見つける手伝いから。</p>
+
+<p>そして子供たちが「楽しかった、また来たい！」と思えるように。そんな空間を作れたらいいなと思っています。</p>
+
+<p>既存のIT勉強会のコミュニティは、現役のエンジニアたちを支え、子供向けプログラミング教室が、未来のエンジニアを支える。</p>
+
+<p>そしてこの両輪を回すことを、今後の自分の仕事として続けていけたら、と思っています。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[合同勉強会でCrystalの話をしてきた]]></title>
@@ -2411,109 +2522,6 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
 <p>最後には、寺田さんのJavaOne土産をプレゼントするじゃんけん大会などもありました。</p>
 
 <p>懇親会で、参加者の皆さんと話をしたときに感じたのは、JavaEEをもっと知りたいという話でした。今後、岡山Javaユーザ会でも、ハンズオンや勉強会などを通じて、JavaEEの啓蒙もしていきたいと感じました。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[weinreでiOSのブラウザのデバッグを行う手順]]></title>
-    <link href="http://zephiransas.github.io/blog/2013/08/20/debug-with-weinre/"/>
-    <updated>2013-08-20T13:27:00+09:00</updated>
-    <id>http://zephiransas.github.io/blog/2013/08/20/debug-with-weinre</id>
-    <content type="html"><![CDATA[<p>モバイル対応のWeb開発をしている時、iPhoneやiPadのブラウザでのデバッグに苦労したことはないですか？</p>
-
-<p>PCの場合であれば、Chormeのデベロッパーツールとかでかなり簡単にデバッグを行うことができますが、iOSとかのSafariではデバッグツールをつかうことができません。</p>
-
-<p>そんな時に便利なのが<a href="http://people.apache.org/~pmuellr/weinre/docs/latest/">weinre</a>です。weinreを使うことで、iOS側で表示されたWebページのデバッグツールの情報を、PCから見ることができる大変便利なツールです。</p>
-
-<p>今回はweinreの使い方を紹介します。</p>
-
-<h2>weinreのインストール</h2>
-
-<p>まずはweinreをインストールします。weinreはnpmで提供されているので、以下のコマンドでインストールします。
-npmをインストールしてない場合は、先に<a href="http://nodejs.org/">node.jsをインストール</a>してください。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo npm -g install weinre
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>自分の環境ではsudoを要求されたのですが、sudoなしでインストールできれば、それでもいいかと思います。</p>
-
-<h2>weinreサーバの起動</h2>
-
-<p>次にweinreサーバを、以下のコマンドで起動します。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>weinre --boundHost 192.168.0.x
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上記のboundHostにはlocalhostのIPアドレスを設定します。
-weinreサーバはデフォルトの状態だとlocalhostからしか接続できません。この後iPad側から接続する必要がありますので、上記のようにboundHostを設定して、他のデバイスからも接続可能にしておく必要があります。</p>
-
-<p>無事、起動できれば</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>weinre: starting server at http://192.168.0.x:8080
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と表示され、8080ポートでサーバが起動します。早速これをブラウザから見てみましょう。</p>
-
-<p><img src="http://zephiransas.github.io/images/20130820/weinre_server.png" alt="weinre_server" /></p>
-
-<p>上記の画面が表示されれば、サーバが起動しています。</p>
-
-<h2>iOSデバイスでブックマークレットの登録</h2>
-
-<p>次に、iOSデバイスでweinreサーバへ接続するためのブックマークレットを登録します。直接ブックマークレットを作れればいいのですが、iOSではそれができないようなので、ここでは新規にブックマークを作成して、これを編集することでブックマークレットを作成しています。</p>
-
-<p>まずiOSデバイスのブラウザでweinreサーバ(ex: <a href="http://192.168.0.3:8080">http://192.168.0.3:8080</a>)を開きます。
-そして、以下のjavascriptをクリップボードにコピーしておきます。</p>
-
-<p><img src="http://zephiransas.github.io/images/20130820/bookmarklet.png" alt="bookmarklet" /></p>
-
-<p>次にiOSデバイスのブラウザで適当なWebページを開き、それをブックマークしておきます。</p>
-
-<p>そしてそのブックマークを編集して、先ほどコピーしたjavascriptをペーストします。</p>
-
-<p><img src="http://zephiransas.github.io/images/20130820/ios_bookmarklet.png" alt="ios_bookmarklet" /></p>
-
-<h2>デバッグの手順</h2>
-
-<p>以上で全ての準備が整ったので、実際にデバッグを行ってみます。</p>
-
-<p>まずはPC側のブラウザでweinreサーバを開き、接続中のクライアント一覧を表示します。</p>
-
-<p><img src="http://zephiransas.github.io/images/20130820/client.png" alt="client" /></p>
-
-<p>上記のリンクをクリックすると</p>
-
-<p><img src="http://zephiransas.github.io/images/20130820/client_list.png" alt="client_list" /></p>
-
-<p>このような画面が表示されます。iOSデバイスから接続されると、上記のTargets一覧に表示されます。</p>
-
-<p>iOSデバイス側からは、まずデバッグしたいWebページを表示し、その後、先に登録したブックマークレットを実行します。するとTargetが以下のようになります。</p>
-
-<p><img src="http://zephiransas.github.io/images/20130820/connect.png" alt="connect" /></p>
-
-<p>あとはこの画面から、普通にデバッグツールを使用することができます。</p>
-
-<p><img src="http://zephiransas.github.io/images/20130820/debug.png" alt="debug" /></p>
-
-<p>当然、デバッグツール側でHTML要素を変更してやれば、それがそのままiOSデバイス側のブラウザに反映されますので</p>
-
-<p><img src="http://zephiransas.github.io/images/20130820/debug1.png" alt="debug1" /></p>
-
-<p>と変更してやれば、iOS側も</p>
-
-<p><img src="http://zephiransas.github.io/images/20130820/debug2.png" alt="debug2" /></p>
-
-<p>といった感じで、即反映されます。</p>
-
-<h2>補足</h2>
-
-<p>今回はiOSデバイスしか手元になかったため未検証ですが、当然Androidでも同様にデバッグすることができます。</p>
 ]]></content>
   </entry>
   

@@ -9,7 +9,7 @@
   <meta name="author" content="Takafumi Yoshida (@zephiransas)">
 
   
-  <meta name="description" content="IT勉強会はなにも東京ばかりで開催されているわけではない。 地方の勉強会に参加するのであれば、ついでに観光地を巡ったり、その土地の美味しいモノを食べたいというのが人情である。 本エントリでは岡山の勉強会に来た際に食べるべきものを紹介する。 もも、ぶどう 言わずと知れた岡山の特産品。桃は白桃、 &hellip;">
+  <meta name="description" content="メッセージ等の新着通知やアップデート情報の配信など、アプリケーションへの通知の方法として、スマートフォンなどで使われるpush通知など、最近では様々なものがあります。 しかし自前で通知用のサーバを運用するのは手間がかかるので、これを簡単に使えるようにするサービスも増えてきました。例えばPusher &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,216 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/20/pusher-with-chrome-extension/">Pusherを使ったChrome拡張を作る</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-20T17:24:00+09:00" pubdate data-updated="true">Mar 20<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>メッセージ等の新着通知やアップデート情報の配信など、アプリケーションへの通知の方法として、スマートフォンなどで使われるpush通知など、最近では様々なものがあります。</p>
+
+<p>しかし自前で通知用のサーバを運用するのは手間がかかるので、これを簡単に使えるようにするサービスも増えてきました。例えば<a href="http://pusher.com">Pusher.com</a>などがあります。これを使うことで、ブラウザへのリアルタイムな通知機能を、WebSocketを使って簡単に作成することができます。</p>
+
+<p><img src="/images/20140321/pusher-ss.png" alt="pusher-ss" /></p>
+
+<p>今回はPusherからの通知をChrome拡張で受信し、これをデスクトップ通知するサンプルを作成しましたので、解説してみます。</p>
+
+<h2>Pusher側の設定</h2>
+
+<p>まずはPusher側に設定を行います。Pusherでアカウントを作成後、以下のようにアプリケーションを登録します。</p>
+
+<p><img src="/images/20140321/pusher1.png" alt="pusher1" /></p>
+
+<p>ここでEncryptionにチェックを入れておきましょう。チェックしなくても特に問題はないのですが、Chrome拡張の場合セキュリティの問題からSSLを使用したほうが、いろいろ都合がいいので、チェックするほうが無難です。</p>
+
+<h2>Chrome拡張の作成</h2>
+
+<h3>manifest.jsonの設定</h3>
+
+<figure class='code'><figcaption><span>manifest.json</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="nt">&quot;manifest_version&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Pusher test extension&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Pusher用 Chrome extension&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;permissions&quot;</span> <span class="p">:</span> <span class="p">[</span>
+</span><span class='line'>        <span class="s2">&quot;notifications&quot;</span>
+</span><span class='line'>    <span class="p">],</span>
+</span><span class='line'>    <span class="nt">&quot;content_security_policy&quot;</span><span class="p">:</span> <span class="s2">&quot;script-src &#39;self&#39; https://stats.pusher.com; object-src &#39;self&#39;&quot;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nt">&quot;background&quot;</span> <span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span class='line'>            <span class="s2">&quot;src/javascript/pusher.min.js&quot;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s2">&quot;src/javascript/background.js&quot;</span>
+</span><span class='line'>        <span class="p">]</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>今回はPusherからのメッセージをデスクトップ通知するようにしたいのでpermissionに</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="s2">&quot;permissions&quot;</span> <span class="err">:</span> <span class="p">[</span>
+</span><span class='line'>    <span class="s2">&quot;notifications&quot;</span>
+</span><span class='line'><span class="p">]</span><span class="err">,</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を指定しています。</p>
+
+<p>また、content_security_policyのscript-srcに <strong><a href="https://stats.pusher.com**">https://stats.pusher.com**</a> を追加しています。httpではなく</strong>https**を指定していることに注意してください。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="s2">&quot;content_security_policy&quot;</span><span class="err">:</span> <span class="s2">&quot;script-src &#39;self&#39; https://stats.pusher.com; object-src &#39;self&#39;&quot;</span><span class="err">,</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このサイトは、Pusherのクライアントライブラリであるpusher.min.jsからアクセスしているのですが、これを許可していないとChrome拡張からPusherのサーバへ、正しく接続をすることができません。</p>
+
+<p>次にpusher.min.jsですが、これは本来であればPusherのサイトに公開されているものを読み込んで使いたいところなのですが、Chrome拡張では外部のjavascriptを読み込むことができないようです。なので、ダウンロードしてソースに加えています。
+ちなみにpusher.min.jsのホスト先は、<a href="http://pusher.com/docs/client_libraries">こちらで</a>公開されています。</p>
+
+<h3>background.js</h3>
+
+<p>あとはChrome拡張のバックグラウンドで実行されるbackground.jsで、Pusherとの接続を行います。</p>
+
+<figure class='code'><figcaption><span>background.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">pusher</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Pusher</span><span class="p">(</span><span class="s2">&quot;======== KEY ========&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">encrypted</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">channel</span> <span class="o">=</span> <span class="nx">pusher</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">&#39;test_channel&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">channel</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;my_event&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">opt</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;basic&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">title</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">message</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+</span><span class='line'>    <span class="nx">iconUrl</span><span class="o">:</span> <span class="s2">&quot;&quot;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">chrome</span><span class="p">.</span><span class="nx">notifications</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nx">opt</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">){</span> <span class="cm">/** Do Nothing */</span> <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Pusherのコンストラクタに渡すkeyには、Pusherで作成したアプリケーションのKeyを指定します。</p>
+
+<p><img src="/images/20140321/pusher2.png" alt="pusher2" /></p>
+
+<p>また、大事なポイントとしてPusherのオプションに</p>
+
+<figure class='code'><figcaption><span>background.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">{</span> <span class="nx">encrypted</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を指定する必要があります。これは先のmanifest.jsonの設定でも触れましたが、この指定がない場合Pusherの接続先が **<a href="http://stats.pusher.com**">http://stats.pusher.com**</a> となってしまいます。Chrome拡張ではhttpsでない外部サーバに接続することはセキュリティ上できませんので、上記のオプションを指定しています。</p>
+
+<h2>Chrome拡張の読み込み</h2>
+
+<p>では、このようにして作ったChrome拡張を、Chromeに読み込ませて動作確認してみましょう。</p>
+
+<p>ChromeのURL欄に chrome://extensions/ と入力します。まだデベロッパーモードを有効にしていない場合は「デベロッパーモード」をチェックします。次に「パッケージ化されていない拡張機能を読み込む」をクリックします。</p>
+
+<p><img src="/images/20140321/pusher3.png" alt="pusher3" /></p>
+
+<p>そして先ほど作ったChrome拡張を含むディレクトリを指定します。すると、拡張機能の一覧に表示されます。</p>
+
+<p><img src="/images/20140321/pusher4.png" alt="pusher4" /></p>
+
+<p>これでChrome拡張を導入することができました。</p>
+
+<h2>Pusherからテストを行う</h2>
+
+<p>それでは実際にPusherから通知を行い、Chrome拡張に通知が表示されるかどうか確認してみましょう。</p>
+
+<p>Railsなどを使って自分でサーバアプリを作ってもいいのですが、今回はPusherのEvent Creatorの機能を使ってみましょう。</p>
+
+<p>Pusherの管理画面から「Event creator」を選択し、以下のように入力します。</p>
+
+<p><img src="/images/20140321/pusher5.png" alt="pusher5" /></p>
+
+<p>これで、Send eventボタンをおして、うまくいけば画面に以下の様な通知が表示されます。</p>
+
+<p><img src="/images/20140321/pusher6.png" alt="pusher6" /></p>
+
+<p>今回はアイコン画像のURLを指定しなかったので、なにも表示されていませんが、以下の用に画像へのURLを指定することでアイコンを表示することもできます。</p>
+
+<figure class='code'><figcaption><span>background.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">opt</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;basic&#39;</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">title</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">title</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">message</span><span class="o">:</span> <span class="nx">data</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+</span><span class='line'>  <span class="nx">iconUrl</span><span class="o">:</span> <span class="s2">&quot;http://example.com/path/to/icon&quot;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>ソースなど</h2>
+
+<p>今回作成したChrome拡張は、こちらのGithubにまとめてあります。参考にしてみてください。</p>
+
+<ul>
+<li><a href="https://github.com/zephiransas/pusher-extension">pusher-extension</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1174,136 +1384,6 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/20/debug-with-weinre/">weinreでiOSのブラウザのデバッグを行う手順</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-20T13:27:00+09:00" pubdate data-updated="true">Aug 20<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>モバイル対応のWeb開発をしている時、iPhoneやiPadのブラウザでのデバッグに苦労したことはないですか？</p>
-
-<p>PCの場合であれば、Chormeのデベロッパーツールとかでかなり簡単にデバッグを行うことができますが、iOSとかのSafariではデバッグツールをつかうことができません。</p>
-
-<p>そんな時に便利なのが<a href="http://people.apache.org/~pmuellr/weinre/docs/latest/">weinre</a>です。weinreを使うことで、iOS側で表示されたWebページのデバッグツールの情報を、PCから見ることができる大変便利なツールです。</p>
-
-<p>今回はweinreの使い方を紹介します。</p>
-
-<h2>weinreのインストール</h2>
-
-<p>まずはweinreをインストールします。weinreはnpmで提供されているので、以下のコマンドでインストールします。
-npmをインストールしてない場合は、先に<a href="http://nodejs.org/">node.jsをインストール</a>してください。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sudo npm -g install weinre
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>自分の環境ではsudoを要求されたのですが、sudoなしでインストールできれば、それでもいいかと思います。</p>
-
-<h2>weinreサーバの起動</h2>
-
-<p>次にweinreサーバを、以下のコマンドで起動します。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>weinre --boundHost 192.168.0.x
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上記のboundHostにはlocalhostのIPアドレスを設定します。
-weinreサーバはデフォルトの状態だとlocalhostからしか接続できません。この後iPad側から接続する必要がありますので、上記のようにboundHostを設定して、他のデバイスからも接続可能にしておく必要があります。</p>
-
-<p>無事、起動できれば</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>weinre: starting server at http://192.168.0.x:8080
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>と表示され、8080ポートでサーバが起動します。早速これをブラウザから見てみましょう。</p>
-
-<p><img src="/images/20130820/weinre_server.png" alt="weinre_server" /></p>
-
-<p>上記の画面が表示されれば、サーバが起動しています。</p>
-
-<h2>iOSデバイスでブックマークレットの登録</h2>
-
-<p>次に、iOSデバイスでweinreサーバへ接続するためのブックマークレットを登録します。直接ブックマークレットを作れればいいのですが、iOSではそれができないようなので、ここでは新規にブックマークを作成して、これを編集することでブックマークレットを作成しています。</p>
-
-<p>まずiOSデバイスのブラウザでweinreサーバ(ex: <a href="http://192.168.0.3:8080">http://192.168.0.3:8080</a>)を開きます。
-そして、以下のjavascriptをクリップボードにコピーしておきます。</p>
-
-<p><img src="/images/20130820/bookmarklet.png" alt="bookmarklet" /></p>
-
-<p>次にiOSデバイスのブラウザで適当なWebページを開き、それをブックマークしておきます。</p>
-
-<p>そしてそのブックマークを編集して、先ほどコピーしたjavascriptをペーストします。</p>
-
-<p><img src="/images/20130820/ios_bookmarklet.png" alt="ios_bookmarklet" /></p>
-
-<h2>デバッグの手順</h2>
-
-<p>以上で全ての準備が整ったので、実際にデバッグを行ってみます。</p>
-
-<p>まずはPC側のブラウザでweinreサーバを開き、接続中のクライアント一覧を表示します。</p>
-
-<p><img src="/images/20130820/client.png" alt="client" /></p>
-
-<p>上記のリンクをクリックすると</p>
-
-<p><img src="/images/20130820/client_list.png" alt="client_list" /></p>
-
-<p>このような画面が表示されます。iOSデバイスから接続されると、上記のTargets一覧に表示されます。</p>
-
-<p>iOSデバイス側からは、まずデバッグしたいWebページを表示し、その後、先に登録したブックマークレットを実行します。するとTargetが以下のようになります。</p>
-
-<p><img src="/images/20130820/connect.png" alt="connect" /></p>
-
-<p>あとはこの画面から、普通にデバッグツールを使用することができます。</p>
-
-<p><img src="/images/20130820/debug.png" alt="debug" /></p>
-
-<p>当然、デバッグツール側でHTML要素を変更してやれば、それがそのままiOSデバイス側のブラウザに反映されますので</p>
-
-<p><img src="/images/20130820/debug1.png" alt="debug1" /></p>
-
-<p>と変更してやれば、iOS側も</p>
-
-<p><img src="/images/20130820/debug2.png" alt="debug2" /></p>
-
-<p>といった感じで、即反映されます。</p>
-
-<h2>補足</h2>
-
-<p>今回はiOSデバイスしか手元になかったため未検証ですが、当然Androidでも同様にデバッグすることができます。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -1332,6 +1412,10 @@ weinreサーバはデフォルトの状態だとlocalhostからしか接続で�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/20/past-present-and-future/">Past, Present and Future</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/09/talk-about-crystal-on-gbdaitokai/">合同勉強会でCrystalの話をしてきた</a>
       </li>
     
@@ -1345,10 +1429,6 @@ weinreサーバはデフォルトの状態だとlocalhostからしか接続で�
     
       <li class="post">
         <a href="/blog/2015/07/08/eager-load-with-paranoia/">論理削除とeager_loadでN+1問題が発生する件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/05/31/java-programmer-must-buy/">JavaプログラマがKindle50%還元セールで買っておくべきIT技術書</a>
       </li>
     
   </ul>

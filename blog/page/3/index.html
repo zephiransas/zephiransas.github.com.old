@@ -9,7 +9,7 @@
   <meta name="author" content="Takafumi Yoshida (@zephiransas)">
 
   
-  <meta name="description" content="モバイル対応のWeb開発をしている時、iPhoneやiPadのブラウザでのデバッグに苦労したことはないですか？ PCの場合であれば、Chormeのデベロッパーツールとかでかなり簡単にデバッグを行うことができますが、iOSとかのSafariではデバッグツールをつかうことができません。 &hellip;">
+  <meta name="description" content="これはJava Advent Calendar2013の12月7日分のエントリです。 前日は@muraken702さんの「RxJavaを使ってCallback Hellから脱出する（ Vert.x がいいね！第5回 ）」でした。 次の日は@nabedgeさんの「 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,66 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/12/07/javaadvent2013/">JavaOne2013報告会@岡山を開催しました</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-07T23:21:00+09:00" pubdate data-updated="true">Dec 7<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>これは<a href="http://www.adventar.org/calendars/145">Java Advent Calendar2013</a>の12月7日分のエントリです。</p>
+
+<p>前日は<a href="htp://twitter.com/muraken702">@muraken702</a>さんの<a href="http://acro-engineer.hatenablog.com/entry/2013/12/06/082444">「RxJavaを使ってCallback Hellから脱出する（ Vert.x がいいね！第5回 ）」</a>でした。</p>
+
+<p>次の日は<a href="http://twitter.com/nabedge">@nabedge</a>さんの<a href="http://nabedge.blogspot.jp/2013/12/mixer2springmvcver-1217.html">「Mixer2のSpringMVC連携機能がver 1.2.17でさらに進化！」</a>です。</p>
+
+<p>先日12/5に、岡山国際交流会館にて、<a href="http://local.aguuu.com/events/26540">JavaOne2013報告会@岡山</a>を開催しました。そのレポートです。</p>
+
+<p><img src="/images/20131208/DSC_2060.jpg" alt="DSC_2060" /></p>
+
+<p>今回は初めて、平日の夜に勉強会を開催しました。というのも、講師の寺田さんが昼間は岡山市内の某SIerにて社内向けにJavaOne報告会を行い、そのまま夜はコミュニティ向けの報告会をやる、といった事情があったためでした。</p>
+
+<p>前日までの参加登録では、9人の予定だったのですが、当日はちょっと増えて、最終的には11人の方にご参加いただきました。ありがとうございます。</p>
+
+<p>２時間という限られた時間のなかで、前半でJavaOne2013の報告と、後半ではWebSocketを活用したより実用的なアプリケーションの開発モデルを紹介していただきました。</p>
+
+<p><img src="/images/20131208/DSC_2066.jpg" alt="DSC_2066" /></p>
+
+<p>JavaOne2013の報告の中ではRaspberry piなどにも注目が集まっているように、「Internet of Things」をキーワードに、Javaが組み込みにも大きく注力していることが印象的でした。現在は組み込みにはJavaMEというJavaSEのサブセット版が提供されていましたが、これを将来的にはSEとMEの垣根をなくし、統合していく方針であるとのこと。これは次のメジャーバージョンで統一というわけにはいかず、少々時間がかかりそうではありますが、スマートフォンを始め、様々なデバイスがインターネットに繋がる時代においては、組み込み分野でも動かせるJavaの重要性は増していくように思いました。</p>
+
+<p><img src="/images/20131208/DSC_2079.jpg" alt="DSC_2079" /></p>
+
+<p>最後には、寺田さんのJavaOne土産をプレゼントするじゃんけん大会などもありました。</p>
+
+<p>懇親会で、参加者の皆さんと話をしたときに感じたのは、JavaEEをもっと知りたいという話でした。今後、岡山Javaユーザ会でも、ハンズオンや勉強会などを通じて、JavaEEの啓蒙もしていきたいと感じました。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -997,228 +1057,6 @@ JavaEEは次のメジャーバージョンであるJavaEE7のリリースを6月
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/24/slickwoshi-u/">Slickを使う（基礎編）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-24T12:42:00+09:00" pubdate data-updated="true">Apr 24<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近playframework2.1をちゃんと使いたいなぁと思ったので、Scala含めて色々調べてます。
-で、ドキュメントを眺めてて気になったのがO/Rマッパ。play1.2系のころはEBean等のO/Rマッパを利用できたんですが、play2.1系ではなくなってる！一応Anormという仕組みでSQLを発行出来ますが、SQL直書きするのは小学生までよねー？！的な感じ。</p>
-
-<p>で、更に調べてみると、typesafeで<a href="http://slick.typesafe.com/">Slick</a>というO/Rマッパがあるので、これが良さそうじゃね？ってことで、試してみました。
-本来はplayから利用するのがベストですが、実験なのでスタンドアロンで。</p>
-
-<h2>build.sbtとplugin.sbtの準備</h2>
-
-<p>まずはsbtで環境を作るところから。以下のようにbuild.sbtを作成</p>
-
-<figure class='code'><figcaption><span>build.sbt</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">name</span> <span class="o">:=</span> <span class="s">&quot;slicksample&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">version</span> <span class="o">:=</span> <span class="s">&quot;1.0&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">scalaVersion</span> <span class="o">:=</span> <span class="s">&quot;2.10.0&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">List</span><span class="o">(</span>
-</span><span class='line'>  <span class="s">&quot;com.typesafe.slick&quot;</span> <span class="o">%%</span> <span class="s">&quot;slick&quot;</span> <span class="o">%</span> <span class="s">&quot;1.0.0&quot;</span><span class="o">,</span>
-</span><span class='line'>  <span class="s">&quot;org.slf4j&quot;</span> <span class="o">%</span> <span class="s">&quot;slf4j-nop&quot;</span> <span class="o">%</span> <span class="s">&quot;1.6.4&quot;</span><span class="o">,</span>
-</span><span class='line'>  <span class="s">&quot;com.h2database&quot;</span> <span class="o">%</span> <span class="s">&quot;h2&quot;</span> <span class="o">%</span> <span class="s">&quot;1.3.166&quot;</span><span class="o">,</span>
-</span><span class='line'>  <span class="s">&quot;com.github.tototoshi&quot;</span> <span class="o">%%</span> <span class="s">&quot;slick-joda-mapper&quot;</span> <span class="o">%</span> <span class="s">&quot;0.1.0&quot;</span>
-</span><span class='line'><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>11行目では<a href="http://d.hatena.ne.jp/tototoshi/20130323/1364013170">slick-joda-mapper</a>を指定しています。</p>
-
-<p>Slickでは日付はjava.sql.Dateで扱うらしいのですが、今更java.sql.Dateなんて触りたくないなーと思っていたところ、JodaTimeへマッピングしてくれるプラグインがあったのでこれを使います。</p>
-
-<p>また、今回はIDEにIntelliJを使うので、<a href="https://github.com/mpeltonen/sbt-idea">sbt-ideaプラグイン</a>を使うように、plugin.sbtを設定します。</p>
-
-<figure class='code'><figcaption><span>project/plugin.sbt</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">addSbtPlugin</span><span class="o">(</span><span class="s">&quot;com.github.mpeltonen&quot;</span> <span class="o">%</span> <span class="s">&quot;sbt-idea&quot;</span> <span class="o">%</span> <span class="s">&quot;1.4.0&quot;</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>あとはsbtからgen-ideaするだけ</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>sbt gen-idea
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ついでにscalaのソースファイル置き場であるsrc/main/scalaディレクトリも作っておきましょう。そして、これをIntelliJに読み込ませます。読み込ませるとこんな感じ。</p>
-
-<p><img src="/images/20130424/image1.png" alt="image1" /></p>
-
-<h2>モデルの作成</h2>
-
-<p>次にモデルを作成します。今回はUSERSテーブルにアクセスするUser objectを作成してみます。カラムは</p>
-
-<ul>
-<li>id &ndash; Integer（主キー）</li>
-<li>name &ndash; String</li>
-<li>birthday &ndash; Option[LocalDate]
-ぐらいで。</li>
-</ul>
-
-
-<p>src/main/scalaにUser.scalaを作成し、以下のように記述します。</p>
-
-<figure class='code'><figcaption><span>User.scala</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">org.joda.time.LocalDate</span>
-</span><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
-</span><span class='line'><span class="k">import</span> <span class="nn">com.github.tototoshi.slick.JodaSupport._</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">object</span> <span class="nc">User</span> <span class="k">extends</span> <span class="nc">Table</span><span class="o">[(</span><span class="kt">Int</span>, <span class="kt">String</span>, <span class="kt">Option</span><span class="o">[</span><span class="kt">LocalDate</span><span class="o">])](</span><span class="s">&quot;USERS&quot;</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">id</span> <span class="k">=</span> <span class="n">column</span><span class="o">[</span><span class="kt">Int</span><span class="o">](</span><span class="s">&quot;id&quot;</span><span class="o">,</span> <span class="n">O</span><span class="o">.</span><span class="nc">PrimaryKey</span><span class="o">)</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">name</span> <span class="k">=</span> <span class="n">column</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="s">&quot;name&quot;</span><span class="o">)</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">birthday</span> <span class="k">=</span> <span class="n">column</span><span class="o">[</span><span class="kt">Option</span><span class="o">[</span><span class="kt">LocalDate</span><span class="o">]](</span><span class="s">&quot;birthday&quot;</span><span class="o">)</span>
-</span><span class='line'>  <span class="k">def</span> <span class="o">*</span> <span class="k">=</span> <span class="n">id</span> <span class="o">~</span> <span class="n">name</span> <span class="o">~</span> <span class="n">birthday</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>まず2行目でSlickのクラスをインポートしておきます。注意すべきは使用するDBに合わせて、インポートするクラスを変えるってところ。今回はDBにH2を使うので</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>としてます。例えばPostgreSQLを使う場合は</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.PostgresDriver.simple._</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>とします。</p>
-
-<p>3行目は先述したslick-joda-mapperを使うのに必要です。IntteliJだと、Unusedで警告がでるのがアレですが・・・</p>
-
-<h2>データのINSERTとSELECT</h2>
-
-<p>次に、このUserモデルを使ってテーブルを作成しデータをINSERT、その後SELECTして内容を表示するコードを書いてきましょう。
-src/main/scalaにMain.scalaを作成し、以下のように記述します。</p>
-
-<figure class='code'><figcaption><span>src/main/Main.scala</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">org.joda.time.LocalDate</span>
-</span><span class='line'><span class="k">import</span> <span class="nn">scala.slick.driver.H2Driver.simple._</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">import</span> <span class="nn">Database.threadLocalSession</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">object</span> <span class="nc">Main</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span><span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span><span class="k">:</span><span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    <span class="nc">Database</span><span class="o">.</span><span class="n">forURL</span><span class="o">(</span><span class="s">&quot;jdbc:h2:mem:test1&quot;</span><span class="o">,</span> <span class="n">driver</span> <span class="k">=</span> <span class="s">&quot;org.h2.Driver&quot;</span><span class="o">)</span> <span class="n">withSession</span> <span class="o">{</span>
-</span><span class='line'>      <span class="nc">User</span><span class="o">.</span><span class="n">ddl</span><span class="o">.</span><span class="n">create</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="nc">User</span><span class="o">.</span><span class="n">insert</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;hoge&quot;</span><span class="o">,</span> <span class="nc">Some</span><span class="o">(</span><span class="k">new</span> <span class="nc">LocalDate</span><span class="o">(</span><span class="mi">2013</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">10</span><span class="o">)))</span>
-</span><span class='line'>      <span class="nc">User</span><span class="o">.</span><span class="n">insert</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="s">&quot;fuga&quot;</span><span class="o">,</span> <span class="nc">Some</span><span class="o">(</span><span class="k">new</span> <span class="nc">LocalDate</span><span class="o">(</span><span class="mi">2013</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">11</span><span class="o">)))</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="c1">//select all</span>
-</span><span class='line'>      <span class="nc">Query</span><span class="o">(</span><span class="nc">User</span><span class="o">)</span> <span class="n">foreach</span> <span class="o">{</span> <span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">birthday</span><span class="o">)</span> <span class="k">=&gt;</span>
-</span><span class='line'>        <span class="n">println</span><span class="o">(</span><span class="n">id</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;:&quot;</span> <span class="o">+</span> <span class="n">birthday</span><span class="o">)</span>
-</span><span class='line'>      <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="c1">//name = &quot;hoge&quot;のみ抽出</span>
-</span><span class='line'>      <span class="k">val</span> <span class="n">q1</span> <span class="k">=</span> <span class="k">for</span><span class="o">{</span> <span class="n">u</span> <span class="k">&lt;-</span> <span class="nc">User</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">name</span> <span class="o">===</span> <span class="s">&quot;hoge&quot;</span> <span class="o">}</span> <span class="k">yield</span> <span class="n">u</span><span class="o">.</span><span class="n">name</span>
-</span><span class='line'>      <span class="n">q1</span> <span class="n">foreach</span> <span class="n">println</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>まず8行目でDBへの接続を行なっています。</p>
-
-<p>次の9行目ではUSERSテーブルのCREATE文を実行して、テーブルの作成を行なっています。</p>
-
-<p>11,12行目でデータのINSERT。15行目以降で、SELECTを行ない、標準出力で出力しています。</p>
-
-<h2>まとめ</h2>
-
-<p>こうして見ると、まだ自分がScalaのListの扱いに慣れてないせいもあって、SELECT周りの書き方にはちょっと違和感を感じますが、O/Rマッパとしての基本的な機能は十分に押さえていそうな感じです。</p>
-
-<h2>参考サイト</h2>
-
-<ul>
-<li><a href="http://slick.typesafe.com/doc/1.0.0/">Slick1.0.0公式ドキュメント</a></li>
-<li><a href="http://d.hatena.ne.jp/tototoshi/20121204/1354615421">tototoshiの日記 &ndash; slickガイド</a></li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1247,6 +1085,10 @@ src/main/scalaにMain.scalaを作成し、以下のように記述します。</
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/05/23/maven-wrapper/">Maven Wrapperを使ってプロジェクトで使うMavenのバージョンを指定する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/12/24/past-present-and-future/">Past, Present and Future</a>
       </li>
     
@@ -1260,10 +1102,6 @@ src/main/scalaにMain.scalaを作成し、以下のように記述します。</
     
       <li class="post">
         <a href="/blog/2015/07/29/unicorn-worker-killer/">Unicorn-worker-killerが便利だった件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/07/08/eager-load-with-paranoia/">論理削除とeager_loadでN+1問題が発生する件</a>
       </li>
     
   </ul>
@@ -1305,7 +1143,7 @@ src/main/scalaにMain.scalaを作成し、以下のように記述します。</
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - Takafumi Yoshida (@zephiransas) -
+  Copyright &copy; 2016 - Takafumi Yoshida (@zephiransas) -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

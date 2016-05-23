@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2015-12-23T23:50:10+09:00</updated>
+  <updated>2016-05-23T16:54:46+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,69 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Maven Wrapperを使ってプロジェクトで使うMavenのバージョンを指定する]]></title>
+    <link href="http://zephiransas.github.io/blog/2016/05/23/maven-wrapper/"/>
+    <updated>2016-05-23T16:34:12+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2016/05/23/maven-wrapper</id>
+    <content type="html"><![CDATA[<p>Javaでの開発において、ライブラリのバージョン管理にMavenを用いているところはたくさんあると思います。</p>
+
+<p>しかし、pom.xmlを使って各ライブラリのバージョンを管理していても、各開発者が使うMavenのバージョンを固定することはできません。</p>
+
+<p>プロジェクトで使うMavenのバージョンを固定したい！そんな場合に使えるのがMaven Wrapperです。</p>
+
+<ul>
+<li>takari/maven-wrapper -　<a href="https://github.com/takari/maven-wrapper">https://github.com/takari/maven-wrapper</a></li>
+</ul>
+
+
+<h2>導入方法</h2>
+
+<p>導入方法は至って簡単。</p>
+
+<p>maven wrapperを適用したいプロジェクトに移動して、以下のコマンドを発行するだけ。</p>
+
+<p><code>bash
+mvn -N io.takari:maven:wrapper
+</code></p>
+
+<p>これだけで、プロジェクトに以下のファイルが追加されます。</p>
+
+<ul>
+<li>mvnw &ndash; Maven Wrapper経由でmavenを実行するためのファイル</li>
+<li>mvnw.cmd &ndash; mvnwのWindows版。Windowsで使う場合はこっちを使いましょう。</li>
+<li>.mvnディレクトリ &ndash; maven wraperがダウンロードしてきたMavenのバイナリとかが入ってる</li>
+</ul>
+
+
+<p>上記のコマンドだと実行時の最新のバージョンが使用されるので、バージョンを指定したい場合はオプションで</p>
+
+<p><code>bash
+mvn -N io.takari:maven:wrapper -Dmaven=3.3.1
+</code></p>
+
+<p>としてやりましょう。以降は今まで</p>
+
+<p><code>bash
+mvn clean
+mvn package
+</code></p>
+
+<p>としていたのをmvnwコマンドに置き換えるだけで</p>
+
+<p><code>bash
+./mvnw clean
+./mvnw package
+</code></p>
+
+<p>固定されたバージョンをMavenを利用することができます。</p>
+
+<h1>.gitignoreの設定</h1>
+
+<p>Gitなどのバージョン管理にはmvnwとmvnw.cmdのみコミット対象とし、<strong>.mvnディレクトリはコミット対象外</strong>にしましょう。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[JavaプログラマがKindle50%還元セールで買っておくべきIT技術書]]></title>
@@ -530,231 +593,6 @@ it.should(&ldquo;nullの場合ぬるぽ&rdquo;, expect &ndash;> {</p>
 
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Java8で始めるLambda（基礎編）]]></title>
-    <link href="http://zephiransas.github.io/blog/2014/03/12/java8lambda/"/>
-    <updated>2014-03-12T16:33:00+09:00</updated>
-    <id>http://zephiransas.github.io/blog/2014/03/12/java8lambda</id>
-    <content type="html"><![CDATA[<p>まもなくリリース予定のJava8。その中でも最も大きなインパクトを持つというProject Lambdaについて、ここ数日調べてみました。
-今からLambdaをはじめようとする人向けに、何回かに分けてまとめてみたいと思います。</p>
-
-<h2>インターフェースの宣言</h2>
-
-<p>まずは手始めに、引数で指定された文字列の前後に"[&ldquo;と&rdquo;]&ldquo;をつける処理を考えてみましょう。</p>
-
-<p>Lambdaを使用するには、まずインターフェースを宣言する必要があります。上記の仕様から考えると</p>
-
-<ul>
-<li>引数はString型の引数が1つ</li>
-<li>戻り値もString型</li>
-</ul>
-
-
-<p>となるので、この場合は以下の様なインターフェースを宣言します。</p>
-
-<p><code>java LambdaInterface.class
-public interface LambdaInterface {
-  String method(String value);
-}
-</code></p>
-
-<p>ここで注意するべきことが1つ。Java8のLambdaとして使えるインターフェースには決まりがあるのですが、もっとも重要なのが<strong>インターフェースのメソッドが1つだけ</strong>ということです。インターフェースのメソッドが2つ以上ある場合には、それをLambdaとして使用することはできません。</p>
-
-<p>これはLambdaの実装部分を書く際に、どのメソッドの内容を実装しているのかを書かないため、Lambdaを書いた場合は<strong>そのインターフェースがもつ唯一のメソッド</strong>に対して実装をおこなったとみなすからです。</p>
-
-<p>一見、これは不便なように思ってしまうかもしれないですが、普段使うパターンのインターフェースのほとんどがjava.util.functionパッケージ内で用意されているので、実際にはそれ程不便ではありません。むしろ自分でインターフェースを用意するほうが稀かもしれません。</p>
-
-<h2>Lambdaを使った記述</h2>
-
-<p>早速、先に宣言したインターフェースを使ってLambdaを書いてみましょう。Lambdaを記述する際の基本となる文法は、以下のようになっています。</p>
-
-<p><code>java
-[インターフェース名] [lambda式の名前] = (引数の型 引数,...) -&gt; {
-  （実装）
-};
-</code></p>
-
-<p>よってLambdaInterfaceを使って書くと、以下のようになります。</p>
-
-<p>``` java Sample.class
-public class Sample {</p>
-
-<p>  public static void main(String&hellip; args) {</p>
-
-<pre><code>LambdaInterface lambda = (String value) -&gt; {
-  return "[" + value + "]";
-};
-System.out.println(lambda.method("HOGE"));
-</code></pre>
-
-<p>  }</p>
-
-<p>}
-```
-実行すると"[HOGE]&ldquo;と出力されていることがわかると思います。</p>
-
-<p>このように、匿名クラスを使った場合などと比べて、少ない記述量で実装できると思います。</p>
-
-<h2>Lambdaの省略記法</h2>
-
-<p>また、このLambdaの記述では、以下のルールで、省略した記述を使用することもできます。</p>
-
-<ul>
-<li>引数の型は（型推論できるので）省略できる</li>
-<li>引数が1つの場合は、引数の()を省略できる</li>
-<li>但し、引数なしの場合は省略できない</li>
-<li>実装部分が1行の場合は、{}を省略可能。さらにreturn文も不要</li>
-</ul>
-
-
-<p>上記ルールに沿ったLambdaであれば省略可能です。ですので先ほどのコードも以下の様に省略できます。</p>
-
-<p>``` java Sample.class
-public class Sample {</p>
-
-<p>  public static void main(String&hellip; args) {</p>
-
-<pre><code>LambdaInterface lambda = value -&gt; "[" + value + "]";
-System.out.println(lambda.method("HOGE"));
-</code></pre>
-
-<p>  }</p>
-
-<p>}
-```</p>
-
-<p>かなりスッキリしましたね！</p>
-
-<h2>java.util.functionで提供されるインターフェースを使う</h2>
-
-<p>先ほど少し触れましたが、上記のLambdaInterfaceのような普段Lambdaとして使うインターフェースはjava.util.function内にいろいろ用意されています。
-例えば、LambdaInterfaceの様に「String型の引数を1つ取り、String型の戻り値を持つ」インターフェースはjava.utl.functionパッケージ内にあるFunctionインターフェースを使います。</p>
-
-<p><code>
-public interface Function&lt;T, R&gt; {
-  R apply(T t);
-}
-</code></p>
-
-<p>最初の型引数Tには1つ目の引数の型、2つ目の型引数Rには戻り値の型を指定します。またapplyメソッドが実装対象となるメソッドです。</p>
-
-<p>先のコードをFunctionインターフェースを使って書き直すと。</p>
-
-<p>``` java Sample.class
-public class Sample {</p>
-
-<p>  public static void main(String&hellip; args) {</p>
-
-<pre><code>Function&lt;String, String&gt; lambda = value -&gt; "[" + value + "]";
-System.out.println(lambda.apply("HOGE"));
-</code></pre>
-
-<p>  }</p>
-
-<p>}
-```</p>
-
-<p>となります。Functionの他にも</p>
-
-<ul>
-<li>引数を1つ持ち、戻り値がないConsumer</li>
-<li>引数がなく、戻り値があるSupplier</li>
-<li>引数を1つ持ち、戻り値がboolean型のPredicate</li>
-<li>引数を1つ持ち、かつこれが戻り値と同じ場合のUnaryOperator</li>
-</ul>
-
-
-<p>などのインターフェースが提供されています。</p>
-
-<p>どういった場合に、どのインターフェースを使えばよいかについては、Qiitaにまとめておきましたので、参考にしてみてください。</p>
-
-<ul>
-<li><a href="http://qiita.com/zephiransas/items/3b03af4f9044df3182d0">Java8関数型インターフェース チートシート</a></li>
-</ul>
-
-
-<p>通常は、ここで提供されているインターフェースを使い、それ以外のパターンが発生した場合のみ、自分でインターフェースを宣言するほうがよいでしょう。</p>
-
-<h2>メソッド参照を使う</h2>
-
-<p>メソッド参照もJava8で新しく追加された機能です。</p>
-
-<p>メソッド参照を使うと、他のクラスのクラスメソッドやインスタンスメソッドを、Lambdaの実装として利用することができるようになります。メソッド参照はドット(.)でメソッドを呼ぶ代わりに、コロン2つで呼び出します。</p>
-
-<p><code>
-</code></p>
-
-<p>例えば先の文字列の前後にカッコをつけるメソッドが以下のようにSampleクラスのstaticメソッドとして定義されていた場合</p>
-
-<p>``` java Sample.class
-public class Sample {</p>
-
-<p>  public static void main(String&hellip; args) {</p>
-
-<pre><code>...
-</code></pre>
-
-<p>  }</p>
-
-<p>  private static String add(String value) {</p>
-
-<pre><code>return "[" + value + "]";
-</code></pre>
-
-<p>  }</p>
-
-<p>}
-```</p>
-
-<p>Sample.addをメソッド参照するには</p>
-
-<p>``` java Sample.class
-public class Sample {</p>
-
-<p>  public static void main(String&hellip; args) {</p>
-
-<pre><code>Function&lt;String, String&gt; lambda = Sample::add;
-System.out.println(lambda.apply("HOGE"));
-</code></pre>
-
-<p>  }</p>
-
-<p>  private static String add(String value) {</p>
-
-<pre><code>return "[" + value + "]";
-</code></pre>
-
-<p>  }</p>
-
-<p>}
-```</p>
-
-<p>ここではstaticなクラスメソッドを使いましたが、インスタンスメソッドの場合も同様に、インスタンスを生成し、そこからメソッド参照をすることができます。</p>
-
-<p>``` java Sample.class
-public class Sample {</p>
-
-<p>  public static void main(String&hellip; args) {</p>
-
-<pre><code>Sample sample = new Sample();
-Function&lt;String, String&gt; lambda = sample::add;
-System.out.println(lambda.apply("HOGE"));
-</code></pre>
-
-<p>  }</p>
-
-<p>  public static String add(String value) {</p>
-
-<pre><code>return "[" + value + "]";
-</code></pre>
-
-<p>  }</p>
-
-<p>}
-```</p>
 ]]></content>
   </entry>
   

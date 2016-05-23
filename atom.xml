@@ -4,7 +4,7 @@
   <title><![CDATA[zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2015-12-23T23:50:10+09:00</updated>
+  <updated>2016-05-23T16:54:46+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,75 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Maven Wrapperを使ってプロジェクトで使うMavenのバージョンを指定する]]></title>
+    <link href="http://zephiransas.github.io/blog/2016/05/23/maven-wrapper/"/>
+    <updated>2016-05-23T16:34:12+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2016/05/23/maven-wrapper</id>
+    <content type="html"><![CDATA[<p>Javaでの開発において、ライブラリのバージョン管理にMavenを用いているところはたくさんあると思います。</p>
+
+<p>しかし、pom.xmlを使って各ライブラリのバージョンを管理していても、各開発者が使うMavenのバージョンを固定することはできません。</p>
+
+<p>プロジェクトで使うMavenのバージョンを固定したい！そんな場合に使えるのがMaven Wrapperです。</p>
+
+<ul>
+<li>takari/maven-wrapper -　<a href="https://github.com/takari/maven-wrapper">https://github.com/takari/maven-wrapper</a></li>
+</ul>
+
+
+<h2>導入方法</h2>
+
+<p>導入方法は至って簡単。</p>
+
+<p>maven wrapperを適用したいプロジェクトに移動して、以下のコマンドを発行するだけ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mvn -N io.takari:maven:wrapper
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これだけで、プロジェクトに以下のファイルが追加されます。</p>
+
+<ul>
+<li>mvnw &ndash; Maven Wrapper経由でmavenを実行するためのファイル</li>
+<li>mvnw.cmd &ndash; mvnwのWindows版。Windowsで使う場合はこっちを使いましょう。</li>
+<li>.mvnディレクトリ &ndash; maven wraperがダウンロードしてきたMavenのバイナリとかが入ってる</li>
+</ul>
+
+
+<p>上記のコマンドだと実行時の最新のバージョンが使用されるので、バージョンを指定したい場合はオプションで</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mvn -N io.takari:maven:wrapper -Dmaven<span class="o">=</span>3.3.1
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>としてやりましょう。以降は今まで</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mvn clean
+</span><span class='line'>mvn package
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>としていたのをmvnwコマンドに置き換えるだけで</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>./mvnw clean
+</span><span class='line'>./mvnw package
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>固定されたバージョンをMavenを利用することができます。</p>
+
+<h1>.gitignoreの設定</h1>
+
+<p>Gitなどのバージョン管理にはmvnwとmvnw.cmdのみコミット対象とし、<strong>.mvnディレクトリはコミット対象外</strong>にしましょう。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Past, Present and Future]]></title>
@@ -2489,39 +2558,6 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
 <h2>まとめ</h2>
 
 <p>GIMP難しい</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[JavaOne2013報告会@岡山を開催しました]]></title>
-    <link href="http://zephiransas.github.io/blog/2013/12/07/javaadvent2013/"/>
-    <updated>2013-12-07T23:21:00+09:00</updated>
-    <id>http://zephiransas.github.io/blog/2013/12/07/javaadvent2013</id>
-    <content type="html"><![CDATA[<p>これは<a href="http://www.adventar.org/calendars/145">Java Advent Calendar2013</a>の12月7日分のエントリです。</p>
-
-<p>前日は<a href="htp://twitter.com/muraken702">@muraken702</a>さんの<a href="http://acro-engineer.hatenablog.com/entry/2013/12/06/082444">「RxJavaを使ってCallback Hellから脱出する（ Vert.x がいいね！第5回 ）」</a>でした。</p>
-
-<p>次の日は<a href="http://twitter.com/nabedge">@nabedge</a>さんの<a href="http://nabedge.blogspot.jp/2013/12/mixer2springmvcver-1217.html">「Mixer2のSpringMVC連携機能がver 1.2.17でさらに進化！」</a>です。</p>
-
-<p>先日12/5に、岡山国際交流会館にて、<a href="http://local.aguuu.com/events/26540">JavaOne2013報告会@岡山</a>を開催しました。そのレポートです。</p>
-
-<p><img src="http://zephiransas.github.io/images/20131208/DSC_2060.jpg" alt="DSC_2060" /></p>
-
-<p>今回は初めて、平日の夜に勉強会を開催しました。というのも、講師の寺田さんが昼間は岡山市内の某SIerにて社内向けにJavaOne報告会を行い、そのまま夜はコミュニティ向けの報告会をやる、といった事情があったためでした。</p>
-
-<p>前日までの参加登録では、9人の予定だったのですが、当日はちょっと増えて、最終的には11人の方にご参加いただきました。ありがとうございます。</p>
-
-<p>２時間という限られた時間のなかで、前半でJavaOne2013の報告と、後半ではWebSocketを活用したより実用的なアプリケーションの開発モデルを紹介していただきました。</p>
-
-<p><img src="http://zephiransas.github.io/images/20131208/DSC_2066.jpg" alt="DSC_2066" /></p>
-
-<p>JavaOne2013の報告の中ではRaspberry piなどにも注目が集まっているように、「Internet of Things」をキーワードに、Javaが組み込みにも大きく注力していることが印象的でした。現在は組み込みにはJavaMEというJavaSEのサブセット版が提供されていましたが、これを将来的にはSEとMEの垣根をなくし、統合していく方針であるとのこと。これは次のメジャーバージョンで統一というわけにはいかず、少々時間がかかりそうではありますが、スマートフォンを始め、様々なデバイスがインターネットに繋がる時代においては、組み込み分野でも動かせるJavaの重要性は増していくように思いました。</p>
-
-<p><img src="http://zephiransas.github.io/images/20131208/DSC_2079.jpg" alt="DSC_2079" /></p>
-
-<p>最後には、寺田さんのJavaOne土産をプレゼントするじゃんけん大会などもありました。</p>
-
-<p>懇親会で、参加者の皆さんと話をしたときに感じたのは、JavaEEをもっと知りたいという話でした。今後、岡山Javaユーザ会でも、ハンズオンや勉強会などを通じて、JavaEEの啓蒙もしていきたいと感じました。</p>
 ]]></content>
   </entry>
   

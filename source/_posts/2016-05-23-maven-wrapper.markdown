@@ -54,4 +54,13 @@ mvn package
 
 # .gitignoreの設定
 
-Gitなどのバージョン管理にはmvnwとmvnw.cmdのみコミット対象とし、**.mvnディレクトリはコミット対象外**にしましょう。
+~~ Gitなどのバージョン管理にはmvnwとmvnw.cmdのみコミット対象とし、**.mvnディレクトリはコミット対象外**にしましょう。 ~~
+
+はい、これウソでしたorz
+
+正しくは「.mvnディレクトリもコミットしましょう」です。
+
+<blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">YOSHIDAさん慣れないジャバやるから</p>&mdash; やっぱりおいしい木村屋のパン (@razon) <a href="https://twitter.com/razon/status/734898775873884160">2016年5月24日</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+はい、その通りですね（真顔

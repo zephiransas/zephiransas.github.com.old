@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2016-05-23T16:54:46+09:00</updated>
+  <updated>2016-05-24T13:11:45+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -72,7 +72,19 @@ mvn package
 
 <h1>.gitignoreの設定</h1>
 
-<p>Gitなどのバージョン管理にはmvnwとmvnw.cmdのみコミット対象とし、<strong>.mvnディレクトリはコミット対象外</strong>にしましょう。</p>
+<p><del> Gitなどのバージョン管理にはmvnwとmvnw.cmdのみコミット対象とし、<strong>.mvnディレクトリはコミット対象外</strong>にしましょう。 </del></p>
+
+<p>はい、これウソでしたorz</p>
+
+<p>正しくは「.mvnディレクトリもコミットしましょう」です。</p>
+
+<blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">YOSHIDAさん慣れないジャバやるから</p>&mdash; やっぱりおいしい木村屋のパン (@razon) <a href="https://twitter.com/razon/status/734898775873884160">2016年5月24日</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>はい、その通りですね（真顔</p>
 ]]></content>
   </entry>
   

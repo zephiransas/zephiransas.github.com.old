@@ -4,7 +4,7 @@
   <title><![CDATA[zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2016-05-24T13:11:45+09:00</updated>
+  <updated>2016-08-18T10:48:37+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -43,9 +43,9 @@
 <p>これだけで、プロジェクトに以下のファイルが追加されます。</p>
 
 <ul>
-<li>mvnw &ndash; Maven Wrapper経由でmavenを実行するためのファイル</li>
-<li>mvnw.cmd &ndash; mvnwのWindows版。Windowsで使う場合はこっちを使いましょう。</li>
-<li>.mvnディレクトリ &ndash; maven wraperがダウンロードしてきたMavenのバイナリとかが入ってる</li>
+<li>mvnw - Maven Wrapper経由でmavenを実行するためのファイル</li>
+<li>mvnw.cmd - mvnwのWindows版。Windowsで使う場合はこっちを使いましょう。</li>
+<li>.mvnディレクトリ - maven wraperがダウンロードしてきたMavenのバイナリとかが入ってる</li>
 </ul>
 
 
@@ -78,7 +78,7 @@
 
 <h1>.gitignoreの設定</h1>
 
-<p><del> Gitなどのバージョン管理にはmvnwとmvnw.cmdのみコミット対象とし、<strong>.mvnディレクトリはコミット対象外</strong>にしましょう。 </del></p>
+<p>~~ Gitなどのバージョン管理にはmvnwとmvnw.cmdのみコミット対象とし、<strong>.mvnディレクトリはコミット対象外</strong>にしましょう。 ~~</p>
 
 <p>はい、これウソでしたorz</p>
 
@@ -116,7 +116,7 @@
 <p>そんなとき、ネットで偶然見かけたのがオープンラボ岡山でした。勉強会についてはほとんど知らなかったし、それほど興味も無かったのですが、偶然Seasarの作者であるひがやすおさんが、岡山に来られるということだけで参加しに行きました。</p>
 
 <ul>
-<li>第15回オープンラボ岡山 &ndash; <a href="http://openlab.okaya.ma/wiki.cgi?page=%CA%D9%B6%AF%B2%F1%2F%C2%E8015%B2%F3">http://openlab.okaya.ma/wiki.cgi?page=%CA%D9%B6%AF%B2%F1%2F%C2%E8015%B2%F3</a></li>
+<li>第15回オープンラボ岡山 - <a href="http://openlab.okaya.ma/wiki.cgi?page=%CA%D9%B6%AF%B2%F1%2F%C2%E8015%B2%F3">http://openlab.okaya.ma/wiki.cgi?page=%CA%D9%B6%AF%B2%F1%2F%C2%E8015%B2%F3</a></li>
 </ul>
 
 
@@ -139,21 +139,21 @@
 <p>そして転機は第19回オープンラボ岡山のときです。</p>
 
 <ul>
-<li>第19回オープンラボ岡山 &ndash; <a href="http://openlab.okaya.ma/wiki.cgi?page=%CA%D9%B6%AF%B2%F1%2F%C2%E8019%B2%F3">http://openlab.okaya.ma/wiki.cgi?page=%CA%D9%B6%AF%B2%F1%2F%C2%E8019%B2%F3</a></li>
+<li>第19回オープンラボ岡山 - <a href="http://openlab.okaya.ma/wiki.cgi?page=%CA%D9%B6%AF%B2%F1%2F%C2%E8019%B2%F3">http://openlab.okaya.ma/wiki.cgi?page=%CA%D9%B6%AF%B2%F1%2F%C2%E8019%B2%F3</a></li>
 </ul>
 
 
 <p>この回はJava特集ということで、当時は日本オラクル所属だった寺田佳央さんと、RedHatの木村貴由さんのお二人からJavaについての話を聞きました。そこで寺田さんはGlassFishの話をされたのですが、これが個人的に一番興味をそそられたので、その後も個人的にいろいろ調べ、以下のブログを書きました。</p>
 
 <ul>
-<li>Glassfish 3.1の自己増殖クラスタを試す &ndash; <a href="http://d.hatena.ne.jp/zephiransas/20110707/1310027466">http://d.hatena.ne.jp/zephiransas/20110707/1310027466</a></li>
+<li>Glassfish 3.1の自己増殖クラスタを試す - <a href="http://d.hatena.ne.jp/zephiransas/20110707/1310027466">http://d.hatena.ne.jp/zephiransas/20110707/1310027466</a></li>
 </ul>
 
 
 <p>このエントリを書いたことをキッカケに、オープンラボ岡山の常連であり、隣国？である福山で「オープンラボ備後」を主催されていた、Yさんから「GlassFishの話してみない？」という依頼がありました。そして第10回オープンラボ備後で初登壇することになります。</p>
 
 <ul>
-<li>第10回オープンラボ備後 &ndash; <a href="https://sites.google.com/site/openlabbingo/home/di10huiopunrabo-bei-hou">https://sites.google.com/site/openlabbingo/home/di10huiopunrabo-bei-hou</a></li>
+<li>第10回オープンラボ備後 - <a href="https://sites.google.com/site/openlabbingo/home/di10huiopunrabo-bei-hou">https://sites.google.com/site/openlabbingo/home/di10huiopunrabo-bei-hou</a></li>
 </ul>
 
 
@@ -259,8 +259,8 @@
 <p>ここでLTしたいがために、東京、大阪からやってくる人もいるくらい、懇親会に最適な会場です。次はオープンセミナー岡山2016という勉強会がありますので、ぜひ県外の皆様にもお越しいただきたいですね。</p>
 
 <ul>
-<li>Togetter &ndash; <a href="http://togetter.com/li/908723">合同勉強会 in 大都会岡山 -2015 Winter- &amp; 忘年会議2015 まとめ #gbdaitokai #忘年会議</a></li>
-<li>flickr &ndash; <a href="https://www.flickr.com/photos/zephiransas/albums/72157659745544384">合同勉強会 in 大都会岡山 -2015 Winter-</a></li>
+<li>Togetter - <a href="http://togetter.com/li/908723">合同勉強会 in 大都会岡山 -2015 Winter- &amp; 忘年会議2015 まとめ #gbdaitokai #忘年会議</a></li>
+<li>flickr - <a href="https://www.flickr.com/photos/zephiransas/albums/72157659745544384">合同勉強会 in 大都会岡山 -2015 Winter-</a></li>
 </ul>
 
 ]]></content>
@@ -283,7 +283,7 @@ Herokuにはこういったことを実現するために、buildpackという�
 <p>crystal用のbuildpackは既にあるので、今回はこれを利用します。</p>
 
 <ul>
-<li>zamith/heroku-buildpack-crystal &ndash; <a href="https://github.com/zamith/heroku-buildpack-crystal">https://github.com/zamith/heroku-buildpack-crystal</a></li>
+<li>zamith/heroku-buildpack-crystal - <a href="https://github.com/zamith/heroku-buildpack-crystal">https://github.com/zamith/heroku-buildpack-crystal</a></li>
 </ul>
 
 
@@ -348,7 +348,7 @@ Herokuにはこういったことを実現するために、buildpackという�
 
 <p>Herokuの場合、サーバのポートは$PORTの値を使用しなければいけませんので、起動時にその値を渡せるようにするためです。</p>
 
-<p>2点目は、以下のようにServerのインスタンス生成時に&#8221;0.0.0.0&#8221;を指定することです。</p>
+<p>2点目は、以下のようにServerのインスタンス生成時に"0.0.0.0"を指定することです。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">server</span> <span class="o">=</span> <span class="ss">HTTP</span><span class="p">:</span><span class="ss">:Server</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">server_port</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">request</span><span class="o">|</span>
@@ -912,8 +912,8 @@ Herokuにはこういったことを実現するために、buildpackという�
 <p>とは言っても論理武装が必要でしょうから、こちらも合わせてどうぞ。</p>
 
 <ul>
-<li>DELETE_FLAG を付ける前に確認したいこと。 &ndash; <a href="http://qiita.com/Jxck_/items/156d0a231c6968f2a474">http://qiita.com/Jxck_/items/156d0a231c6968f2a474</a></li>
-<li>論理削除が云々について &ndash; <a href="http://mike-neck.hatenadiary.com/entry/2015/03/24/231422">http://mike-neck.hatenadiary.com/entry/2015/03/24/231422</a></li>
+<li>DELETE_FLAG を付ける前に確認したいこと。 - <a href="http://qiita.com/Jxck_/items/156d0a231c6968f2a474">http://qiita.com/Jxck_/items/156d0a231c6968f2a474</a></li>
+<li>論理削除が云々について - <a href="http://mike-neck.hatenadiary.com/entry/2015/03/24/231422">http://mike-neck.hatenadiary.com/entry/2015/03/24/231422</a></li>
 </ul>
 
 ]]></content>
@@ -1073,10 +1073,10 @@ Rubyであればirbやpryなどが有名ですね。</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>1行目 &ndash; OSXの環境に合わせて&#8221;#!/bin/sh&#8221;に修正
-2行目 &ndash; jline2のjarを指定
-3行目 &ndash; JDK9のjavacのあるディレクトリを指定
-6行目 &ndash; 先頭に&#8221;$JAVAC_BIN_HOME&#8221;を追加</p>
+<p>1行目 - OSXの環境に合わせて"#!/bin/sh"に修正
+2行目 - jline2のjarを指定
+3行目 - JDK9のjavacのあるディレクトリを指定
+6行目 - 先頭に"$JAVAC_BIN_HOME"を追加</p>
 
 <p>修正できたら</p>
 
@@ -1192,8 +1192,8 @@ Rubyであればirbやpryなどが有名ですね。</p>
 <h2>参考にしたリンク</h2>
 
 <ul>
-<li>Java 9 REPL – Getting started guide &ndash; <a href="http://www.jclarity.com/2015/04/15/java-9-repl-getting-started-guide/">http://www.jclarity.com/2015/04/15/java-9-repl-getting-started-guide/</a></li>
-<li>REPLで遊ぼう &ndash; <a href="http://d.hatena.ne.jp/bitter_fox/20150331/1427754868">http://d.hatena.ne.jp/bitter_fox/20150331/1427754868</a></li>
+<li>Java 9 REPL – Getting started guide - <a href="http://www.jclarity.com/2015/04/15/java-9-repl-getting-started-guide/">http://www.jclarity.com/2015/04/15/java-9-repl-getting-started-guide/</a></li>
+<li>REPLで遊ぼう - <a href="http://d.hatena.ne.jp/bitter_fox/20150331/1427754868">http://d.hatena.ne.jp/bitter_fox/20150331/1427754868</a></li>
 </ul>
 
 ]]></content>
@@ -1207,7 +1207,7 @@ Rubyであればirbやpryなどが有名ですね。</p>
     <content type="html"><![CDATA[<p>gemを作りました。名前はoctocamです。</p>
 
 <ul>
-<li>octocam &ndash; <a href="https://rubygems.org/gems/octocam">https://rubygems.org/gems/octocam</a></li>
+<li>octocam - <a href="https://rubygems.org/gems/octocam">https://rubygems.org/gems/octocam</a></li>
 </ul>
 
 
@@ -1546,7 +1546,7 @@ lambda-behaveを使うと、このようなDSLっぽい記述のテストを、J
 <p>しかし今回のCCCの参加登録数は約650名で過去最高。また懇親会の参加者も受付開始するとあっという間に満席になり、最終的には100名とこちらも過去最高。自分にとっても最高に楽しい時間でした。</p>
 
 <ul>
-<li>JJUG CCC 2014 Fall 懇親会 &ndash; <a href="https://www.flickr.com/photos/zephiransas/sets/72157648917084929/">https://www.flickr.com/photos/zephiransas/sets/72157648917084929/</a></li>
+<li>JJUG CCC 2014 Fall 懇親会 - <a href="https://www.flickr.com/photos/zephiransas/sets/72157648917084929/">https://www.flickr.com/photos/zephiransas/sets/72157648917084929/</a></li>
 </ul>
 
 
@@ -1806,8 +1806,8 @@ lambda-behaveを使うと、このようなDSLっぽい記述のテストを、J
 <p>そして、Java会の重鎮、<a href="https://twitter.com/skrb">櫻庭さん</a>も岡山のパフェ推しで有名。大都会アドベントカレンダーでも、岡山のパフェを紹介して頂いています。</p>
 
 <ul>
-<li><a href="http://www.javainthebox.com/2012/12/advent-calendar-16.html">大都会岡山 Advent Calendar 16 日目 &ndash; 岡山といえばパフェだよね</a></li>
-<li><a href="http://www.javainthebox.com/2013/12/advent-calendar-11-2.html">大都会岡山 Advent Calendar 11 日目 &ndash; 岡山といえばパフェだよね #2</a></li>
+<li><a href="http://www.javainthebox.com/2012/12/advent-calendar-16.html">大都会岡山 Advent Calendar 16 日目 - 岡山といえばパフェだよね</a></li>
+<li><a href="http://www.javainthebox.com/2013/12/advent-calendar-11-2.html">大都会岡山 Advent Calendar 11 日目 - 岡山といえばパフェだよね #2</a></li>
 </ul>
 
 
@@ -1855,7 +1855,7 @@ lambda-behaveを使うと、このようなDSLっぽい記述のテストを、J
 
 <h2>インターフェースの宣言</h2>
 
-<p>まずは手始めに、引数で指定された文字列の前後に&#8221;[&ldquo;と&rdquo;]&ldquo;をつける処理を考えてみましょう。</p>
+<p>まずは手始めに、引数で指定された文字列の前後に"[&ldquo;と&rdquo;]&ldquo;をつける処理を考えてみましょう。</p>
 
 <p>Lambdaを使用するには、まずインターフェースを宣言する必要があります。上記の仕様から考えると</p>
 
@@ -1920,7 +1920,7 @@ lambda-behaveを使うと、このようなDSLっぽい記述のテストを、J
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>実行すると&#8221;[HOGE]&ldquo;と出力されていることがわかると思います。</p>
+<p>実行すると"[HOGE]&ldquo;と出力されていることがわかると思います。</p>
 
 <p>このように、匿名クラスを使った場合などと比べて、少ない記述量で実装できると思います。</p>
 
@@ -2325,10 +2325,10 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
 
 
 <ul>
-<li>16~18行目 &ndash; テスト用のtmpディレクトリを作成（rspecのテストでtmpを使ってるので、必要なければ不要です）</li>
-<li>6~7,37~38行目 &ndash; テスト用のPostgreSQLを実行する</li>
-<li>53~55行目 &ndash; rspecを実行</li>
-<li>57~59行目 &ndash; cucumberを実行</li>
+<li>16~18行目 - テスト用のtmpディレクトリを作成（rspecのテストでtmpを使ってるので、必要なければ不要です）</li>
+<li>6~7,37~38行目 - テスト用のPostgreSQLを実行する</li>
+<li>53~55行目 - rspecを実行</li>
+<li>57~59行目 - cucumberを実行</li>
 </ul>
 
 

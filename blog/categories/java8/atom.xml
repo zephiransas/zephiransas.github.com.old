@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Java8 | zephiransasのチラシの裏]]></title>
+  <title><![CDATA[Category: java8 | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/blog/categories/java8/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2016-05-24T13:11:45+09:00</updated>
+  <updated>2016-08-18T10:48:37+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -35,11 +35,10 @@
 
 <p>となるので、この場合は以下の様なインターフェースを宣言します。</p>
 
-<p><code>java LambdaInterface.class
-public interface LambdaInterface {
+<pre><code class="java LambdaInterface.class">public interface LambdaInterface {
   String method(String value);
 }
-</code></p>
+</code></pre>
 
 <p>ここで注意するべきことが1つ。Java8のLambdaとして使えるインターフェースには決まりがあるのですが、もっとも重要なのが<strong>インターフェースのメソッドが1つだけ</strong>ということです。インターフェースのメソッドが2つ以上ある場合には、それをLambdaとして使用することはできません。</p>
 
@@ -51,30 +50,26 @@ public interface LambdaInterface {
 
 <p>早速、先に宣言したインターフェースを使ってLambdaを書いてみましょう。Lambdaを記述する際の基本となる文法は、以下のようになっています。</p>
 
-<p><code>java
-[インターフェース名] [lambda式の名前] = (引数の型 引数,...) -&gt; {
+<pre><code class="java">[インターフェース名] [lambda式の名前] = (引数の型 引数,...) -&gt; {
   （実装）
 };
-</code></p>
+</code></pre>
 
 <p>よってLambdaInterfaceを使って書くと、以下のようになります。</p>
 
-<p>``` java Sample.class
-public class Sample {</p>
+<pre><code class="java Sample.class">public class Sample {
 
-<p>  public static void main(String&hellip; args) {</p>
+  public static void main(String... args) {
+    LambdaInterface lambda = (String value) -&gt; {
+      return "[" + value + "]";
+    };
+    System.out.println(lambda.method("HOGE"));
+  }
 
-<pre><code>LambdaInterface lambda = (String value) -&gt; {
-  return "[" + value + "]";
-};
-System.out.println(lambda.method("HOGE"));
+}
 </code></pre>
 
-<p>  }</p>
-
-<p>}
-```
-実行すると"[HOGE]&ldquo;と出力されていることがわかると思います。</p>
+<p>実行すると"[HOGE]&ldquo;と出力されていることがわかると思います。</p>
 
 <p>このように、匿名クラスを使った場合などと比べて、少ない記述量で実装できると思います。</p>
 
@@ -92,19 +87,15 @@ System.out.println(lambda.method("HOGE"));
 
 <p>上記ルールに沿ったLambdaであれば省略可能です。ですので先ほどのコードも以下の様に省略できます。</p>
 
-<p>``` java Sample.class
-public class Sample {</p>
+<pre><code class="java Sample.class">public class Sample {
 
-<p>  public static void main(String&hellip; args) {</p>
+  public static void main(String... args) {
+    LambdaInterface lambda = value -&gt; "[" + value + "]";
+    System.out.println(lambda.method("HOGE"));
+  }
 
-<pre><code>LambdaInterface lambda = value -&gt; "[" + value + "]";
-System.out.println(lambda.method("HOGE"));
+}
 </code></pre>
-
-<p>  }</p>
-
-<p>}
-```</p>
 
 <p>かなりスッキリしましたね！</p>
 
@@ -113,29 +104,24 @@ System.out.println(lambda.method("HOGE"));
 <p>先ほど少し触れましたが、上記のLambdaInterfaceのような普段Lambdaとして使うインターフェースはjava.util.function内にいろいろ用意されています。
 例えば、LambdaInterfaceの様に「String型の引数を1つ取り、String型の戻り値を持つ」インターフェースはjava.utl.functionパッケージ内にあるFunctionインターフェースを使います。</p>
 
-<p><code>
-public interface Function&lt;T, R&gt; {
+<pre><code>public interface Function&lt;T, R&gt; {
   R apply(T t);
 }
-</code></p>
+</code></pre>
 
 <p>最初の型引数Tには1つ目の引数の型、2つ目の型引数Rには戻り値の型を指定します。またapplyメソッドが実装対象となるメソッドです。</p>
 
 <p>先のコードをFunctionインターフェースを使って書き直すと。</p>
 
-<p>``` java Sample.class
-public class Sample {</p>
+<pre><code class="java Sample.class">public class Sample {
 
-<p>  public static void main(String&hellip; args) {</p>
+  public static void main(String... args) {
+    Function&lt;String, String&gt; lambda = value -&gt; "[" + value + "]";
+    System.out.println(lambda.apply("HOGE"));
+  }
 
-<pre><code>Function&lt;String, String&gt; lambda = value -&gt; "[" + value + "]";
-System.out.println(lambda.apply("HOGE"));
+}
 </code></pre>
-
-<p>  }</p>
-
-<p>}
-```</p>
 
 <p>となります。Functionの他にも</p>
 
@@ -169,72 +155,51 @@ System.out.println(lambda.apply("HOGE"));
 
 <p>例えば先の文字列の前後にカッコをつけるメソッドが以下のようにSampleクラスのstaticメソッドとして定義されていた場合</p>
 
-<p>``` java Sample.class
-public class Sample {</p>
+<pre><code class="java Sample.class">public class Sample {
 
-<p>  public static void main(String&hellip; args) {</p>
+  public static void main(String... args) {
+    ...
+  }
 
-<pre><code>...
+  private static String add(String value) {
+    return "[" + value + "]";
+  }
+
+}
 </code></pre>
-
-<p>  }</p>
-
-<p>  private static String add(String value) {</p>
-
-<pre><code>return "[" + value + "]";
-</code></pre>
-
-<p>  }</p>
-
-<p>}
-```</p>
 
 <p>Sample.addをメソッド参照するには</p>
 
-<p>``` java Sample.class
-public class Sample {</p>
+<pre><code class="java Sample.class">public class Sample {
 
-<p>  public static void main(String&hellip; args) {</p>
+  public static void main(String... args) {
+    Function&lt;String, String&gt; lambda = Sample::add;
+    System.out.println(lambda.apply("HOGE"));
+  }
 
-<pre><code>Function&lt;String, String&gt; lambda = Sample::add;
-System.out.println(lambda.apply("HOGE"));
+  private static String add(String value) {
+    return "[" + value + "]";
+  }
+
+}
 </code></pre>
-
-<p>  }</p>
-
-<p>  private static String add(String value) {</p>
-
-<pre><code>return "[" + value + "]";
-</code></pre>
-
-<p>  }</p>
-
-<p>}
-```</p>
 
 <p>ここではstaticなクラスメソッドを使いましたが、インスタンスメソッドの場合も同様に、インスタンスを生成し、そこからメソッド参照をすることができます。</p>
 
-<p>``` java Sample.class
-public class Sample {</p>
+<pre><code class="java Sample.class">public class Sample {
 
-<p>  public static void main(String&hellip; args) {</p>
+  public static void main(String... args) {
+    Sample sample = new Sample();
+    Function&lt;String, String&gt; lambda = sample::add;
+    System.out.println(lambda.apply("HOGE"));
+  }
 
-<pre><code>Sample sample = new Sample();
-Function&lt;String, String&gt; lambda = sample::add;
-System.out.println(lambda.apply("HOGE"));
+  public static String add(String value) {
+    return "[" + value + "]";
+  }
+
+}
 </code></pre>
-
-<p>  }</p>
-
-<p>  public static String add(String value) {</p>
-
-<pre><code>return "[" + value + "]";
-</code></pre>
-
-<p>  }</p>
-
-<p>}
-```</p>
 ]]></content>
   </entry>
   

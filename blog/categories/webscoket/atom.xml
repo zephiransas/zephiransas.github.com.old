@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: WebScoket | zephiransasのチラシの裏]]></title>
+  <title><![CDATA[Category: webscoket | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/blog/categories/webscoket/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2016-05-24T13:11:45+09:00</updated>
+  <updated>2016-08-18T10:48:37+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -38,44 +38,36 @@
 
 <h3>manifest.jsonの設定</h3>
 
-<p>``` json manifest.json
-{</p>
-
-<pre><code>"manifest_version": 2,
-"name": "Pusher test extension",
-"version": "0.0.1",
-"description": "Pusher用 Chrome extension",
-"permissions" : [
-    "notifications"
-],
-"content_security_policy": "script-src 'self' https://stats.pusher.com; object-src 'self'",
-"background" : {
-    "scripts": [
-        "src/javascript/pusher.min.js",
-        "src/javascript/background.js"
-    ]
+<pre><code class="json manifest.json">{
+    "manifest_version": 2,
+    "name": "Pusher test extension",
+    "version": "0.0.1",
+    "description": "Pusher用 Chrome extension",
+    "permissions" : [
+        "notifications"
+    ],
+    "content_security_policy": "script-src 'self' https://stats.pusher.com; object-src 'self'",
+    "background" : {
+        "scripts": [
+            "src/javascript/pusher.min.js",
+            "src/javascript/background.js"
+        ]
+    }
 }
 </code></pre>
 
-<p>}
-```</p>
-
 <p>今回はPusherからのメッセージをデスクトップ通知するようにしたいのでpermissionに
-``` json
-&ldquo;permissions&rdquo; : [</p>
-
-<pre><code>"notifications"
-</code></pre>
-
-<p>],
-```
+<code>json
+"permissions" : [
+    "notifications"
+],
+</code>
 を指定しています。</p>
 
 <p>また、content_security_policyのscript-srcに <strong><a href="https://stats.pusher.com**">https://stats.pusher.com**</a> を追加しています。httpではなく</strong>https**を指定していることに注意してください。</p>
 
-<p><code>json
-"content_security_policy": "script-src 'self' https://stats.pusher.com; object-src 'self'",
-</code></p>
+<pre><code class="json">"content_security_policy": "script-src 'self' https://stats.pusher.com; object-src 'self'",
+</code></pre>
 
 <p>このサイトは、Pusherのクライアントライブラリであるpusher.min.jsからアクセスしているのですが、これを許可していないとChrome拡張からPusherのサーバへ、正しく接続をすることができません。</p>
 
@@ -86,22 +78,18 @@
 
 <p>あとはChrome拡張のバックグラウンドで実行されるbackground.jsで、Pusherとの接続を行います。</p>
 
-<p>``` javascript background.js
-var pusher = new Pusher(&ldquo;======== KEY ========&rdquo;, { encrypted: true });
-var channel = pusher.subscribe(&lsquo;test_channel&rsquo;);
-channel.bind(&lsquo;my_event&rsquo;, function(data) {
-  var opt = {</p>
-
-<pre><code>type: 'basic',
-title: data.title,
-message: data.message,
-iconUrl: ""
-</code></pre>
-
-<p>  }
-  chrome.notifications.create(&ldquo;&rdquo;, opt, function(id){ /<em>* Do Nothing </em>/ });<br/>
+<pre><code class="javascript background.js">var pusher = new Pusher("======== KEY ========", { encrypted: true });
+var channel = pusher.subscribe('test_channel');
+channel.bind('my_event', function(data) {
+  var opt = {
+    type: 'basic',
+    title: data.title,
+    message: data.message,
+    iconUrl: ""
+  }
+  chrome.notifications.create("", opt, function(id){ /** Do Nothing */ });  
 });
-```</p>
+</code></pre>
 
 <p>Pusherのコンストラクタに渡すkeyには、Pusherで作成したアプリケーションのKeyを指定します。</p>
 
@@ -109,9 +97,8 @@ iconUrl: ""
 
 <p>また、大事なポイントとしてPusherのオプションに</p>
 
-<p><code>
-{ encrypted: true }
-</code></p>
+<pre><code>{ encrypted: true }
+</code></pre>
 
 <p>を指定する必要があります。これは先のmanifest.jsonの設定でも触れましたが、この指定がない場合Pusherの接続先が **<a href="http://stats.pusher.com**">http://stats.pusher.com**</a> となってしまいます。Chrome拡張ではhttpsでない外部サーバに接続することはセキュリティ上できませんので、上記のオプションを指定しています。</p>
 
@@ -145,14 +132,13 @@ iconUrl: ""
 
 <p>今回はアイコン画像のURLを指定しなかったので、なにも表示されていませんが、以下の用に画像へのURLを指定することでアイコンを表示することもできます。</p>
 
-<p><code>javascript background.js
-var opt = {
+<pre><code class="javascript background.js">var opt = {
   type: 'basic',
   title: data.title,
   message: data.message,
   iconUrl: "http://example.com/path/to/icon"
 }
-</code></p>
+</code></pre>
 
 <h2>ソースなど</h2>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: heroku | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/blog/categories/heroku/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2016-05-24T13:11:45+09:00</updated>
+  <updated>2016-08-18T10:48:37+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -30,21 +30,19 @@ Herokuにはこういったことを実現するために、buildpackという�
 <p>crystal用のbuildpackは既にあるので、今回はこれを利用します。</p>
 
 <ul>
-<li>zamith/heroku-buildpack-crystal &ndash; <a href="https://github.com/zamith/heroku-buildpack-crystal">https://github.com/zamith/heroku-buildpack-crystal</a></li>
+<li>zamith/heroku-buildpack-crystal - <a href="https://github.com/zamith/heroku-buildpack-crystal">https://github.com/zamith/heroku-buildpack-crystal</a></li>
 </ul>
 
 
 <p>heroku createする際に上記のbuildpackを指定しておきます。</p>
 
-<p><code>bash
-heroku create --buildpack https://github.com/zamith/heroku-buildpack-crystal
-</code></p>
+<pre><code class="bash">heroku create --buildpack https://github.com/zamith/heroku-buildpack-crystal
+</code></pre>
 
 <p>ちなみに、これはあとから指定することも可能です。</p>
 
-<p><code>bash
-heroku
-</code></p>
+<pre><code class="bash">heroku
+</code></pre>
 
 <h2>アプリケーションの準備</h2>
 
@@ -52,27 +50,23 @@ heroku
 
 <p>app.crというファイル名で以下のファイルを準備します。</p>
 
-<p>``` ruby app.cr
-require &ldquo;http/server&rdquo;
-require &ldquo;option_parser&rdquo;</p>
+<pre><code class="ruby app.cr">require "http/server"
+require "option_parser"
 
-<p>server_port = 8080
+server_port = 8080
 OptionParser.parse! do |opts|
-  opts.on(&ldquo;-p PORT&rdquo;, &ldquo;&mdash;port PORT&rdquo;, &ldquo;define port to run server&rdquo;) do |port|</p>
+  opts.on("-p PORT", "--port PORT", "define port to run server") do |port|
+    server_port = port.to_i
+  end
+end
 
-<pre><code>server_port = port.to_i
-</code></pre>
+server = HTTP::Server.new("0.0.0.0", server_port) do |request|
+  HTTP::Response.ok "text/plain", "Hello world, got #{request.path}!"
+end
 
-<p>  end
-end</p>
-
-<p>server = <a href="HTTP::Server.new">HTTP::Server.new</a>(&ldquo;0.0.0.0&rdquo;, server_port) do |request|
-  <a href="HTTP::Response.ok">HTTP::Response.ok</a> &ldquo;text/plain&rdquo;, &ldquo;Hello world, got #{request.path}!&rdquo;
-end</p>
-
-<p>puts &ldquo;Listening on <a href="http://0.0.0.0:#">http://0.0.0.0:#</a>{server_port}&rdquo;
+puts "Listening on http://0.0.0.0:#{server_port}"
 server.listen
-```</p>
+</code></pre>
 
 <p>注意するところは2点。</p>
 
@@ -82,23 +76,20 @@ server.listen
 
 <p>2点目は、以下のようにServerのインスタンス生成時に"0.0.0.0"を指定することです。</p>
 
-<p><code>ruby
-server = HTTP::Server.new("0.0.0.0", server_port) do |request|
-</code></p>
+<pre><code class="ruby">server = HTTP::Server.new("0.0.0.0", server_port) do |request|
+</code></pre>
 
 <p>こうすることで、localhost以外からでもアクセス可能にしてあります。これを指定していない場合は、Herokuでの起動時に</p>
 
-<p><code>bash
-Error R10 (Boot timeout) -&gt; Web process failed to bind to $PORT within 60 seconds of launch
-</code></p>
+<pre><code class="bash">Error R10 (Boot timeout) -&gt; Web process failed to bind to $PORT within 60 seconds of launch
+</code></pre>
 
 <p>というエラーが発生します。</p>
 
 <p>できたら早速、起動してみましょう。</p>
 
-<p><code>bash
-crystal run app.cr
-</code></p>
+<pre><code class="bash">crystal run app.cr
+</code></pre>
 
 <p>ブラウザからlocalhost:8080にアクセスし、以下の用に表示されれば、Webサーバが正しく起動しています。</p>
 
@@ -108,17 +99,15 @@ crystal run app.cr
 
 <p>次にProcfileを以下のように準備します。</p>
 
-<p><code>bash Procfile
-web: ./app -p $PORT
-</code></p>
+<pre><code class="bash Procfile">web: ./app -p $PORT
+</code></pre>
 
 <p>起動時に$PORTをWebサーバのポートとして、指定しています。</p>
 
 <p>次にProjectfileを準備します。中身は空でOKです。</p>
 
-<p><code>bash
-touch Projectfile
-</code></p>
+<pre><code class="bash">touch Projectfile
+</code></pre>
 
 <p>これは本来は不要なファイルなのですが、crystalのbuildpack内でProjectfileがない場合は、crystalのアプリケーションとして認識してくれないため、空のファイルを作成しています。</p>
 
@@ -126,13 +115,12 @@ touch Projectfile
 
 <p>app.cr、Procfile、Projectfileの3つが準備できたら、Herokuにデプロイしてみましょう。</p>
 
-<p><code>bash
-git init
+<pre><code class="bash">git init
 git add .
 git commit -m 'First commit'
 heroku git:remote --app [APPNAME]
 git push heroku master
-</code></p>
+</code></pre>
 
 <p>あとは、Herokuにアクセスして、正しく動作していればOKです。</p>
 

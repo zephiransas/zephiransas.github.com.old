@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: iOS | zephiransasのチラシの裏]]></title>
+  <title><![CDATA[Category: ios | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2016-05-24T13:11:45+09:00</updated>
+  <updated>2016-08-18T10:48:37+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -31,9 +31,8 @@
 <p>まずはweinreをインストールします。weinreはnpmで提供されているので、以下のコマンドでインストールします。
 npmをインストールしてない場合は、先に<a href="http://nodejs.org/">node.jsをインストール</a>してください。</p>
 
-<p><code>bash
-$ sudo npm -g install weinre
-</code></p>
+<pre><code class="bash">$ sudo npm -g install weinre
+</code></pre>
 
 <p>自分の環境ではsudoを要求されたのですが、sudoなしでインストールできれば、それでもいいかと思います。</p>
 
@@ -41,18 +40,18 @@ $ sudo npm -g install weinre
 
 <p>次にweinreサーバを、以下のコマンドで起動します。</p>
 
-<p><code>bash
-$ weinre --boundHost 192.168.0.x
-</code>
-上記のboundHostにはlocalhostのIPアドレスを設定します。
+<pre><code class="bash">$ weinre --boundHost 192.168.0.x
+</code></pre>
+
+<p>上記のboundHostにはlocalhostのIPアドレスを設定します。
 weinreサーバはデフォルトの状態だとlocalhostからしか接続できません。この後iPad側から接続する必要がありますので、上記のようにboundHostを設定して、他のデバイスからも接続可能にしておく必要があります。</p>
 
 <p>無事、起動できれば</p>
 
-<p><code>bash
-weinre: starting server at http://192.168.0.x:8080
-</code>
-と表示され、8080ポートでサーバが起動します。早速これをブラウザから見てみましょう。</p>
+<pre><code class="bash">weinre: starting server at http://192.168.0.x:8080
+</code></pre>
+
+<p>と表示され、8080ポートでサーバが起動します。早速これをブラウザから見てみましょう。</p>
 
 <p><img src="/images/20130820/weinre_server.png" alt="weinre_server" /></p>
 

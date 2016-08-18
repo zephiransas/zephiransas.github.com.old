@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Mac | zephiransasのチラシの裏]]></title>
+  <title><![CDATA[Category: mac | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/blog/categories/mac/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2016-05-24T13:11:45+09:00</updated>
+  <updated>2016-08-18T10:48:37+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -35,31 +35,29 @@
 
 <p>次にターミナルを立ちあげ</p>
 
-<p><code>bash
-$ sudo chflags -R nouchg /Volumes/share/unicorn.sparsebundle
-</code>
-して、ロックを解除しておきます。次に</p>
+<pre><code class="bash">$ sudo chflags -R nouchg /Volumes/share/unicorn.sparsebundle
+</code></pre>
 
-<p><code>bash
-$ hdiutil attach -nomount -noverify -noautofsck /Volumes/share/unicorn.sparsebundle
-</code>
-と入力します。実行すると以下のようなメッセージが表示されます。</p>
+<p>して、ロックを解除しておきます。次に</p>
 
-<p><code>bash
-/dev/disk2 Apple_partition_scheme
+<pre><code class="bash">$ hdiutil attach -nomount -noverify -noautofsck /Volumes/share/unicorn.sparsebundle
+</code></pre>
+
+<p>と入力します。実行すると以下のようなメッセージが表示されます。</p>
+
+<pre><code class="bash">/dev/disk2 Apple_partition_scheme
 /dev/disk2s1 Apple_partition_map
 /dev/disk2s2 Apple_HFSX
-</code>
-この時の/dev/disk? の?部分は実行時の環境によって異なる数値が入っていますので注意。また、この次点でTime Machineイメージに対して修復処理がバックグラウンドで実行されています。そのログが/var/log/fsck_hfs.logに出力されています。復旧が終了したかどうかはそのログで確認するのでtailで眺めてやります。</p>
+</code></pre>
 
-<p><code>bash
-$ tail -f /var/log/fsck_hfs.log
-</code></p>
+<p>この時の/dev/disk? の?部分は実行時の環境によって異なる数値が入っていますので注意。また、この次点でTime Machineイメージに対して修復処理がバックグラウンドで実行されています。そのログが/var/log/fsck_hfs.logに出力されています。復旧が終了したかどうかはそのログで確認するのでtailで眺めてやります。</p>
+
+<pre><code class="bash">$ tail -f /var/log/fsck_hfs.log
+</code></pre>
 
 <p>おそらくこんな感じ。</p>
 
-<p><code>bash
-** Checking Journaled HFS Plus volume.
+<pre><code class="bash">** Checking Journaled HFS Plus volume.
 ** Detected a case-sensitive volume.
    The volume name is Time Machine バックアップ
 ** Checking extents overflow file.
@@ -71,34 +69,30 @@ $ tail -f /var/log/fsck_hfs.log
 ** Checking volume bitmap.
 ** Checking volume information.
 ** The volume Time Machine バックアップ appears to be OK.
-</code></p>
+</code></pre>
 
 <p>最後の「The volume Time Machine バックアップ appears to be OK.」が表示されればイメージの復旧は完了です。</p>
 
 <p>終了したら、デタッチしておきます。</p>
 
-<p><code>bash
-hdiutil detach /dev/disk2s2
-</code></p>
+<pre><code class="bash">hdiutil detach /dev/disk2s2
+</code></pre>
 
 <p>ただこの状態だと、イメージ内部ではまだ壊れたままという情報が残っているため、これを修正します。</p>
 
-<p><code>bash
-$ cd /Volumes/share/unicorn.sparsebundle/
+<pre><code class="bash">$ cd /Volumes/share/unicorn.sparsebundle/
 $ vi com.apple.TimeMachine.MachineID.plist
-</code></p>
+</code></pre>
 
 <p>とし、その内部の</p>
 
-<p><code>xml
-&lt;integer&gt;2&lt;/integer&gt;
-</code></p>
+<pre><code class="xml">&lt;integer&gt;2&lt;/integer&gt;
+</code></pre>
 
 <p>を</p>
 
-<p><code>xml
-&lt;integer&gt;0&lt;/integer&gt;
-</code></p>
+<pre><code class="xml">&lt;integer&gt;0&lt;/integer&gt;
+</code></pre>
 
 <p>に修正します。</p>
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Java | zephiransasのチラシの裏]]></title>
+  <title><![CDATA[Category: java | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2016-05-24T13:11:45+09:00</updated>
+  <updated>2016-08-18T10:48:37+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -35,44 +35,40 @@
 
 <p>maven wrapperを適用したいプロジェクトに移動して、以下のコマンドを発行するだけ。</p>
 
-<p><code>bash
-mvn -N io.takari:maven:wrapper
-</code></p>
+<pre><code class="bash">mvn -N io.takari:maven:wrapper
+</code></pre>
 
 <p>これだけで、プロジェクトに以下のファイルが追加されます。</p>
 
 <ul>
-<li>mvnw &ndash; Maven Wrapper経由でmavenを実行するためのファイル</li>
-<li>mvnw.cmd &ndash; mvnwのWindows版。Windowsで使う場合はこっちを使いましょう。</li>
-<li>.mvnディレクトリ &ndash; maven wraperがダウンロードしてきたMavenのバイナリとかが入ってる</li>
+<li>mvnw - Maven Wrapper経由でmavenを実行するためのファイル</li>
+<li>mvnw.cmd - mvnwのWindows版。Windowsで使う場合はこっちを使いましょう。</li>
+<li>.mvnディレクトリ - maven wraperがダウンロードしてきたMavenのバイナリとかが入ってる</li>
 </ul>
 
 
 <p>上記のコマンドだと実行時の最新のバージョンが使用されるので、バージョンを指定したい場合はオプションで</p>
 
-<p><code>bash
-mvn -N io.takari:maven:wrapper -Dmaven=3.3.1
-</code></p>
+<pre><code class="bash">mvn -N io.takari:maven:wrapper -Dmaven=3.3.1
+</code></pre>
 
 <p>としてやりましょう。以降は今まで</p>
 
-<p><code>bash
-mvn clean
+<pre><code class="bash">mvn clean
 mvn package
-</code></p>
+</code></pre>
 
 <p>としていたのをmvnwコマンドに置き換えるだけで</p>
 
-<p><code>bash
-./mvnw clean
+<pre><code class="bash">./mvnw clean
 ./mvnw package
-</code></p>
+</code></pre>
 
 <p>固定されたバージョンをMavenを利用することができます。</p>
 
 <h1>.gitignoreの設定</h1>
 
-<p><del> Gitなどのバージョン管理にはmvnwとmvnw.cmdのみコミット対象とし、<strong>.mvnディレクトリはコミット対象外</strong>にしましょう。 </del></p>
+<p>~~ Gitなどのバージョン管理にはmvnwとmvnw.cmdのみコミット対象とし、<strong>.mvnディレクトリはコミット対象外</strong>にしましょう。 ~~</p>
 
 <p>はい、これウソでしたorz</p>
 
@@ -146,11 +142,10 @@ Rubyであればirbやpryなどが有名ですね。</p>
 
 <p>ソースコードは<a href="https://github.com/jline/jline2">GitHubのリポジトリ</a>でホストされていますので</p>
 
-<p><code>bash
-git clone git@github.com:jline/jline2.git
+<pre><code class="bash">git clone git@github.com:jline/jline2.git
 cd jline2
 mvn install
-</code></p>
+</code></pre>
 
 <p>ちなみにJLine2はJDK8以前でないとビルドできないので注意です。</p>
 
@@ -161,31 +156,27 @@ mvn install
 <p>KullaのビルドにはJDK9が必要です。<a href="https://jdk9.java.net/download/">こちら</a>からJDK9をダウンロードし、インストールします。
 自分がインストールしたのは、以下のバージョン。</p>
 
-<p><code>
-java version "1.9.0-ea"
+<pre><code>java version "1.9.0-ea"
 Java(TM) SE Runtime Environment (build 1.9.0-ea-b59)
 Java HotSpot(TM) 64-Bit Server VM (build 1.9.0-ea-b59, mixed mode)
-</code></p>
+</code></pre>
 
 <p>その後、使用するJAVA_HOMEをJDK9に設定します。</p>
 
 <p>普段、自分はJAVA_HOMEの設定にjava_homeコマンドを使用しているので、.bash_profileに</p>
 
-<p><code>
-export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
-</code></p>
+<pre><code>export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+</code></pre>
 
 <p>としてJDK8を使用しています。今回はJDK9を使いたいので、これを</p>
 
-<p><code>
-export JAVA_HOME=`/usr/libexec/java_home -v 1.9`
-</code></p>
+<pre><code>export JAVA_HOME=`/usr/libexec/java_home -v 1.9`
+</code></pre>
 
 <p>とし</p>
 
-<p><code>bash
-source ~/.bash_profile
-</code></p>
+<pre><code class="bash">source ~/.bash_profile
+</code></pre>
 
 <p>として、JDK9を有効にします。</p>
 
@@ -193,10 +184,9 @@ source ~/.bash_profile
 
 <p>いよいよKullaのソースをダウンロードしてビルドします。</p>
 
-<p><code>bash
-hg clone http://hg.openjdk.java.net/kulla/dev ~/kulla
+<pre><code class="bash">hg clone http://hg.openjdk.java.net/kulla/dev ~/kulla
 cd ~/kulla
-</code></p>
+</code></pre>
 
 <p>次に、その他必要なソース類を取得します。
 <code>bash
@@ -206,33 +196,28 @@ chmod 755 get_source.sh
 
 <p>しばらく待つと、終了します。次にビルドスクリプトを環境に合わせて修正します。</p>
 
-<p><code>bash
-cd langtools/repl
-</code></p>
+<pre><code class="bash">cd langtools/repl
+</code></pre>
 
 <p>scripts/compileを以下のように修正します。</p>
 
-<p>``` bash scripts/compile</p>
+<pre><code class="bash scripts/compile">#!/bin/sh
+JLINE2LIB=/Users/[ユーザ名]/jline2/target/jline-2.13-SNAPSHOT.jar
+JAVAC_BIN_HOME=/Library/Java/JavaVirtualMachines/jdk1.9.0.jdk/Contents/Home/bin
 
-<h1>!/bin/sh</h1>
+mkdir -p build
+$JAVAC_BIN_HOME/javac -Xlint:unchecked -Xdiags:verbose -cp ${JLINE2LIB} -d build src/*/*.java
+</code></pre>
 
-<p>JLINE2LIB=/Users/[ユーザ名]/jline2/target/jline-2.13-SNAPSHOT.jar
-JAVAC_BIN_HOME=/Library/Java/JavaVirtualMachines/jdk1.9.0.jdk/Contents/Home/bin</p>
-
-<p>mkdir -p build
-$JAVAC_BIN_HOME/javac -Xlint:unchecked -Xdiags:verbose -cp ${JLINE2LIB} -d build src/<em>/</em>.java
-```</p>
-
-<p>1行目 &ndash; OSXの環境に合わせて"#!/bin/sh"に修正
-2行目 &ndash; jline2のjarを指定
-3行目 &ndash; JDK9のjavacのあるディレクトリを指定
-6行目 &ndash; 先頭に"$JAVAC_BIN_HOME"を追加</p>
+<p>1行目 - OSXの環境に合わせて"#!/bin/sh"に修正
+2行目 - jline2のjarを指定
+3行目 - JDK9のjavacのあるディレクトリを指定
+6行目 - 先頭に"$JAVAC_BIN_HOME"を追加</p>
 
 <p>修正できたら</p>
 
-<p><code>bash
-scripts/compile
-</code></p>
+<pre><code class="bash">scripts/compile
+</code></pre>
 
 <p>でビルドしましょう。なにもエラーがでなければ、成功しています。</p>
 
@@ -240,37 +225,31 @@ scripts/compile
 
 <p>実行前にscripts/runを以下のように修正します。</p>
 
-<p>``` bash scripts/run</p>
-
-<h1>!/bin/sh</h1>
-
-<p>JLINE2LIB=/Users/[ユーザ名]/jline2/target/jline-2.13-SNAPSHOT.jar
+<pre><code class="bash scripts/run">#!/bin/sh
+JLINE2LIB=/Users/[ユーザ名]/jline2/target/jline-2.13-SNAPSHOT.jar
 JAVA_BIN_HOME=/Library/Java/JavaVirtualMachines/jdk1.9.0.jdk/Contents/Home/bin/
-$JAVA_BIN_HOME/java -ea -esa -cp build:${JLINE2LIB} tool.Repl &ldquo;$@&rdquo;
-```</p>
+$JAVA_BIN_HOME/java -ea -esa -cp build:${JLINE2LIB} tool.Repl "$@"
+</code></pre>
 
 <p>先になおしたスクリプトとほぼ同じです。</p>
 
 <p>修正できたら、早速実行してみましょう。</p>
 
-<p><code>bash
-scripts/run
-</code></p>
+<pre><code class="bash">scripts/run
+</code></pre>
 
 <p>すると、以下のようにプロンプトが表示されます。</p>
 
-<p>```
-|  Welcome to the Java REPL &mdash; Version 0.411
-|  Type /help for help</p>
+<pre><code>|  Welcome to the Java REPL -- Version 0.411
+|  Type /help for help
 
-<p>&ndash;>
-```</p>
+-&gt;
+</code></pre>
 
 <p>あとは普通にJavaのプログラムが書けます！</p>
 
-<p><code>
--&gt; System.out.println("Hello!");
-</code></p>
+<pre><code>-&gt; System.out.println("Hello!");
+</code></pre>
 
 <p>また、CUIなどと同じようにタブによる補完もできます。</p>
 
@@ -284,28 +263,25 @@ scripts/run
 
 <p>当然ですがクラスを定義することもできます。</p>
 
-<p>```
-&ndash;> class Hoge {</p>
+<pre><code>-&gt; class Hoge {
+&gt;&gt; public static String fuga(){ return "FUGA!!"; }
+&gt;&gt; }
+|  Added class Hoge
 
-<blockquote><blockquote><p>public static String fuga(){ return &ldquo;FUGA!!&rdquo;; }
-}
-|  Added class Hoge</p></blockquote></blockquote>
-
-<p>&ndash;> Hoge.fuga();
-|  Expression value is: &ldquo;FUGA!!&rdquo;
+-&gt; Hoge.fuga();
+|  Expression value is: "FUGA!!"
 |    assigned to temporary variable $1 of type String
-```</p>
+</code></pre>
 
 <p>面白いのは、<strong>いきなりメソッド定義</strong>もできます！</p>
 
-<p>```
-&ndash;> int add(int x, int y){ return x + y;}
-|  Added method add</p>
+<pre><code>-&gt; int add(int x, int y){ return x + y;}
+|  Added method add
 
-<p>&ndash;> add(2,3);
+-&gt; add(2,3);
 |  Expression value is: 5
 |    assigned to temporary variable $2 of type int
-```</p>
+</code></pre>
 
 <p>普通に使えそうですね！</p>
 
@@ -320,8 +296,8 @@ scripts/run
 <h2>参考にしたリンク</h2>
 
 <ul>
-<li>Java 9 REPL – Getting started guide &ndash; <a href="http://www.jclarity.com/2015/04/15/java-9-repl-getting-started-guide/">http://www.jclarity.com/2015/04/15/java-9-repl-getting-started-guide/</a></li>
-<li>REPLで遊ぼう &ndash; <a href="http://d.hatena.ne.jp/bitter_fox/20150331/1427754868">http://d.hatena.ne.jp/bitter_fox/20150331/1427754868</a></li>
+<li>Java 9 REPL – Getting started guide - <a href="http://www.jclarity.com/2015/04/15/java-9-repl-getting-started-guide/">http://www.jclarity.com/2015/04/15/java-9-repl-getting-started-guide/</a></li>
+<li>REPLで遊ぼう - <a href="http://d.hatena.ne.jp/bitter_fox/20150331/1427754868">http://d.hatena.ne.jp/bitter_fox/20150331/1427754868</a></li>
 </ul>
 
 ]]></content>
@@ -342,18 +318,14 @@ scripts/run
 
 <p>自分は普段はRailsでの開発を行っているのですが、現場では主にRSpecを使ってテストを記述しています。RSpecでのテストは以下のような感じです。</p>
 
-<p>``` ruby
-describe &lsquo;Sample&rsquo; do
-  context &lsquo;hogeメソッドについて&rsquo; do</p>
-
-<pre><code>it 'fugaを返すこと' do
-  Sample.hoge.should == "fuga"
+<pre><code class="ruby">describe 'Sample' do
+  context 'hogeメソッドについて' do
+    it 'fugaを返すこと' do
+      Sample.hoge.should == "fuga"
+    end
+  end
 end
 </code></pre>
-
-<p>  end
-end
-```</p>
 
 <p>RSpecでは上記のようにDSLを使って、なにをテストしているかを構造的に記述することができます。
 lambda-behaveを使うと、このようなDSLっぽい記述のテストを、Java8のLambdaを使って書くことができるようになります。</p>
@@ -362,16 +334,12 @@ lambda-behaveを使うと、このようなDSLっぽい記述のテストを、J
 
 <p>まずはテスト対象となるメソッドを準備します。</p>
 
-<p>``` java
-public class Sample {</p>
-
-<pre><code>public static int includeTax(Integer price) {
-    return 0;
+<pre><code class="java">public class Sample {
+    public static int includeTax(Integer price) {
+        return 0;
+    }
 }
 </code></pre>
-
-<p>}
-```</p>
 
 <p>上記のようなstaticなメソッドを準備します。includeTaxメソッドは引数を一つ取り、その税込み金額を返すメソッドとします。<strong>実にギョーミーですね！</strong></p>
 
@@ -387,21 +355,27 @@ public class Sample {</p>
 <p>をテストするとします。これをlambda-behaveで書くと、以下のようになります。</p>
 
 <p>
-``` java
-import static com.insightfullogic.lambdabehave.Suite.*;</p>
-
-<p>@RunWith(JunitSuiteRunner.class)
-public class SampleSpec {{</p>
-
-<pre><code>describe("includeTax", it -&gt; {
-    it.should("税込み価格が取得できること", expect -&gt;
-        expect.that(Sample.includeTax(100)).is(108)
-    );
-});
-</code></pre>
-
-<p>}}
-```
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">insightfullogic</span><span class="o">.</span><span class="na">lambdabehave</span><span class="o">.</span><span class="na">Suite</span><span class="o">.*;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nd">@RunWith</span><span class="o">(</span><span class="n">JunitSuiteRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleSpec</span> <span class="o">{{</span>
+</span><span class='line'>    <span class="n">describe</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">includeTax</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;,</span> <span class="n">it</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">it</span><span class="o">.</span><span class="na">should</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">税込み価格が取得できること</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;,</span> <span class="n">expect</span> <span class="o">-&gt;</span>
+</span><span class='line'>            <span class="n">expect</span><span class="o">.</span><span class="na">that</span><span class="o">(</span><span class="n">Sample</span><span class="o">.</span><span class="na">includeTax</span><span class="o">(</span><span class="mi">100</span><span class="o">)).</span><span class="na">is</span><span class="o">(</span><span class="mi">108</span><span class="o">)</span>
+</span><span class='line'>        <span class="o">);</span>
+</span><span class='line'>    <span class="o">});</span>
+</span><span class='line'><span class="o">}}</span>
+</span></code></pre></td></tr></table></div></figure>
 </p>
 
 <p>static importを使ってlambda-behaveのメソッドを使えるようにし、こられを使って記述していきます。</p>
@@ -414,17 +388,13 @@ public class SampleSpec {{</p>
 
 <p>次に、includeTaxを実装してみます。</p>
 
-<p>``` java
-public class Sample {</p>
-
-<pre><code>public static int includeTax(Integer price) {
-    final float TAX_RATE = 0.08;
-    return (int)Math.floor(price * (1 + TAX_RATE));
+<pre><code class="java">public class Sample {
+    public static int includeTax(Integer price) {
+        final float TAX_RATE = 0.08;
+        return (int)Math.floor(price * (1 + TAX_RATE));
+    }
 }
 </code></pre>
-
-<p>}
-```</p>
 
 <p>再度、テストを実行すれば、テストが成功しています。</p>
 
@@ -434,16 +404,12 @@ public class Sample {</p>
 
 <p>先の例では1つの値でしかテストしませんでしたが、lambda-behaveでは同時に複数の値でテストすることもできます。以下のようになります。</p>
 
-<p>``` java
-it.uses(100, 108)
+<pre><code class="java">it.uses(100, 108)
   .and(200, 216)
-  .toShow(&ldquo;税込み価格が取得できること&rdquo;, (expect, price, includeTax) &ndash;> {</p>
-
-<pre><code> expect.that(Sample.includeTax(price)).is(includeTax);
+  .toShow("税込み価格が取得できること", (expect, price, includeTax) -&gt; {
+     expect.that(Sample.includeTax(price)).is(includeTax);
+  });
 </code></pre>
-
-<p>  });
-```</p>
 
 <p>itのあとにuseとandをチェインして値を準備し、これを使ってtoShowメソッド内でテストを行います。toShowメソッド内ではlambdaの引数で準備した値を利用できますので、lambda内でその値をexpectするようにしています。</p>
 
@@ -453,17 +419,14 @@ it.uses(100, 108)
 
 <p>（あまり例がよくないですが・・・）</p>
 
-<p>``` java
-it.requires(5)
+<pre><code class="java">it.requires(5)
   .example(Generator.integersUpTo(1000))
-  .toShow(&ldquo;税込み価格が取得できること&rdquo;, (expect, price) &ndash;> {</p>
-
-<pre><code>expect.that(Sample.includeTax(price)).is((int)Math.floor(price * 1.08));
+  .toShow("税込み価格が取得できること", (expect, price) -&gt; {
+    expect.that(Sample.includeTax(price)).is((int)Math.floor(price * 1.08));
+  });
 </code></pre>
 
-<p>  });
-```
-requiresでランダムに準備する値の数を指定します。</p>
+<p>requiresでランダムに準備する値の数を指定します。</p>
 
 <p>exampleではどのようなテストデータを生成するかを指定します。ここではlambda-behaveで準備されたGenerator.integersUpToを使用しています。この他にも適当な文字列を生成するasciiStringsメソッドなどもあります</p>
 
@@ -473,33 +436,25 @@ requiresでランダムに準備する値の数を指定します。</p>
 
 <p>まず、includeTaxにnullチェックを記述します。</p>
 
-<p>``` java
-public class Sample {</p>
-
-<pre><code>public static int includeTax(Integer price) {
-    if(price == null) {
-        throw new NullPointerException();
+<pre><code class="java">public class Sample {
+    public static int includeTax(Integer price) {
+        if(price == null) {
+            throw new NullPointerException();
+        }
+        final float TAX_RATE = 0.08f;
+        return (int)Math.floor(price * (1 + TAX_RATE));
     }
-    final float TAX_RATE = 0.08f;
-    return (int)Math.floor(price * (1 + TAX_RATE));
 }
 </code></pre>
 
-<p>}
-```</p>
-
 <p>これをテストするlambda-behaveのコードは以下のようになります。</p>
 
-<p>``` java
-it.should(&ldquo;nullの場合ぬるぽ&rdquo;, expect &ndash;> {</p>
-
-<pre><code>expect.exception(NullPointerException.class, () -&gt; {
-    Sample.includeTax(null);
+<pre><code class="java">it.should("nullの場合ぬるぽ", expect -&gt; {
+    expect.exception(NullPointerException.class, () -&gt; {
+        Sample.includeTax(null);
+    });
 });
 </code></pre>
-
-<p>});
-```</p>
 
 <p>exceptionメソッドの第1引数に、発生する予定の例外を指定し、第2引数には例外が発生する処理をlambdaで記述します。</p>
 
@@ -584,7 +539,7 @@ it.should(&ldquo;nullの場合ぬるぽ&rdquo;, expect &ndash;> {</p>
 <p>しかし今回のCCCの参加登録数は約650名で過去最高。また懇親会の参加者も受付開始するとあっという間に満席になり、最終的には100名とこちらも過去最高。自分にとっても最高に楽しい時間でした。</p>
 
 <ul>
-<li>JJUG CCC 2014 Fall 懇親会 &ndash; <a href="https://www.flickr.com/photos/zephiransas/sets/72157648917084929/">https://www.flickr.com/photos/zephiransas/sets/72157648917084929/</a></li>
+<li>JJUG CCC 2014 Fall 懇親会 - <a href="https://www.flickr.com/photos/zephiransas/sets/72157648917084929/">https://www.flickr.com/photos/zephiransas/sets/72157648917084929/</a></li>
 </ul>
 
 

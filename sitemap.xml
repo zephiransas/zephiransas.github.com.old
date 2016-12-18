@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://zephiransas.github.io/blog/2016/12/18/gbdaitokai2016/</loc>
+<lastmod>2016-12-18T21:21:31+09:00</lastmod>
+</url>
+<url>
 <loc>http://zephiransas.github.io/blog/2016/05/23/maven-wrapper/</loc>
 <lastmod>2016-05-23T16:34:12+09:00</lastmod>
 </url>

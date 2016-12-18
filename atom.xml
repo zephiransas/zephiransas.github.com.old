@@ -4,7 +4,7 @@
   <title><![CDATA[zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2016-08-18T10:48:37+09:00</updated>
+  <updated>2016-12-18T22:17:02+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,55 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[合同勉強会2016に参加してきた]]></title>
+    <link href="http://zephiransas.github.io/blog/2016/12/18/gbdaitokai2016/"/>
+    <updated>2016-12-18T21:21:31+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2016/12/18/gbdaitokai2016</id>
+    <content type="html"><![CDATA[<p>このエントリは大都会アドベントカレンダー2016の18日目のエントリです。</p>
+
+<p>昨日のエントリは <a href="https://twitter.com/DAI199">たがみだいき</a>さんの「<a href="http://tagamidaiki.com/railsgirlsokayama-2nd/">RailsGirlsOkayama 2ndを2月25日26日に開催する予定です！</a>」でした。
+<a href="http://railsgirls.com/okayama2015.html">去年の第1回</a>には、自分もコーチとして参加させてもらいましたが、そこから新たに岡山に女性エンジニアのコミュニティができ、それが主体となってRailsGirlsをやる、というのは素晴らしいことだと思います。きっとイベントも大成功することでしょう。</p>
+
+<p>先日、毎年恒例となった合同勉強会と忘年会議が開催されました。</p>
+
+<p>例年のように県内だけでなく県外からも多くのかたに参加していただき、大変よいイベントになったのではないでしょうか。</p>
+
+<p>例によって写真を撮ってますのでこちらからどうぞ。</p>
+
+<p><a href="https://www.flickr.com/photos/zephiransas/sets/72157674062172594/">合同勉強会&amp;忘年会議2016</a></p>
+
+<p>個人的に今回のベストトーカー（not ベストストーカー）を上げたいのは、<a href="https://twitter.com/samuneP">SamuneP</a>さんの「ゲーム会社経営ゲーム」。
+とにかく高い技術力を武器に、ちょっと尻込みしちゃうような案件をやってるハナシで、とにかく「今の時代にこんな人がいるのか？！」と驚きの連続でした。その凄さをみんなもうまく言語化できずに</p>
+
+<blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">めちゃくちゃ面白い話聞いてるけど、上手に実況できる気がしないwww <a href="https://twitter.com/hashtag/gbdaitokai?src=hash">#gbdaitokai</a></p>&mdash; シン・ダイクシー Plus (@daiksy) <a href="https://twitter.com/daiksy/status/809990570441523200">2016年12月17日</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">なんか…うまいこといわれへんけど「この人、天才ちゃうか？」と思わされるｗ <a href="https://twitter.com/hashtag/gbdaitokai?src=hash">#gbdaitokai</a></p>&mdash; 三浦一仁(本読めるようになりたい) (@kazuhito_m) <a href="https://twitter.com/kazuhito_m/status/809990766495862784">2016年12月17日</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+
+<blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">つよい(つよい) <a href="https://twitter.com/hashtag/gbdaitokai?src=hash">#gbdaitokai</a></p>&mdash; ⊇ﾅﾆﾚﾆω (@kotanin) <a href="https://twitter.com/kotanin/status/809990832128262144">2016年12月17日</a></blockquote>
+
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>などなど、人のボキャブラリーを著しく低下させる作用があったようですw</p>
+
+<p>さて、次は来年のオープンセミナーです。こちらも面白いセッションをたくさん用意できるよう、誠意準備中ですので、ぜひご参加ください！</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Maven Wrapperを使ってプロジェクトで使うMavenのバージョンを指定する]]></title>
@@ -2525,51 +2574,6 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
 
 
 <p>後楽園では、元旦より<a href="http://www.okayama-korakuen.jp/2013/12/post-605.html">後楽園初春祭</a>な行われ、お正月ムードの日本庭園を楽しむことができます。お近くにお越しの際は、ぜひ寄ってみてはいかがでしょうか。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[色んなバリエーションのirofさんを紹介しよう]]></title>
-    <link href="http://zephiransas.github.io/blog/2013/12/13/irof2013/"/>
-    <updated>2013-12-13T00:00:00+09:00</updated>
-    <id>http://zephiransas.github.io/blog/2013/12/13/irof2013</id>
-    <content type="html"><![CDATA[<p>これは<a href="http://atnd.org/events/44814">irofアドベントカレンダー2013</a>の12月13日分のエントリのようです。</p>
-
-<p>昨日は<a href="https://twitter.com/akuraru">@akuraru</a>さんの<a href="http://d.hatena.ne.jp/akuraru/20131212/p1">「いろふさんの描かれていない領域には何があるのか」</a>でした。</p>
-
-<p>このアドベントカレンダーは先日、急にJJUGの某幹事からQBKで振られたものです。</p>
-
-<blockquote class="twitter-tweet" lang="ja"><p><a href="https://twitter.com/zephiransas">@zephiransas</a> ありがとうございます！名前書いておきました！</p>&mdash; (´・ω・｀) (@megascus) <a href="https://twitter.com/megascus/statuses/410019752245870592">2013, 12月 9</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>正直ネタを思いつかないだろうなーとおもいつつ、昨日の@akuraruさんのネタを見て、衝動的に思いついたので、書いてみます。</p>
-
-<p>皆さんご存知の用にirofさんには様々なインスタンスが存在しますが、それと同時に様々なバリエーションも存在します。BANDAIを始めとするおもちゃメーカーからもこぞってirofさんグッズが発売されていますが、今回はそのバリエーションの一部を皆さんにご紹介したいと思います。</p>
-
-<h2>シャア専用irof</h2>
-
-<p><img src="http://zephiransas.github.io/images/20131213/char_irof.jpg" alt="char_irof" /></p>
-
-<p>シャア専用です。赤いです。3倍早いです。通常の3倍の速度でテストを書いてくれます。便利ですね。ぜひうちの会社に欲しいものです。</p>
-
-<h2>量産型irof</h2>
-
-<p><img src="http://zephiransas.github.io/images/20131213/eva_irof.jpg" alt="eva_irof" /></p>
-
-<p>量産型です。空から降ってきて、人の黒歴史に干渉します。ちょっとイヤですね。</p>
-
-<h2>金剛型戦艦99番艦 irof</h2>
-
-<p><img src="http://zephiransas.github.io/images/20131213/kongou_irof.png" alt="kongou_irof" /></p>
-
-<p>金剛型戦艦99番艦のirofﾃﾞｰｽ!!</p>
-
-<h2>まとめ</h2>
-
-<p>GIMP難しい</p>
 ]]></content>
   </entry>
   

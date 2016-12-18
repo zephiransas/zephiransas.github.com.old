@@ -1,0 +1,36 @@
+---
+layout: post
+title: "合同勉強会2016に参加してきた"
+date: 2016-12-18 21:21:31 +0900
+comments: true
+categories: 勉強会
+---
+
+このエントリは[大都会岡山アドベントカレンダー2016](http://www.adventar.org/calendars/1580)の18日目のエントリです。
+
+昨日のエントリは [たがみだいき](https://twitter.com/DAI199)さんの「[RailsGirlsOkayama 2ndを2月25日26日に開催する予定です！](http://tagamidaiki.com/railsgirlsokayama-2nd/)」でした。
+[去年の第1回](http://railsgirls.com/okayama2015.html)には、自分もコーチとして参加させてもらいましたが、そこから新たに岡山に女性エンジニアのコミュニティができ、それが主体となってRailsGirlsをやる、というのは素晴らしいことだと思います。きっとイベントも大成功することでしょう。
+
+先日、毎年恒例となった合同勉強会と忘年会議が開催されました。
+
+例年のように県内だけでなく県外からも多くのかたに参加していただき、大変よいイベントになったのではないでしょうか。
+
+例によって写真を撮ってますのでこちらからどうぞ。
+
+[合同勉強会&忘年会議2016](https://www.flickr.com/photos/zephiransas/sets/72157674062172594/)
+
+個人的に今回のベストトーカー（not ベストストーカー）を上げたいのは、[SamuneP](https://twitter.com/samuneP)さんの「ゲーム会社経営ゲーム」。
+とにかく高い技術力を武器に、ちょっと尻込みしちゃうような案件をやってるハナシで、とにかく「今の時代にこんな人がいるのか？！」と驚きの連続でした。その凄さをみんなもうまく言語化できずに
+
+<blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">めちゃくちゃ面白い話聞いてるけど、上手に実況できる気がしないwww <a href="https://twitter.com/hashtag/gbdaitokai?src=hash">#gbdaitokai</a></p>&mdash; シン・ダイクシー Plus (@daiksy) <a href="https://twitter.com/daiksy/status/809990570441523200">2016年12月17日</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">なんか…うまいこといわれへんけど「この人、天才ちゃうか？」と思わされるｗ <a href="https://twitter.com/hashtag/gbdaitokai?src=hash">#gbdaitokai</a></p>&mdash; 三浦一仁(本読めるようになりたい) (@kazuhito_m) <a href="https://twitter.com/kazuhito_m/status/809990766495862784">2016年12月17日</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">つよい(つよい) <a href="https://twitter.com/hashtag/gbdaitokai?src=hash">#gbdaitokai</a></p>&mdash; ⊇ﾅﾆﾚﾆω (@kotanin) <a href="https://twitter.com/kotanin/status/809990832128262144">2016年12月17日</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+などなど、人のボキャブラリーを著しく低下させる作用があったようですw
+
+さて、次は来年のオープンセミナーです。こちらも面白いセッションをたくさん用意できるよう、誠意準備中ですので、ぜひご参加ください！

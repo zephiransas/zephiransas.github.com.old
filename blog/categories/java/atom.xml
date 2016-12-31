@@ -4,7 +4,7 @@
   <title><![CDATA[Category: java | zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2016-12-18T22:20:05+09:00</updated>
+  <updated>2016-12-31T13:10:16+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,51 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[スクフェス・ログサーバをつくった]]></title>
+    <link href="http://zephiransas.github.io/blog/2016/12/31/schfeslogsvr/"/>
+    <updated>2016-12-31T12:47:59+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2016/12/31/schfeslogsvr</id>
+    <content type="html"><![CDATA[<p>今日は大晦日ですね。年末ですが今年も例によって、コード書いたりプラモ作ったり、普段の連休と同じくダラダラ過ごしております。</p>
+
+<p>ところで今年の<a href="http://www.adventar.org/calendars/1360">ラブライブ！アドベントカレンダー</a>はチェックしましたか？
+自分も20日目に<a href="https://zephiransas.goat.me/3OsFK6X7">劇場版ラブライブとμ’ｓメンバーのその後</a>というタイトルでエントリしてます。
+今年はその他にも、さまざまな視点から見た素晴らしいエントリがたくさん集まってますので、ラブライバーならぜひチェックしてみてください。</p>
+
+<p>で、22日目のエントリには<a href="https://twitter.com/hideo54">@hideo54</a>さんの<a href="https://blog.hideo54.com/archives/591">スクフェスのライブスコアを取得する”schfeslog”を作った話</a>というのがあります。
+これはnodeで建てたプロキシを使って、スクフェスがサーバに送信してる通信内容をみて、ライブのプレイ結果をツイートすることができるツールです。</p>
+
+<ul>
+<li>hideo54/schfeslog - <a href="https://github.com/hideo54/schfeslog">https://github.com/hideo54/schfeslog</a></li>
+</ul>
+
+
+<p>これをみて「お、ツイートできるんなら、外部サーバにも送信できるんじゃね？」ってことで、早速コードを書いてみました。</p>
+
+<p>まずはschfeslog側に外部サーバへの通信機能を実装しています。該当するPull Requestは<a href="https://github.com/hideo54/schfeslog/pull/4">こちら</a>。単純にプレイデータをJSON形式にして、設定でされたサーバにPOSTするだけです。</p>
+
+<p>これを受信するサーバはこちら。</p>
+
+<ul>
+<li>zephiransas/schfeslogsvr - <a href="https://github.com/zephiransas/schfeslogsvr">https://github.com/zephiransas/schfeslogsvr</a></li>
+</ul>
+
+
+<p>送信されたプレイデータを一覧で見ることもできます。ちなみに私のプレイデータがこちら</p>
+
+<ul>
+<li>schfeslog - <a href="http://schfeslog.herokuapp.com/">http://schfeslog.herokuapp.com/</a></li>
+</ul>
+
+
+<p>見た目とかは、もうちょっと改善したいところです・・・</p>
+
+<p>最近、ちょっとJavaの案件をやってるせいもあって、真面目にSpring Bootで書いています。こういったRESTなアプリケーションを作るにはSpring Bootはとても簡単でいいですね。</p>
+
+<p>サーバ側は簡単に自分用に環境を作れるよう、Deploy to Herokuボタンも準備してますので、興味のあるかたはschfeslogと一緒に、ぜひ試してみてください。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Maven Wrapperを使ってプロジェクトで使うMavenのバージョンを指定する]]></title>
@@ -461,105 +506,6 @@ lambda-behaveを使うと、このようなDSLっぽい記述のテストを、J
 <p>lambdaに慣れていないと少々書きづらいかもしれないですが、DSLちっくに書けるのはJavaっぽくなくてステキですよね！</p>
 
 <p>こちらからは以上です。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[JJUG CCC 2014 Fallで発表してきた]]></title>
-    <link href="http://zephiransas.github.io/blog/2014/11/17/attend-jjug-ccc-2014-fall/"/>
-    <updated>2014-11-17T20:40:56+09:00</updated>
-    <id>http://zephiransas.github.io/blog/2014/11/17/attend-jjug-ccc-2014-fall</id>
-    <content type="html"><![CDATA[<p>11月15日に、東京は新宿の西新宿ベルサールにて開催された<a href="http://www.java-users.jp/?page_id=1284">JJUG CCC 2014 Fall</a>に参加してきました。</p>
-
-<p>JJUC CCC（クロス・コミュニティ・カンファレンス）日本Javaユーザ会が春/秋と、年に2回開催している、JJUG主催としては最大のイベントです。</p>
-
-<p>今回はこれのセッション公募(CfP)に応募したところ嬉しい事にセッション枠を1つ受け持つことになったので、それも兼ねて東京まで参加してきました。
-久々に東京のJavaコミュニティの勉強会で、普段はTL上でしか面識のない人たちに会えるのも、楽しみの一つ。</p>
-
-<p>いつもの面々（失礼）もそうですが、今回は以前からお会いしたいと思っていた <a href="https://twitter.com/kikutaro_">@kikutaro_</a> さんと、お昼をご一緒させていただくことができました。TL上での発言を見て「真面目な好青年っぽいなー」という印象を持っていましたが、会ってもやはり好青年でした。</p>
-
-<p><strong>普段から何をツイートするか、考えて発言しないといけませんね！！</strong> （ｹﾞﾌﾝｹﾞﾌﾝ</p>
-
-<p>それから余談ですが、実は大都会ITクラスタは過去、JJUG CCCのスピーカを3人輩出しています。</p>
-
-<p>最初は独立国家福山に住む「<a href="https://twitter.com/soudai1025">@soudai1025</a> 氏」</p>
-
-<p>それから岡山Javaユーザ会/倉敷天領Scala勉強会に所属する「<a href="https://twitter.com/razon">@razon</a> 氏」</p>
-
-<p>あとは「<a href="https://twitter.com/mao_instantlife">@mao_instantlife</a> 氏」</p>
-
-<p>他の地方で、これだけスピーカが出てるところはないように思うので、ちょっと自慢していいような気もしますw</p>
-
-<h3>自分のセッションについて</h3>
-
-<p>今回自分はRailsライクなWebフレームワーク「<a href="http://www.ninjaframework.org/">ninjaframework</a>」について、セッションを行いました。以下はその資料。</p>
-
-<script async class="speakerdeck-embed" data-id="425e04e04edd01329d885e31c290001e" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
-
-
-<p>一番小さい部屋だったので、おそらく40~50人程度の方がいらしていたと思います。</p>
-
-<p>当日、他のセッションでSpring Bootのセッションとハンズオンがあり「これはネタを選択し間違えた感・・・」と思ったのは内緒。</p>
-
-<p>久々の発表だったり、資料作りが思うように進まなくて、練習もろくにできなかったりで、たどたどしいことこの上ないセッションになってしまったような気がします・・・</p>
-
-<p>しかも50分の予定が40分程度で終わってしまい、困ったなーと思っていたところ、Q&amp;Aで意外にも多くの方から質問を頂きました。その結果、きっちり50分！</p>
-
-<p>あまりうまくいかなかった部分もありましたが、最後まで聞いていただいた皆さん、大変にありがとうございます！</p>
-
-<h3>Java女子部の台頭</h3>
-
-<p>以下はセッションの内容とはあまり関係ない、参加して自分が肌で感じたことです。</p>
-
-<p>今回のCCCで一番思ったことが、女性の参加者が多いこと。</p>
-
-<p>個人的にですが、エンジニアの世界はまだまだ男性中心な世界だなと感じていて、女性でバリバリコード書いたり、勉強会で発表してる人って少ないのが現状です。（それが良いとも悪いともいいません。それは本質ではないので。）</p>
-
-<p>なので、今回のCCCに多くの女性エンジニアがいたことには正直驚きました。最近、女性エンジニアの有志を中心に「<a href="http://javajo.doorkeeper.jp/">Java女子部</a>」なるコミュニティが発足したことは知っていましたが、それが広まってきてる感じです。</p>
-
-<p>エンジニアという職業が成熟していく過程に、女性が活躍できる環境というのは必須だと思います。また、それがエンジニアという仕事を一生の仕事にするためにも、必要なことだと思います。</p>
-
-<blockquote class="twitter-tweet" lang="ja"><p>Java女子部の女の子たちみんな可愛かったのでみんなJavaやるべき</p>&mdash; しょぼちむ@どうもネカマです (@syobochim) <a href="https://twitter.com/syobochim/status/533626307267928065">2014, 11月 15</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<h3>Javaコミュニティの復活の兆し</h3>
-
-<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=4774169315" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-
-
-<p>つい先日発売された「Javaエンジニア養成読本」（通称「妖精本」）の巻頭記事に、Javaのコミュニティの歴史について触れている部分があります。</p>
-
-<p>自分がJavaのコミュニティに最初に触れたのは、Seasarが流行っていた時代です。</p>
-
-<p>その後Javaのコミュニティは、Sunの不振などもあり少しづつ勢いを失ってきたように思います。</p>
-
-<p>しかし今回のCCCの参加登録数は約650名で過去最高。また懇親会の参加者も受付開始するとあっという間に満席になり、最終的には100名とこちらも過去最高。自分にとっても最高に楽しい時間でした。</p>
-
-<ul>
-<li>JJUG CCC 2014 Fall 懇親会 - <a href="https://www.flickr.com/photos/zephiransas/sets/72157648917084929/">https://www.flickr.com/photos/zephiransas/sets/72157648917084929/</a></li>
-</ul>
-
-
-<blockquote class="twitter-tweet" lang="ja"><p>この飲み会、Java最盛期っぽい！</p>&mdash; きしだﬗ (@kis) <a href="https://twitter.com/kis/status/533619083271352322">2014, 11月 15</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-
-<p>これもひとえに2007年4月にJJUGが発足以来、地道に活動してこられた多くの人たちの努力の賜物です。</p>
-
-<p>自分が感じたことは、<strong>Javaコミュニティは再びかつての勢いを取り戻しはじめている</strong>、ということです。</p>
-
-<p>そして言語としてのJavaもJava8で導入されたLambdaを皮切りに、これからも進化を続けていって欲しいと思います。</p>
-
-<blockquote class="twitter-tweet" lang="ja"><p>もはやJavaダサいとかいてるほうがダサい　<a href="https://twitter.com/hashtag/jjug_ccc?src=hash">#jjug_ccc</a> <a href="https://twitter.com/hashtag/ccc_r17?src=hash">#ccc_r17</a></p>&mdash; Takafumi Yoshida (@zephiransas) <a href="https://twitter.com/zephiransas/status/533561483234267136">2014, 11月 15</a></blockquote>
-
-
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
 ]]></content>
   </entry>
   

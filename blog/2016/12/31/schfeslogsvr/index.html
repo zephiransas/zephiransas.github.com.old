@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Pusher - zephiransasのチラシの裏</title>
+  <title>スクフェス・ログサーバをつくった - zephiransasのチラシの裏</title>
   <meta name="author" content="Takafumi Yoshida (@zephiransas)">
 
   
-  <meta name="description" content="Category: pusher">
+  <meta name="description" content="今日は大晦日ですね。年末ですが今年も例によって、コード書いたりプラモ作ったり、普段の連休と同じくダラダラ過ごしております。 ところで今年のラブライブ！アドベントカレンダーはチェックしましたか？
+自分も20日目に劇場版ラブライブとμ’ｓメンバーのその後というタイトルでエントリしてます。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://zephiransas.github.io/blog/categories/pusher/">
+  <link rel="canonical" href="http://zephiransas.github.io/blog/2016/12/31/schfeslogsvr/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="zephiransasのチラシの裏" type="application/atom+xml">
@@ -76,35 +77,108 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Pusher</h1>
+    
+      <h1 class="entry-title">スクフェス・ログサーバをつくった</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-12-31T12:47:59+09:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>12:47 pm</span></time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>今日は大晦日ですね。年末ですが今年も例によって、コード書いたりプラモ作ったり、普段の連休と同じくダラダラ過ごしております。</p>
 
-  
-  <h2>2014</h2>
+<p>ところで今年の<a href="http://www.adventar.org/calendars/1360">ラブライブ！アドベントカレンダー</a>はチェックしましたか？
+自分も20日目に<a href="https://zephiransas.goat.me/3OsFK6X7">劇場版ラブライブとμ’ｓメンバーのその後</a>というタイトルでエントリしてます。
+今年はその他にも、さまざまな視点から見た素晴らしいエントリがたくさん集まってますので、ラブライバーならぜひチェックしてみてください。</p>
 
-<article>
-  
-<h1><a href="/blog/2014/03/20/pusher-with-chrome-extension/">Pusherを使ったChrome拡張を作る</a></h1>
-<time datetime="2014-03-20T17:24:00+09:00" pubdate><span class='month'>Mar</span> <span class='day'>20</span> <span class='year'>2014</span></time>
+<p>で、22日目のエントリには<a href="https://twitter.com/hideo54">@hideo54</a>さんの<a href="https://blog.hideo54.com/archives/591">スクフェスのライブスコアを取得する”schfeslog”を作った話</a>というのがあります。
+これはnodeで建てたプロキシを使って、スクフェスがサーバに送信してる通信内容をみて、ライブのプレイ結果をツイートすることができるツールです。</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/chrome/'>chrome</a>, <a class='category' href='/blog/categories/javascript/'>javascript</a>, <a class='category' href='/blog/categories/pusher/'>pusher</a>, <a class='category' href='/blog/categories/webscoket/'>webscoket</a></span>
-</footer>
+<ul>
+<li>hideo54/schfeslog - <a href="https://github.com/hideo54/schfeslog">https://github.com/hideo54/schfeslog</a></li>
+</ul>
 
 
-</article>
+<p>これをみて「お、ツイートできるんなら、外部サーバにも送信できるんじゃね？」ってことで、早速コードを書いてみました。</p>
 
+<p>まずはschfeslog側に外部サーバへの通信機能を実装しています。該当するPull Requestは<a href="https://github.com/hideo54/schfeslog/pull/4">こちら</a>。単純にプレイデータをJSON形式にして、設定でされたサーバにPOSTするだけです。</p>
+
+<p>これを受信するサーバはこちら。</p>
+
+<ul>
+<li>zephiransas/schfeslogsvr - <a href="https://github.com/zephiransas/schfeslogsvr">https://github.com/zephiransas/schfeslogsvr</a></li>
+</ul>
+
+
+<p>送信されたプレイデータを一覧で見ることもできます。ちなみに私のプレイデータがこちら</p>
+
+<ul>
+<li>schfeslog - <a href="http://schfeslog.herokuapp.com/">http://schfeslog.herokuapp.com/</a></li>
+</ul>
+
+
+<p>見た目とかは、もうちょっと改善したいところです・・・</p>
+
+<p>最近、ちょっとJavaの案件をやってるせいもあって、真面目にSpring Bootで書いています。こういったRESTなアプリケーションを作るにはSpring Bootはとても簡単でいいですね。</p>
+
+<p>サーバ側は簡単に自分用に環境を作れるよう、Deploy to Herokuボタンも準備してますので、興味のあるかたはschfeslogと一緒に、ぜひ試してみてください。</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Takafumi Yoshida (@zephiransas)</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2016-12-31T12:47:59+09:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>12:47 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://zephiransas.github.io/blog/2016/12/31/schfeslogsvr/" data-via="" data-counturl="http://zephiransas.github.io/blog/2016/12/31/schfeslogsvr/" >Tweet</a>
+  
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/12/18/gbdaitokai2016/" title="Previous Post: 合同勉強会2016に参加してきた">&laquo; 合同勉強会2016に参加してきた</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

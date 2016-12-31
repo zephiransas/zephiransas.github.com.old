@@ -9,8 +9,8 @@
   <meta name="author" content="Takafumi Yoshida (@zephiransas)">
 
   
-  <meta name="description" content="このエントリは大都会岡山アドベントカレンダー2016の18日目のエントリです。 昨日のエントリは たがみだいきさんの「RailsGirlsOkayama 2ndを2月25日26日に開催する予定です！」でした。
-去年の第1回には、自分もコーチとして参加させてもらいましたが、 &hellip;">
+  <meta name="description" content="今日は大晦日ですね。年末ですが今年も例によって、コード書いたりプラモ作ったり、普段の連休と同じくダラダラ過ごしております。 ところで今年のラブライブ！アドベントカレンダーはチェックしましたか？
+自分も20日目に劇場版ラブライブとμ’ｓメンバーのその後というタイトルでエントリしてます。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,71 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/12/31/schfeslogsvr/">スクフェス・ログサーバをつくった</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-12-31T12:47:59+09:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>12:47 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今日は大晦日ですね。年末ですが今年も例によって、コード書いたりプラモ作ったり、普段の連休と同じくダラダラ過ごしております。</p>
+
+<p>ところで今年の<a href="http://www.adventar.org/calendars/1360">ラブライブ！アドベントカレンダー</a>はチェックしましたか？
+自分も20日目に<a href="https://zephiransas.goat.me/3OsFK6X7">劇場版ラブライブとμ’ｓメンバーのその後</a>というタイトルでエントリしてます。
+今年はその他にも、さまざまな視点から見た素晴らしいエントリがたくさん集まってますので、ラブライバーならぜひチェックしてみてください。</p>
+
+<p>で、22日目のエントリには<a href="https://twitter.com/hideo54">@hideo54</a>さんの<a href="https://blog.hideo54.com/archives/591">スクフェスのライブスコアを取得する”schfeslog”を作った話</a>というのがあります。
+これはnodeで建てたプロキシを使って、スクフェスがサーバに送信してる通信内容をみて、ライブのプレイ結果をツイートすることができるツールです。</p>
+
+<ul>
+<li>hideo54/schfeslog - <a href="https://github.com/hideo54/schfeslog">https://github.com/hideo54/schfeslog</a></li>
+</ul>
+
+
+<p>これをみて「お、ツイートできるんなら、外部サーバにも送信できるんじゃね？」ってことで、早速コードを書いてみました。</p>
+
+<p>まずはschfeslog側に外部サーバへの通信機能を実装しています。該当するPull Requestは<a href="https://github.com/hideo54/schfeslog/pull/4">こちら</a>。単純にプレイデータをJSON形式にして、設定でされたサーバにPOSTするだけです。</p>
+
+<p>これを受信するサーバはこちら。</p>
+
+<ul>
+<li>zephiransas/schfeslogsvr - <a href="https://github.com/zephiransas/schfeslogsvr">https://github.com/zephiransas/schfeslogsvr</a></li>
+</ul>
+
+
+<p>送信されたプレイデータを一覧で見ることもできます。ちなみに私のプレイデータがこちら</p>
+
+<ul>
+<li>schfeslog - <a href="http://schfeslog.herokuapp.com/">http://schfeslog.herokuapp.com/</a></li>
+</ul>
+
+
+<p>見た目とかは、もうちょっと改善したいところです・・・</p>
+
+<p>最近、ちょっとJavaの案件をやってるせいもあって、真面目にSpring Bootで書いています。こういったRESTなアプリケーションを作るにはSpring Bootはとても簡単でいいですね。</p>
+
+<p>サーバ側は簡単に自分用に環境を作れるよう、Deploy to Herokuボタンも準備してますので、興味のあるかたはschfeslogと一緒に、ぜひ試してみてください。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1494,89 +1559,6 @@ Rubyであればirbやpryなどが有名ですね。</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/04/02/introduce-octocam/">GitHubのPull requestから、CHANGELOGっぽいものを作成するgemを作った</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-04-02T17:31:42+09:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2015</span></span> <span class='time'>5:31 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>gemを作りました。名前はoctocamです。</p>
-
-<ul>
-<li>octocam - <a href="https://rubygems.org/gems/octocam">https://rubygems.org/gems/octocam</a></li>
-</ul>
-
-
-<p>主な機能としては「GitHubから指定された日付期間にマージされたPull requestを抽出し、CHANGELOGっぽいMarkdownを生成する」というgemです。</p>
-
-<p>定期的にリリースを行っている場合に、以前リリースされたときからどのような機能が増えたかをCHANGELOGとかに書き出しますが、そういった時に便利に使えると思います。</p>
-
-<p>似たような機能を持つものはgemやnpmを探すと、結構あります。<a href="https://github.com/skywinder/Github-Changelog-Generator/wiki/Alternatives">この辺り</a>とか。ただ、いずれも</p>
-
-<ul>
-<li>日付の指定ができない。できたとしてもPull requestの作成日とか。</li>
-<li>issueやcommitを含めてしまう。</li>
-<li>Markdownで出力できない。</li>
-<li>認証に対応してない。</li>
-</ul>
-
-
-<p>などなど、要求を満たすものではなかったので、gemの作り方を勉強がてら作ってみました。</p>
-
-<p>ワークフローとして、 <strong>必ずPull requestでレビューをしてから、マージをおこなうワークフロー</strong> を採用しているところであれば、フィットするように思います。</p>
-
-<h2>インストール</h2>
-
-<p>以下のようにしてインストールします。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>gem install octocam
-</span><span class='line'>rbenv rehash  # rbenvを使ってる人はrehash</span></code></pre></td></tr></table></div></figure>
-
-
-<p>もしプライベートなリポジトリにアクセスしたい場合は、<a href="https://github.com/settings/applications">こちら</a>からPersonal access tokensを生成します。
-あとは、生成したトークンを.bash_profileあたりから、環境変数「OCTOCAM_GITHUB_TOKEN」に設定しておきます。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>export OCTOCAM_GITHUB_TOKEN="your-40-digit-github-token"</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>使い方</h2>
-
-<p>インストールされるとoctocamコマンドが使えるようになるので、以下のようにして実行します。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>octocam -o zephiransas -r octocam -f 2015-01-01 -t 2015-01-31</span></code></pre></td></tr></table></div></figure>
-
-
-<p>-f,-tオプションにPull requestがマージされた日付を指定でききます。</p>
-
-<p><strong> カレントディレクトリがgitのローカルリポジトリで、かつ、originがGitHubに設定されている場合であれば-o,-rオプションは省略できます。 </strong></p>
-
-<p>欲しい機能ありましたら、issueを立てて頂くか、Pull requestを投げてください。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1603,6 +1585,10 @@ Rubyであればirbやpryなどが有名ですね。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/12/31/schfeslogsvr/">スクフェス・ログサーバをつくった</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/12/18/gbdaitokai2016/">合同勉強会2016に参加してきた</a>
       </li>
     
@@ -1616,10 +1602,6 @@ Rubyであればirbやpryなどが有名ですね。</p>
     
       <li class="post">
         <a href="/blog/2015/12/09/talk-about-crystal-on-gbdaitokai/">合同勉強会でCrystalの話をしてきた</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/10/crystal-on-heroku/">CrystalをHerokuで動かしてみた</a>
       </li>
     
   </ul>

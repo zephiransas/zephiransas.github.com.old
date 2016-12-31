@@ -4,7 +4,7 @@
   <title><![CDATA[zephiransasのチラシの裏]]></title>
   <link href="http://zephiransas.github.io/atom.xml" rel="self"/>
   <link href="http://zephiransas.github.io/"/>
-  <updated>2016-12-18T22:20:05+09:00</updated>
+  <updated>2016-12-31T13:10:16+09:00</updated>
   <id>http://zephiransas.github.io/</id>
   <author>
     <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
@@ -12,6 +12,51 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[スクフェス・ログサーバをつくった]]></title>
+    <link href="http://zephiransas.github.io/blog/2016/12/31/schfeslogsvr/"/>
+    <updated>2016-12-31T12:47:59+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2016/12/31/schfeslogsvr</id>
+    <content type="html"><![CDATA[<p>今日は大晦日ですね。年末ですが今年も例によって、コード書いたりプラモ作ったり、普段の連休と同じくダラダラ過ごしております。</p>
+
+<p>ところで今年の<a href="http://www.adventar.org/calendars/1360">ラブライブ！アドベントカレンダー</a>はチェックしましたか？
+自分も20日目に<a href="https://zephiransas.goat.me/3OsFK6X7">劇場版ラブライブとμ’ｓメンバーのその後</a>というタイトルでエントリしてます。
+今年はその他にも、さまざまな視点から見た素晴らしいエントリがたくさん集まってますので、ラブライバーならぜひチェックしてみてください。</p>
+
+<p>で、22日目のエントリには<a href="https://twitter.com/hideo54">@hideo54</a>さんの<a href="https://blog.hideo54.com/archives/591">スクフェスのライブスコアを取得する”schfeslog”を作った話</a>というのがあります。
+これはnodeで建てたプロキシを使って、スクフェスがサーバに送信してる通信内容をみて、ライブのプレイ結果をツイートすることができるツールです。</p>
+
+<ul>
+<li>hideo54/schfeslog - <a href="https://github.com/hideo54/schfeslog">https://github.com/hideo54/schfeslog</a></li>
+</ul>
+
+
+<p>これをみて「お、ツイートできるんなら、外部サーバにも送信できるんじゃね？」ってことで、早速コードを書いてみました。</p>
+
+<p>まずはschfeslog側に外部サーバへの通信機能を実装しています。該当するPull Requestは<a href="https://github.com/hideo54/schfeslog/pull/4">こちら</a>。単純にプレイデータをJSON形式にして、設定でされたサーバにPOSTするだけです。</p>
+
+<p>これを受信するサーバはこちら。</p>
+
+<ul>
+<li>zephiransas/schfeslogsvr - <a href="https://github.com/zephiransas/schfeslogsvr">https://github.com/zephiransas/schfeslogsvr</a></li>
+</ul>
+
+
+<p>送信されたプレイデータを一覧で見ることもできます。ちなみに私のプレイデータがこちら</p>
+
+<ul>
+<li>schfeslog - <a href="http://schfeslog.herokuapp.com/">http://schfeslog.herokuapp.com/</a></li>
+</ul>
+
+
+<p>見た目とかは、もうちょっと改善したいところです・・・</p>
+
+<p>最近、ちょっとJavaの案件をやってるせいもあって、真面目にSpring Bootで書いています。こういったRESTなアプリケーションを作るにはSpring Bootはとても簡単でいいですね。</p>
+
+<p>サーバ側は簡単に自分用に環境を作れるよう、Deploy to Herokuボタンも準備してますので、興味のあるかたはschfeslogと一緒に、ぜひ試してみてください。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[合同勉強会2016に参加してきた]]></title>
@@ -2532,48 +2577,6 @@ Photo LeafのソースはBitbucket上のprivateリポジトリで管理してい
 しおじには牡蠣以外にも、ホタテや海老などの海産物も売っていますので、お子様でも安心です。</p>
 
 <p>というわけで、牡蠣駆動勉強会の紹介でした。ぜひ、シーズン中に行ってみてください！</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Illumination Photo Advent Calendar 2013]]></title>
-    <link href="http://zephiransas.github.io/blog/2013/12/21/photo-advent2013/"/>
-    <updated>2013-12-21T00:05:00+09:00</updated>
-    <id>http://zephiransas.github.io/blog/2013/12/21/photo-advent2013</id>
-    <content type="html"><![CDATA[<p>これは<a href="http://www.adventar.org/calendars/67">Illumination Photo Advent Calendar 2013</a>の12月21日分のエントリです。</p>
-
-<p>自分にしては珍しく、非技術系のアドベントカレンダーに参加してみました。</p>
-
-<p>ところで自分は<strike>大都会</strike>岡山在住なのですが、岡山の観光名所といえば<a href="http://www.okayama-korakuen.jp/">「後楽園」</a>です。倉敷の美観地区とならび、有名だと思います。</p>
-
-<p>後楽園は昼間も良いのですが、実は春夏秋冬のそれぞれシーズン始めには園内でイルミネーションをやっていて、夜間も開園していたりします。</p>
-
-<p>今回はその後楽園のイルミネーションを紹介したいと思います。</p>
-
-<iframe src="http://www.flickr.com/photos/zephiransas/9514242229/player/" height="534" width="800"  frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
-
-
-
-
-<iframe src="http://www.flickr.com/photos/zephiransas/9514231661/player/" height="534" width="800"  frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
-
-
-
-
-<iframe src="http://www.flickr.com/photos/zephiransas/10155261616/player/" height="534" width="800"  frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
-
-
-
-
-<iframe src="http://www.flickr.com/photos/zephiransas/10155180835/player/" height="534" width="800"  frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
-
-
-
-
-<iframe src="http://www.flickr.com/photos/zephiransas/10155070624/player/" height="534" width="800"  frameborder="0" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
-
-
-<p>後楽園では、元旦より<a href="http://www.okayama-korakuen.jp/2013/12/post-605.html">後楽園初春祭</a>な行われ、お正月ムードの日本庭園を楽しむことができます。お近くにお越しの際は、ぜひ寄ってみてはいかがでしょうか。</p>
 ]]></content>
   </entry>
   

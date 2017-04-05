@@ -9,7 +9,7 @@
   <meta name="author" content="Takafumi Yoshida (@zephiransas)">
 
   
-  <meta name="description" content="現在開発を行っているプロジェクトでは、Spring Bootを使って開発を行っているのですが、そこでのテストをCI環境で実行できるよう設定を行ったので、その手順を書いておきます。 CircleCIで普通にテストできるようにする 最初は並列ではなく、 &hellip;">
+  <meta name="description" content="Spring BootのプロジェクトでもSASSが書きたい！という欲望から、Gulpを使ってSASSをコンパイルするようにしました。 基本Gulpでやってるので、出力先だけ変えれば、特にSpring Bootには関係ない気もしますが・・・ npmは既にインストールしてある前提で。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,280 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2017/04/05/gulp-sass/">Spring BootのCSSをGulpで管理する</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-04-05T16:13:17+09:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>4:13 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Spring BootのプロジェクトでもSASSが書きたい！という欲望から、Gulpを使ってSASSをコンパイルするようにしました。</p>
+
+<p>基本Gulpでやってるので、出力先だけ変えれば、特にSpring Bootには関係ない気もしますが・・・</p>
+
+<p>npmは既にインストールしてある前提で。</p>
+
+<h2>フォルダの構成と基本方針</h2>
+
+<p>フォルダ構成は以下のようなイメージ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>├── assets
+</span><span class='line'>│   └── stylesheets
+</span><span class='line'>│       └── application.scss
+</span><span class='line'>├── gulpfile.js
+</span><span class='line'>├── package.json
+</span><span class='line'>└── src
+</span><span class='line'>    └── main
+</span><span class='line'>        └── resources
+</span><span class='line'>            └── static
+</span><span class='line'>                └── css
+</span><span class='line'>                    ├── maps
+</span><span class='line'>                    │   └── application.css.map
+</span><span class='line'>                    └── application.css
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>assets/stylesheets以下にSASSを配置し、これをGulpでコンパイル。</p>
+
+<p>出力先をSpring BootのCSS配備先 <code>src/main/resources/static/css</code> にして、これをThymeleafから参照する、という方針です。</p>
+
+<h2>必要なパッケージをインストールする</h2>
+
+<p>まずは必要なパッケージをnpmでインストールしていきます。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>npm init
+</span><span class='line'><span class="o">(</span>以降、全てデフォルトで<span class="o">)</span>
+</span><span class='line'><span class="nv">$ </span>npm install --save-dev gulp gulp-sass gulp-sourcemaps gulp-minify-css gulp-plumber
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでpackage.jsonが作成され、node_modulesに依存ライブラリがインストールされます。node_modulesはgitignoreしておくといいでしょう。</p>
+
+<h2>gulpfile.jsを作成する</h2>
+
+<p>SASSをコンパイルできるようGulpのタスクを定義します。</p>
+
+<figure class='code'><figcaption><span>gulpfile.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">gulp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;gulp&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="nx">sass</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;gulp-sass&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="nx">sourcemaps</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;gulp-sourcemaps&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="nx">minifyCss</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;gulp-minify-css&#39;</span><span class="p">),</span>
+</span><span class='line'>    <span class="nx">plumber</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;gulp-plumber&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">gulp</span><span class="p">.</span><span class="nx">task</span><span class="p">(</span><span class="s1">&#39;sass&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="nx">gulp</span><span class="p">.</span><span class="nx">src</span><span class="p">(</span><span class="s1">&#39;assets/stylesheets/*.scss&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">plumber</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sourcemaps</span><span class="p">.</span><span class="nx">init</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sass</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">minifyCss</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sourcemaps</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;./maps&#39;</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">gulp</span><span class="p">.</span><span class="nx">dest</span><span class="p">(</span><span class="s1">&#39;src/main/resources/static/css&#39;</span><span class="p">))</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>まずscssファイルの置き場所を <code>gulp.src('assets/stylesheets/*.scss')</code> としてassets/stylesheetsディレクトリに設定します。</p>
+
+<p><code>.pipe(sass())</code>でSASSのコンパイル、<code>.pipe(minifyCss())</code>でCSSの圧縮をしています。</p>
+
+<p>圧縮したCSSだと、元のSASSでの場所がわからなくなるので <code>.pipe(sourcemaps.write('./maps'))</code>でmapファイルを作成します。</p>
+
+<p><code>sourcemaps.write()</code>はデフォルトだとコンパイルされたcss内部にインラインでmapを書き込むので、別途mapsディレクトリにmapファイルを書き込むよう設定しておきます。こうしておくことでChromeなどのDeveloper toolで見たときにSASSの場所が分かるようになります。</p>
+
+<p>最後に <code>.pipe(gulp.dest('src/main/resources/static/css'))</code>でCSS出力しています。</p>
+
+<p>設定したタスクを実行します。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>gulp sass
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでCSSが出力されますので、あとはThymeleaf側から</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="na">href=</span><span class="s">&quot;@{/css/application.css}&quot;</span><span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>として参照できます。</p>
+
+<h2>SASSを分割したい</h2>
+
+<p>よくあるケースとして、画面単位でSASSを分け、最終的なCSSでは1つにまとめてしまいたい、というケースがあります。
+例えば、以下のようなイメージ。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>assets
+</span><span class='line'>└── stylesheets
+</span><span class='line'>    ├── modules &lt;- 各画面ごとのSASS
+</span><span class='line'>    │   ├── _hoge.scss
+</span><span class='line'>    │   └── _fuga.scss
+</span><span class='line'>    └── application.scss &lt;- modulesを全てimportしたい
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こういった時にはgulp-sass-bulk-importが便利です。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>npm install --save-dev gulp-sass-bulk-import
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>としてgulp-sass-bulk-importをインストールした後、gulpfile.jsを修正します。</p>
+
+<figure class='code'><figcaption><span>gulpfile.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">sassBulk</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;gulp-sass-bulk-import&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">...</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">gulp</span><span class="p">.</span><span class="nx">task</span><span class="p">(</span><span class="s1">&#39;sass&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="nx">gulp</span><span class="p">.</span><span class="nx">src</span><span class="p">(</span><span class="s1">&#39;assets/stylesheets/*.scss&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">plumber</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sourcemaps</span><span class="p">.</span><span class="nx">init</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sassBulk</span><span class="p">())</span> <span class="err">#</span> <span class="err">追加</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sass</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">minifyCss</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sourcemaps</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;./maps&#39;</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">gulp</span><span class="p">.</span><span class="nx">dest</span><span class="p">(</span><span class="s1">&#39;src/main/resources/static/css&#39;</span><span class="p">))</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あとはapplication.scssで</p>
+
+<figure class='code'><figcaption><span>application.scss</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span> <span class="s2">&quot;modules/*&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とすることで、modules内のSASSを含めて、CSSがコンパイルされます。</p>
+
+<p>注意点として、modules以下のSASSファイルは、プレフィックスとしてアンダーバーが付与されています。付与しない場合は、modules以下のSASSも普通にコンパイルの対象になり、そのままdestに出力されてしまうので、これを防止するため、アンダーバーを付与しています。</p>
+
+<h2>Bootstrapを使いたい</h2>
+
+<p>まずBoostrapをnpmでインストールします。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>npm install --save-dev bootstrap@4.0.0-alpha.4
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでnode_modulesにBootstrapがインストールされたので、これをGulpから参照できるようgulpfile.jsを修正します。</p>
+
+<figure class='code'><figcaption><span>gulpfile.js</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">gulp</span><span class="p">.</span><span class="nx">task</span><span class="p">(</span><span class="s1">&#39;sass&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="nx">gulp</span><span class="p">.</span><span class="nx">src</span><span class="p">(</span><span class="s1">&#39;assets/stylesheets/*.scss&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">plumber</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sourcemaps</span><span class="p">.</span><span class="nx">init</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sassBulk</span><span class="p">())</span> <span class="err">#</span> <span class="err">追加</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sass</span><span class="p">({</span>
+</span><span class='line'>      <span class="nx">includePaths</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;./node_modules/bootstrap/scss&#39;</span><span class="p">]</span>   <span class="err">#</span> <span class="err">追加</span>
+</span><span class='line'>    <span class="p">}))</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">minifyCss</span><span class="p">())</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">sourcemaps</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;./maps&#39;</span><span class="p">))</span>
+</span><span class='line'>    <span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">gulp</span><span class="p">.</span><span class="nx">dest</span><span class="p">(</span><span class="s1">&#39;src/main/resources/static/css&#39;</span><span class="p">))</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>あとはapplication.scssで</p>
+
+<figure class='code'><figcaption><span>application.scss</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='css'><span class='line'><span class="k">@import</span> <span class="s2">&quot;bootstrap&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>とするだけです。SASSのコンパイルを実行すると、application.cssにBootstrapのcssが含まれていることがわかります。</p>
+
+<h2>参考など</h2>
+
+<ul>
+<li><a href="http://qiita.com/steelydylan/items/37aa028fa11046cf4f51">gulpの設定を簡単に行える、gulpfile generatorを作りました。</a></li>
+<li><a href="http://steelydylan.github.io/gulp-generator/">gulp generator</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1487,65 +1761,6 @@ Herokuにはこういったことを実現するために、buildpackという�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/05/31/java-programmer-must-buy/">JavaプログラマがKindle50%還元セールで買っておくべきIT技術書</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-05-31T22:29:48+09:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>31</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>10:29 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Kindle Storeでセールをやってるようです。今回は50%をポイント還元するってセールらしいです。</p>
-
-<p>で、<a href="http://www.kinleit.link/web/post-4954#Web-2">こちら</a>を見てたらRubyやPHPはあっても、Javaがなかったので、ついカッとなってJavaプログラマ向けのオススメ技術書をチョイスしました。
-セールは<strong>6/1の正午まで</strong>ですので、お早めにどーぞ。</p>
-
-<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00MIM1KFC" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-
-
-<p>これは店頭で目次を見た程度です。わりと初心者向けな印象なので、これからJavaを勉強したい人にオススメです。</p>
-
-<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00V2WMQNE" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-
-
-<p>いわずと知れた「パーフェクトシリーズ」のJava版。広範囲に網羅されているので、手元に置いておけば長く使えると思います。初心者でも可。</p>
-
-<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00JS1EHH4" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-
-
-<p>これも「逆引きレシピシリーズ」のJava版。リファレンス的に使うのならコイツは鉄板。</p>
-
-<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B00XTOSYIY" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-
-
-<p>そもそもJava EEの日本語の本は少ないのですが、最新のJava EE7に対応した本。</p>
-
-<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=zephiransas-22&o=9&p=8&l=as4&m=amazon&f=ifr&ref=ss_til&asins=B0088L9I4W" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
-
-
-<p>1つ前のバージョンであるJava EE6の本。通称「金魚本」。Java EE6と多少古くはあるがJava EE7と全然違うというわけでもないので、未だに現役で使えるはず。内容はある程度Java EE6の仕組みを理解している人がリファレンス的に使う感じだと思います。</p>
-
-<p>現場からは以上です。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1572,6 +1787,10 @@ Herokuにはこういったことを実現するために、buildpackという�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/04/05/gulp-sass/">Spring BootのCSSをGulpで管理する</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/03/10/ciecleci-and-gradle/">CircleCIでGradleのテストを並列実行する</a>
       </li>
     
@@ -1585,10 +1804,6 @@ Herokuにはこういったことを実現するために、buildpackという�
     
       <li class="post">
         <a href="/blog/2016/05/23/maven-wrapper/">Maven Wrapperを使ってプロジェクトで使うMavenのバージョンを指定する</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/12/24/past-present-and-future/">Past, Present and Future</a>
       </li>
     
   </ul>

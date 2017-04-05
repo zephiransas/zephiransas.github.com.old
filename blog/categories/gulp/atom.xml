@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: gulp | zephiransasのチラシの裏]]></title>
+  <link href="http://zephiransas.github.io/blog/categories/gulp/atom.xml" rel="self"/>
+  <link href="http://zephiransas.github.io/"/>
+  <updated>2017-04-05T17:22:33+09:00</updated>
+  <id>http://zephiransas.github.io/</id>
+  <author>
+    <name><![CDATA[Takafumi Yoshida (@zephiransas)]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Spring BootのCSSをGulpで管理する]]></title>
+    <link href="http://zephiransas.github.io/blog/2017/04/05/gulp-sass/"/>
+    <updated>2017-04-05T16:13:17+09:00</updated>
+    <id>http://zephiransas.github.io/blog/2017/04/05/gulp-sass</id>
+    <content type="html"><![CDATA[<p>Spring BootのプロジェクトでもSASSが書きたい！という欲望から、Gulpを使ってSASSをコンパイルするようにしました。</p>
+
+<p>基本Gulpでやってるので、出力先だけ変えれば、特にSpring Bootには関係ない気もしますが・・・</p>
+
+<p>npmは既にインストールしてある前提で。</p>
+
+<h2>フォルダの構成と基本方針</h2>
+
+<p>フォルダ構成は以下のようなイメージ。</p>
+
+<pre><code class="bash">├── assets
+│   └── stylesheets
+│       └── application.scss
+├── gulpfile.js
+├── package.json
+└── src
+    └── main
+        └── resources
+            └── static
+                └── css
+                    ├── maps
+                    │   └── application.css.map
+                    └── application.css
+</code></pre>
+
+<p>assets/stylesheets以下にSASSを配置し、これをGulpでコンパイル。</p>
+
+<p>出力先をSpring BootのCSS配備先 <code>src/main/resources/static/css</code> にして、これをThymeleafから参照する、という方針です。</p>
+
+<h2>必要なパッケージをインストールする</h2>
+
+<p>まずは必要なパッケージをnpmでインストールしていきます。</p>
+
+<pre><code class="bash">$ npm init
+(以降、全てデフォルトで)
+$ npm install --save-dev gulp gulp-sass gulp-sourcemaps gulp-minify-css gulp-plumber
+</code></pre>
+
+<p>これでpackage.jsonが作成され、node_modulesに依存ライブラリがインストールされます。node_modulesはgitignoreしておくといいでしょう。</p>
+
+<h2>gulpfile.jsを作成する</h2>
+
+<p>SASSをコンパイルできるようGulpのタスクを定義します。</p>
+
+<pre><code class="javascript gulpfile.js">var gulp = require('gulp'),
+    sass = require('gulp-sass'),
+    sourcemaps = require('gulp-sourcemaps'),
+    minifyCss = require('gulp-minify-css'),
+    plumber = require('gulp-plumber');
+
+gulp.task('sass', function(){
+  gulp.src('assets/stylesheets/*.scss')
+    .pipe(plumber())
+    .pipe(sourcemaps.init())
+    .pipe(sass())
+    .pipe(minifyCss())
+    .pipe(sourcemaps.write('./maps'))
+    .pipe(gulp.dest('src/main/resources/static/css'))
+});
+</code></pre>
+
+<p>まずscssファイルの置き場所を <code>gulp.src('assets/stylesheets/*.scss')</code> としてassets/stylesheetsディレクトリに設定します。</p>
+
+<p><code>.pipe(sass())</code>でSASSのコンパイル、<code>.pipe(minifyCss())</code>でCSSの圧縮をしています。</p>
+
+<p>圧縮したCSSだと、元のSASSでの場所がわからなくなるので <code>.pipe(sourcemaps.write('./maps'))</code>でmapファイルを作成します。</p>
+
+<p><code>sourcemaps.write()</code>はデフォルトだとコンパイルされたcss内部にインラインでmapを書き込むので、別途mapsディレクトリにmapファイルを書き込むよう設定しておきます。こうしておくことでChromeなどのDeveloper toolで見たときにSASSの場所が分かるようになります。</p>
+
+<p>最後に <code>.pipe(gulp.dest('src/main/resources/static/css'))</code>でCSS出力しています。</p>
+
+<p>設定したタスクを実行します。</p>
+
+<pre><code class="bash">$ gulp sass
+</code></pre>
+
+<p>これでCSSが出力されますので、あとはThymeleaf側から</p>
+
+<pre><code class="html">&lt;link rel="stylesheet" type="text/css" href="@{/css/application.css}"/&gt;
+</code></pre>
+
+<p>として参照できます。</p>
+
+<h2>SASSを分割したい</h2>
+
+<p>よくあるケースとして、画面単位でSASSを分け、最終的なCSSでは1つにまとめてしまいたい、というケースがあります。
+例えば、以下のようなイメージ。</p>
+
+<pre><code class="bash">assets
+└── stylesheets
+    ├── modules &lt;- 各画面ごとのSASS
+    │   ├── _hoge.scss
+    │   └── _fuga.scss
+    └── application.scss &lt;- modulesを全てimportしたい
+</code></pre>
+
+<p>こういった時にはgulp-sass-bulk-importが便利です。</p>
+
+<pre><code class="bash">$ npm install --save-dev gulp-sass-bulk-import
+</code></pre>
+
+<p>としてgulp-sass-bulk-importをインストールした後、gulpfile.jsを修正します。</p>
+
+<pre><code class="javascript gulpfile.js">var sassBulk = require('gulp-sass-bulk-import');
+
+...
+
+gulp.task('sass', function(){
+  gulp.src('assets/stylesheets/*.scss')
+    .pipe(plumber())
+    .pipe(sourcemaps.init())
+    .pipe(sassBulk()) # 追加
+    .pipe(sass())
+    .pipe(minifyCss())
+    .pipe(sourcemaps.write('./maps'))
+    .pipe(gulp.dest('src/main/resources/static/css'))
+});
+</code></pre>
+
+<p>あとはapplication.scssで</p>
+
+<pre><code class="css application.scss">@import "modules/*";
+</code></pre>
+
+<p>とすることで、modules内のSASSを含めて、CSSがコンパイルされます。</p>
+
+<p>注意点として、modules以下のSASSファイルは、プレフィックスとしてアンダーバーが付与されています。付与しない場合は、modules以下のSASSも普通にコンパイルの対象になり、そのままdestに出力されてしまうので、これを防止するため、アンダーバーを付与しています。</p>
+
+<h2>Bootstrapを使いたい</h2>
+
+<p>まずBoostrapをnpmでインストールします。</p>
+
+<pre><code class="bash">$ npm install --save-dev bootstrap@4.0.0-alpha.4
+</code></pre>
+
+<p>これでnode_modulesにBootstrapがインストールされたので、これをGulpから参照できるようgulpfile.jsを修正します。</p>
+
+<pre><code class="javascript gulpfile.js">gulp.task('sass', function(){
+  gulp.src('assets/stylesheets/*.scss')
+    .pipe(plumber())
+    .pipe(sourcemaps.init())
+    .pipe(sassBulk()) # 追加
+    .pipe(sass({
+      includePaths: ['./node_modules/bootstrap/scss']   # 追加
+    }))
+    .pipe(minifyCss())
+    .pipe(sourcemaps.write('./maps'))
+    .pipe(gulp.dest('src/main/resources/static/css'))
+});
+</code></pre>
+
+<p>あとはapplication.scssで</p>
+
+<pre><code class="css application.scss">@import "bootstrap";
+</code></pre>
+
+<p>とするだけです。SASSのコンパイルを実行すると、application.cssにBootstrapのcssが含まれていることがわかります。</p>
+
+<h2>参考など</h2>
+
+<ul>
+<li><a href="http://qiita.com/steelydylan/items/37aa028fa11046cf4f51">gulpの設定を簡単に行える、gulpfile generatorを作りました。</a></li>
+<li><a href="http://steelydylan.github.io/gulp-generator/">gulp generator</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
